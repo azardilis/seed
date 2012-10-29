@@ -1,0 +1,23 @@
+Notes (meeting 29/10/12)
+=========================
+
+Features:
+==========
+
+Post comments/rating per module/teacher/cw
+Allow modules to change over time (syllabus changes etc.)
+People can add their mark for a specific module (combine that with ecs data to get summary statistics per module)
+Data from ecs for module grade stats(?)
+subscription to threads via rss feed / email
+Ability to sign in with university email address
+Integration of youtube (embedded video lectures etc.)
+
+Initial tasks
+==============
+
+Panicos -> setup Django on Google App Engine
+Alex, alex -> wireframes-basic design
+Kim, Perez -> state diagram
+Marinos, argyris -> requirements
+
+all -> get acquainted with Django and google app engine :)
