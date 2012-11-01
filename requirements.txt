@@ -1,0 +1,16 @@
+Requirements(01/11/2012)
+=========================
+
+Associate between modules based on prerequisites
+Ability to show other modules teached by the same lecturer
+Table view for modules grouped by semester/year.
+Preview of basic module information (lecturers photos, ratings for teaching quality, grade distribution)
+User authentication
+Ability to comment on modules, reply to comments, (up|down)vote comments, add/delete module(approval needed),
+	   	      	       click on predefined descriptive words for module(pointless, important, useful)
+Score comments based on votes + time (comments with higher score go higher up, reddit-like)
+Ability to subscribe via rss/email to different sections of content.
+
+
+
+
