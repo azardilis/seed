@@ -1,0 +1,22 @@
+
+Should we have an admin page ?
+
+kim-dio-kim :
+	modules list could be a dropdown
+	
+	user profile : modules should pop up a window and show :
+		link to the intranet page of that module
+		lecture schedule
+		deadlines
+		syllabus
+		lecturer evaluations ?
+		what are the pictures ?
+	
+	in homepage :
+		position latest topics to the left, show deadline instead
+		have a link to the user profile
+	
+	on module page:
+		clicking on a lecturer would lead to evaluation of the lecturer/view comments on them
+	
+	Forum page is not really required, as everything could be accessible through the user profile
