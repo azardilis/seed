@@ -11,6 +11,20 @@ Ability to comment on modules, reply to comments, (up|down)vote comments, add/de
 Score comments based on votes + time (comments with higher score go higher up, reddit-like)
 Ability to subscribe via rss/email to different sections of content.
 
+Requirements(02/11/2012)
+========================
 
+Replace facebook for discussion about cw and module with a forum
+Search for tags in the forum.
+Tags are attached to the thread for easy search.
 
+Lectureres profile (rating,link to ecs profile)
 
+User profile next to posts(year,course,signature 99 chars,avatar)
+
+chat/pm??? further extension.
+
+vote on thread and comment.
+Rate module based on (how hard it is, how much self study, the lecturer, ) 
+
+on the modules page , have categories drop down with the X most popular posts, giving an option to go to a new page that shows all threads in that category.
