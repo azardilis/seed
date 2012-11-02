@@ -21,4 +21,5 @@ Scripting coursework 2
 Start allocating tasks for the coding part of the coursework
 
 Discuss any difficulties or objections that might have come up in others people tasks
+
 --------------------------------------------------------------------------------------
