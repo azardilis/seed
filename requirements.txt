@@ -10,4 +10,23 @@ Forum (facebook replacement):
   - Ability to create new discussion(threads)
   - User profile next to post(incl. avatar, year/course)
   - Ability to (up|down)vote threads, comments
-  - Only show more popular posts at first and then expand
+  - Only show more popular posts at first and then expand to show more 
+
+Module Explorer:
+  - Ratings per lecturer/module
+  - Lecturers profiles with ratings, link to homepage, modules teached.
+  - Module profile with description, ratings(teaching quality), mark distribution
+  - Show associations between module based on prerequisites.
+  - Table view of modules grouped by year/semester
+
+Utilities:
+  - User authentication
+  - Subscription with email/rss
+  - Add/delete users/modules
+
+
+Work allocation:
+
+Database: Perez, Marinos
+Design(python page generation blah blah): everyone else
+
