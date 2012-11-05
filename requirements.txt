@@ -1,17 +1,13 @@
-Requirements(02/11/2012)
-========================
+Requirements(05/11/2012)
+=========================
 
-Replace facebook for discussion about cw and module with a forum
-Search for tags in the forum.
-Tags are attached to the thread for easy search.
+Basic Requirements
+------------------
 
-Lectureres profile (rating,link to ecs profile)
-
-User profile next to posts(year,course,signature 99 chars,avatar)
-
-chat/pm??? further extension.
-
-vote on thread and comment.
-Rate module based on (how hard it is, how much self study, the lecturer, ) 
-
-on the modules page , have categories drop down with the X most popular posts, giving an option to go to a new page that shows all threads in that category.
+Forum (facebook replacement):
+  - Searchable tags for discussion threads
+  - Embed youtube videos in comments
+  - Ability to create new discussion(threads)
+  - User profile next to post(incl. avatar, year/course)
+  - Ability to (up|down)vote threads, comments
+  - Only show more popular posts at first and then expand
