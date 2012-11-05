@@ -11,3 +11,4 @@ Forum (facebook replacement):
   - User profile next to post(incl. avatar, year/course)
   - Ability to (up|down)vote threads, comments
   - Only show more popular posts at first and then expand
+
