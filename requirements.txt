@@ -22,7 +22,7 @@ Module Explorer:
 Utilities:
   - User authentication
   - Subscription with email/rss
-  - Add/delete users/modules
+  - Add/delete users/modules (fill-in forms each Semester)
 
 
 Work allocation:
