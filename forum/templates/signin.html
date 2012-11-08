@@ -1,0 +1,12 @@
+<html>
+  <body>
+    Welcome to the site, {{ user.username }} <p>
+    Your modules: <br>
+    <ul>
+    {% for mod in module_list %}
+    <li> <a href="{{ mod.url }}">{{ mod.name }}</a>: rating: {{mod.rating}}</li>
+    {% endfor %}
+    </ul>
+    </p>
+  </body>
+</html>
