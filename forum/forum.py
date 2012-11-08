@@ -42,21 +42,47 @@ class SignInPage(webapp2.RequestHandler):
         self.response.out.write(template.render())
 
 class MainPage(webapp2.RequestHandler):
+    def get(self):
+        module_list = user.get_modules()
+        template_values = {
+            'user':user,
+            'module_list':module_list,
+        }
+        template = jinja_environment.get_template('templates/signin.html')
+        self.response.out.write(template.render(template_values))
+        
     def post(self):
         username = cgi.escape(self.request.get('user'))
         module_list = user.get_modules()
         template_values = {
             'user':user,
             'module_list':module_list,
-            }
+        }
         template = jinja_environment.get_template('templates/signin.html')
         self.response.out.write(template.render(template_values))
 
+class ForumPage(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/forum.html')
+        self.response.out.write(template.render({}))
+
+class AboutPage(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/about.html')
+        self.response.out.write(template.render({}))
+        
+class NotesPage(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/notes.html')
+        self.response.out.write(template.render({}))
 
 user = create_mockup_user("az2g10")
-app = webapp2.WSGIApplication([('/', SignInPage),
-                               ('/main', MainPage)],
-                               debug=True)
+app = webapp2.WSGIApplication([('/'     , SignInPage),
+                               ('/main' , MainPage),
+                               ('/forum', ForumPage),
+                               ('/about', AboutPage),
+                               ('/notes', NotesPage)],
+                              debug=True)
                                
 
 
