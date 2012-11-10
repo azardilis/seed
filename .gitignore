@@ -1,0 +1,4 @@
+*.autosave
+*.swp
+#*#
+*.pyc
