@@ -1,8 +1,17 @@
 from google.appengine.ext import db
-#
-#	I just implemented this stub, fill in the rest of the info !
-#
+import Thread
+import User
 
 
-class Post(db.model) :
-	pass 
+
+
+class Post(db.Model) :
+	subject = db.StringProperty(required=True)
+	body = db.StringProperty(required=True)
+	thread = db.ReferenceProperty(Thread, collection_name='posts', required=True)
+	votes = db.IntegerProperty(required=True)
+	poster = db.ReferenceProperty(User, collection_name='posts', required=True)
+	timestamp = db.DateTimeProperty(auto_now_add=True, required=True)
+	answer = db.BooleanProperty(required=True)
+	
+	
