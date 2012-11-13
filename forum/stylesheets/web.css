@@ -1,0 +1,38 @@
+#wrapper {
+	width:940px;
+	margin: 0 auto;
+}
+
+
+
+header {
+	text-align:center;
+	padding:70px 0;
+}
+
+nav {
+	background-color:#b0c4de;
+	height: 60px;
+	width: 960px;
+	margin-left: -10px;
+	line-height:50px;
+	position: relative;
+	text-align:center;
+}
+
+nav.li
+ {
+ float:right;
+ display:inline;
+ }
+
+#content {
+	background: #fff;
+	height: 1500px; /* presetting the height */
+	box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.fixed {
+        position:fixed;
+	
+}
