@@ -2,6 +2,7 @@ import webapp2
 import jinja2
 import os
 import cgi
+from google.appengine.api import mail
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -76,14 +77,46 @@ class NotesPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/notes.html')
         self.response.out.write(template.render({}))
 
+class ContactPage(webapp2.RequestHandler):
+    def get(self):
+        subject=''
+        message=''
+        template = jinja_environment.get_template('templates/contact.html')
+        template_values = {
+                           subject:'subject',
+                           message:'message'
+                           }
+        #mail.send_mail(sender='alex.pana.oikonomou@gmail.com',
+         #         to='ao2g10@soton.ac.uk',
+          #        subject='asddsa',
+           #       body='asdad')
+        
+        self.response.out.write(template.render(template_values))
+
+class EmailSent(webapp2.RequestHandler):
+    def post(self):
+        self.request.get('subject')
+        template = jinja_environment.get_template('templates/something.html')
+        subject = self.response.write(self.request.get('subject'))
+        message = self.response.write(self.request.get('message'))
+        mail.send_mail(sender='alex.pana.oikonomou@gmail.com',#user google email
+                       to='scriptingteamk@gmail.com',
+                       subject=subject,
+                       body=message)        
+        self.response.out.write(template.render({}))
+
+
 user = create_mockup_user("az2g10")
 app = webapp2.WSGIApplication([('/'     , SignInPage),
                                ('/main' , MainPage),
                                ('/forum', ForumPage),
                                ('/about', AboutPage),
-                               ('/notes', NotesPage)],
+                               ('/notes', NotesPage),
+                               ('/contact',ContactPage),
+                               ('/something',EmailSent)],
                               debug=True)
                                
 
 
     
+
