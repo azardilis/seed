@@ -4,63 +4,57 @@ import os
 import cgi
 from google.appengine.api import mail
 
+from model.base.Module import Module
+from model.base.User import User
+from model.base.YearCourseSemester import YearCourseSemester
+from model.base.Lecturer import Lecturer
+from model.base.Rating import Rating
+from model.base.Subscription import Subscription
+
+from google.appengine.ext.db import Key
+
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-class User:
-    def __init__(self, username, moduleList):
-        self.username = username
-        self.moduleList = moduleList
+global current_user
 
-    def get_username(self):
-        return self.username
-
-    def get_modules(self):
-        return self.moduleList
-
-class Module:
-    def __init__(self, name, rating, url):
-        self.name = name
-        self.rating = rating
-        self.url = url
-
-    def get_name(self):
-        return self.name
-
-    def get_rating(self):
-        return self.rating
-
-def create_mockup_user(username):
-    m1 = Module("comp3001", 4.0, "https://secure.ecs.soton.ac.uk/module/1213/COMP3001/")
-    m2 = Module("comp3033", 5.0, "https://secure.ecs.soton.ac.uk/module/1213/COMP3033/")
-    m3 = Module("comp3032", 4.5, "https://secure.ecs.soton.ac.uk/module/1213/COMP3032/")
-    user = User(username, [m1,m2,m3])
-    return user
 
 class SignInPage(webapp2.RequestHandler):
     def get(self):
         template = jinja_environment.get_template('templates/index.html')
+        
         self.response.out.write(template.render())
+    
+    def post(self):
+        global current_user
+        
+        #checking if the typed in username is actually in the database, and retrieving the user object
+        #This needs to be implemented as a proper login function, I have only done the basic, so we can have our global current user variable
+        q = User.all()
+        q.filter('username',cgi.escape(self.request.get('user')))
+        
+        current_user = q.get()
+        
+        self.redirect("/main")
+        
+        
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        module_list = user.get_modules()
+        #building query to get only the current user's modules
+        q= Subscription.all().filter('subscribed_user',current_user).filter('show_in_homepage',True)
+        q=q.run()
+  
+        #passing variables to template
         template_values = {
-            'user':user,
-            'module_list':module_list,
-        }
+                           
+                           'user':current_user,
+                           'query':q
+                           }
+      
         template = jinja_environment.get_template('templates/signin.html')
         self.response.out.write(template.render(template_values))
         
-    def post(self):
-        username = cgi.escape(self.request.get('user'))
-        module_list = user.get_modules()
-        template_values = {
-            'user':user,
-            'module_list':module_list,
-        }
-        template = jinja_environment.get_template('templates/signin.html')
-        self.response.out.write(template.render(template_values))
 
 class ForumPage(webapp2.RequestHandler):
     def get(self):
@@ -106,15 +100,30 @@ class EmailSent(webapp2.RequestHandler):
         self.response.out.write(template.render({}))
 
 
-user = create_mockup_user("az2g10")
-app = webapp2.WSGIApplication([('/'     , SignInPage),
-                               ('/main' , MainPage),
-                               ('/forum', ForumPage),
-                               ('/about', AboutPage),
-                               ('/notes', NotesPage),
-                               ('/contact',ContactPage),
-                               ('/something',EmailSent)],
-                              debug=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+app = webapp2.WSGIApplication([
+                                   ('/'     , SignInPage),
+                                   ('/main' , MainPage),
+                                   ('/forum', ForumPage),
+                                   ('/about', AboutPage),
+                                   ('/notes', NotesPage),
+                                   ('/contact',ContactPage),
+                                   ('/something',EmailSent)                                 
+                                ], debug=True)
                                
 
 

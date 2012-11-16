@@ -7,8 +7,8 @@
     Welcome to the site, {{ user.username }} <p>
     Your modules: <br>
     <ul>
-    {% for mod in module_list %}
-    <li> <a href="{{ mod.url }}">{{ mod.name }}</a>: rating: {{mod.rating}}</li>
+    {% for q in query %}
+    <li> <a href="{{ q.module.ecs_page }}">{{ q.module.code }} : {{q.module.title}}</a></li>
     {% endfor %}
     </ul>
     </p>
