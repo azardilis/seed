@@ -3,59 +3,45 @@ import jinja2
 import os
 import cgi
 from google.appengine.api import mail
-
 from model.base.Module import Module
 from model.base.User import User
 from model.base.YearCourseSemester import YearCourseSemester
 from model.base.Lecturer import Lecturer
 from model.base.Rating import Rating
 from model.base.Subscription import Subscription
-
 from google.appengine.ext.db import Key
+from itertools import izip
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 global current_user
 
-
+#Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(webapp2.RequestHandler):
     def get(self):
         template = jinja_environment.get_template('templates/index.html')
-        
         self.response.out.write(template.render())
     
-    def post(self):
+    def post(self): #proper authorisation should go here
         global current_user
-        
-        #checking if the typed in username is actually in the database, and retrieving the user object
-        #This needs to be implemented as a proper login function, I have only done the basic, so we can have our global current user variable
         q = User.all()
         q.filter('username',cgi.escape(self.request.get('user')))
-        
         current_user = q.get()
-        
         self.redirect("/main")
-        
-        
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        #building query to get only the current user's modules
-        q= Subscription.all().filter('subscribed_user',current_user).filter('show_in_homepage',True)
-        q=q.run()
-  
-        #passing variables to template
+        #passing variables to template, namely the current user and the subs that need
+        #to be displayed in the homepage
+        homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         template_values = {
-                           
-                           'user':current_user,
-                           'query':q
+                           'current_user':current_user,
+                           'subscriptions':homepage_subs
                            }
-      
         template = jinja_environment.get_template('templates/signin.html')
         self.response.out.write(template.render(template_values))
         
-
 class ForumPage(webapp2.RequestHandler):
     def get(self):
         template = jinja_environment.get_template('templates/forum.html')
@@ -80,11 +66,6 @@ class ContactPage(webapp2.RequestHandler):
                            subject:'subject',
                            message:'message'
                            }
-        #mail.send_mail(sender='alex.pana.oikonomou@gmail.com',
-         #         to='ao2g10@soton.ac.uk',
-          #        subject='asddsa',
-           #       body='asdad')
-        
         self.response.out.write(template.render(template_values))
 
 class EmailSent(webapp2.RequestHandler):
@@ -100,21 +81,50 @@ class EmailSent(webapp2.RequestHandler):
         self.response.out.write(template.render({}))
 
 
+def reset_db():
+    for user in User.all():
+        user.delete()
+
+    for ycs in YearCourseSemester.all():
+        ycs.delete()
+
+    for mod in Module.all():
+        mod.delete()
+
+    for sub in Subscription.all():
+        sub.delete()
+        
+#function to populate the db at the start of the app,
+#that is if you don't have your own copy locally
+def populate_db():
+    reset_db()
+    current_user = User(username='az2g10', password='1234', course='cs', signature='governing dynamics gentlemen'
+                    ,user_type='normal', year=1)
+    current_user.put()
+    ycs = YearCourseSemester(year=3, semester=1, course='cs')
+    ycs.put()
+    #add some modules
+    mod1 = Module(key_name='comp3001', code='comp3001', title='Scripting Languages',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/", semester=1,
+                  yearCourseSemester=ycs)
+    mod1.put()
+    mod2 = Module(key_name='comp3033', code='comp3033', title='Computational Biology',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3033/", semester=1,
+                  yearCourseSemester=ycs)
+    mod2.put()
+    mod3 = Module(key_name='comp3032', code='comp3032', title='Intelligent Algorithms',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3032/", semester=1,
+                  yearCourseSemester=ycs)
+    mod3.put()
+    sub1 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod1)
+    sub2 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod2)
+    sub3 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod3)
+    sub1.put()
+    sub2.put()
+    sub3.put()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+populate_db()
 app = webapp2.WSGIApplication([
                                    ('/'     , SignInPage),
                                    ('/main' , MainPage),
