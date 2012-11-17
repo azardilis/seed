@@ -6,11 +6,13 @@
   <section id="content" class="content">
   
     {% include "/templates/test.html" %}
-    Welcome to the site, {{ user.username }} <p>
+    Welcome to the site,{{current_user.username}} <p>
     Your modules: <br>
     <ul>
-    {% for q in query %}
-    <li> <a href="{{ q.module.ecs_page }}">{{ q.module.code }} : {{q.module.title}}</a></li>
+    {% for sub in subscriptions %}
+    <li>
+      <a href="{{sub.module.ecs_page}}">{{sub.module.title}}</a>
+    </li>
     {% endfor %}
     </ul>
     </p>
