@@ -97,24 +97,38 @@ def reset_db():
 #function to populate the db at the start of the app,
 #that is if you don't have your own copy locally
 def populate_db():
+
     reset_db()
+
     current_user = User(key_name='az2g10', full_name='argyris', password='1234', course='cs', year=3)
     current_user.put()
-    ycs = YearCourseSemester(year=3, semester=1, course='cs')
-    ycs.put()
-    #add some modules
+
+    compsci11 = YearCourseSemester(year=int(1), semester=int(1), course='compsci')
+    compsci11.put()
+    compsci12 = YearCourseSemester(year=int(1), semester=int(2), course='compsci')
+    compsci12.put()
+    compsci21 = YearCourseSemester(year=int(2), semester=int(1), course='compsci')
+    compsci21.put()
+    compsci22 = YearCourseSemester(year=int(2), semester=int(2), course='compsci')
+    compsci22.put()
+    compsci31 = YearCourseSemester(year=int(3), semester=int(1), course='compsci')
+    compsci31.put()
+    compsci32 = YearCourseSemester(year=int(3), semester=int(2), course='compsci')
+    compsci32.put()
+
     mod1 = Module(key_name='comp3001', code='comp3001', title='Scripting Languages',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/", semester=1,
-                  yearCourseSemester=ycs)
+                  yearCourseSemester=compsci31)
     mod1.put()
     mod2 = Module(key_name='comp3033', code='comp3033', title='Computational Biology',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3033/", semester=1,
-                  yearCourseSemester=ycs)
+                  yearCourseSemester=compsci31)
     mod2.put()
     mod3 = Module(key_name='comp3032', code='comp3032', title='Intelligent Algorithms',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3032/", semester=1,
-                  yearCourseSemester=ycs)
+                  yearCourseSemester=compsci31)
     mod3.put()
+
     sub1 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod1)
     sub2 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod2)
     sub3 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod3)
