@@ -1,14 +1,20 @@
 from google.appengine.ext import db
 
 class User(db.Model):
-	username = db.StringProperty(required=True)
+	
+	#implicit key_name (use for username)
 	password = db.StringProperty(required=True)
+	
+	user_type = db.StringProperty(choices=set(['normal','moderator']), default = 'normal')
+	activated = db.BooleanProperty(default=False)
+	
 	course = db.StringProperty(required=True)
-	signature = db.StringProperty(required=False)
-	user_type = db.StringProperty(required=True, choices=set(['normal','moderator']))
-	#karma = db.IntegerProperty(required=True)
-	#alternative_email = db.emailProperty(required=True)
-	#home_page  = db.LinkProperty(required=True)
-	#avatar = db.LinkProperty()
-	#activated = db.BooleanProperty(default=False)
 	year = db.IntegerProperty(required=True)
+	#consider reference to yearCourseSemester instead
+		
+	full_name = db.StringProperty(required=True)
+	avatar = db.LinkProperty()
+	signature = db.StringProperty()
+	karma = db.IntegerProperty(default=0)
+	home_page  = db.LinkProperty()
+	alternative_email = db.EmailProperty()

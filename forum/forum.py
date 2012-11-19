@@ -98,8 +98,7 @@ def reset_db():
 #that is if you don't have your own copy locally
 def populate_db():
     reset_db()
-    current_user = User(username='az2g10', password='1234', course='cs', signature='governing dynamics gentlemen'
-                    ,user_type='normal', year=1)
+    current_user = User(key_name='az2g10', full_name='argyris', password='1234', course='cs', year=3)
     current_user.put()
     ycs = YearCourseSemester(year=3, semester=1, course='cs')
     ycs.put()
