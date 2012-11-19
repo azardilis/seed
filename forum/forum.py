@@ -116,25 +116,10 @@ def populate_db():
     compsci32 = YearCourseSemester(year=int(3), semester=int(2), course='compsci')
     compsci32.put()
 
-    mod1 = Module(key_name='comp3001', code='comp3001', title='Scripting Languages',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/", semester=1,
+    comp3001 = Module(key_name='comp3001', title='Scripting Languages',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/",
                   yearCourseSemester=compsci31)
-    mod1.put()
-    mod2 = Module(key_name='comp3033', code='comp3033', title='Computational Biology',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3033/", semester=1,
-                  yearCourseSemester=compsci31)
-    mod2.put()
-    mod3 = Module(key_name='comp3032', code='comp3032', title='Intelligent Algorithms',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3032/", semester=1,
-                  yearCourseSemester=compsci31)
-    mod3.put()
-
-    sub1 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod1)
-    sub2 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod2)
-    sub3 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=mod3)
-    sub1.put()
-    sub2.put()
-    sub3.put()
+    comp3001.put()
 
 
 populate_db()
