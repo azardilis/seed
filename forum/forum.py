@@ -9,6 +9,7 @@ from model.base.YearCourseSemester import YearCourseSemester
 from model.base.Lecturer import Lecturer
 from model.base.Rating import Rating
 from model.base.Assessment import Assessment
+from model.base.Grade import Grade
 from model.base.Subscription import Subscription
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
@@ -164,8 +165,11 @@ def populate_db():
                         module=comp3001)
     assesCwk3005.put()
 
-	grade1 = Grade(student=current_user, assessment=assesCwk3001, mark=100)
-    grade.put()
+    grade1 = Grade(student=current_user, assessment=assesCwk3001, mark=100)
+    grade1.put()
+
+    ejz = Lecturer(key_name='ejz', full_name='Ed J Zaluska', home_page='http://google.com')
+    ejz.put()
 
 populate_db()
 app = webapp2.WSGIApplication([
