@@ -6,7 +6,7 @@
   <section id="content" class="content">
   
     {% include "/templates/test.html" %}
-    Welcome to the site,{{current_user.username}} <p>
+    Welcome to the site, {{current_user.full_name}} <p>
     Your modules: <br>
     <ul>
     {% for sub in subscriptions %}

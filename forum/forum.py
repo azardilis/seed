@@ -30,9 +30,10 @@ class SignInPage(webapp2.RequestHandler):
     
     def post(self): #proper authorisation should go here
         global current_user
-        q = User.all()
-        q.filter('username',cgi.escape(self.request.get('user')))
-        current_user = q.get()
+        #q = User.all()
+       #q.filter('key_name',cgi.escape(self.request.get('user')))
+        #current_user = q.get()
+	current_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
         self.redirect("/main")
 
 class MainPage(webapp2.RequestHandler):
