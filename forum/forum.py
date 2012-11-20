@@ -10,6 +10,7 @@ from model.base.Lecturer import Lecturer
 from model.base.Rating import Rating
 from model.base.Assessment import Assessment
 from model.base.Grade import Grade
+from model.base.Category import Category
 from model.base.Subscription import Subscription
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
@@ -102,8 +103,10 @@ def reset_db():
 #that is if you don't have your own copy locally
 def populate_db():
 
+    ###### RESET #######
     reset_db()
 
+    ###### POPULATE ######
     current_user = User(key_name='az2g10', full_name='argyris', password='1234', course='cs', year=3)
     current_user.put()
 
@@ -199,6 +202,22 @@ def populate_db():
     #both comp3016
     Rating(lecturer=nmg,module=comp3016).put()
     Rating(lecturer=lac,module=comp3016).put()
+
+    ###### FORUM #######
+    categGeneral3001 = Category(name='General Discussion', description='blah blah', module=comp3001)
+    categGeneral3001.put()
+    categCoursework3001 = Category(name='Coursework Discussion', description='blah blah', module=comp3001)
+    categCoursework3001.put()
+    
+    ## TODO ##
+    #make Post to inherit from PolyModel and Thread inherit from Post
+    #import Post and Thread classes in this file (look at other imports)
+    #create Thread called thread1 making its category=categGeneral3001
+    #create Post called t1reply1 making its post=thread1
+    #create Post called t1reply1_1 making its post=t1reply1
+    #create Post called t1reply1_1_1 making its post=t1reply1_1
+    #create Post called t1reply2 making its post=thread1
+    #create Thread called thread2 making its category=categGeneral3001 again
 
 populate_db()
 app = webapp2.WSGIApplication([
