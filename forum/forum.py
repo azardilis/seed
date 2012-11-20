@@ -170,6 +170,35 @@ def populate_db():
 
     ejz = Lecturer(key_name='ejz', full_name='Ed J Zaluska', home_page='http://google.com')
     ejz.put()
+    mjw = Lecturer(key_name='mjw', full_name='Mark J Weal', home_page='http://google.com')
+    mjw.put()
+    apb = Lecturer(key_name='apb', full_name='Adam Prugel-Bennett', home_page='http://google.com')
+    apb.put()
+    mn = Lecturer(key_name='mn', full_name='Mahesan Niranjan', home_page='http://google.com')
+    mn.put()
+    mp3 = Lecturer(key_name='mp3', full_name='Maria Polukarov', home_page='http://google.com')
+    mp3.put()
+    msn = Lecturer(key_name='msn', full_name='Mark S Nixon', home_page='http://google.com')
+    msn.put()
+    srg = Lecturer(key_name='srg', full_name='Steve R Gunn', home_page='http://google.com')
+    srg.put()
+    bim = Lecturer(key_name='bim', full_name='B Iain McNally', home_page='http://google.com')
+    bim.put()
+    mrp2 = Lecturer(key_name='mrp2', full_name='Michael R. Poppleton', home_page='http://google.com')
+    mrp2.put()
+    srinanda = Lecturer(key_name='srinanda', full_name='Srinandan Dasmahapatra', home_page='http://google.com')
+    srinanda.put()
+    lac = Lecturer(key_name='lac', full_name='Leslie Carr', home_page='http://google.com')
+    lac.put()
+    nmg = Lecturer(key_name='nmg', full_name='Nicholas Gibbins', home_page='http://google.com')
+    nmg.put()
+    
+    #both ejz
+    Rating(lecturer=ejz,module=comp3001).put()
+    Rating(lecturer=ejz,module=info3005).put()
+    #both comp3016
+    Rating(lecturer=nmg,module=comp3016).put()
+    Rating(lecturer=lac,module=comp3016).put()
 
 populate_db()
 app = webapp2.WSGIApplication([
