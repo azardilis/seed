@@ -8,9 +8,12 @@ from model.base.User import User
 from model.base.YearCourseSemester import YearCourseSemester
 from model.base.Lecturer import Lecturer
 from model.base.Rating import Rating
+from model.base.Assessment import Assessment
 from model.base.Subscription import Subscription
 from google.appengine.ext.db import Key
+from google.appengine.ext import db
 from itertools import izip
+from datetime import datetime
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -120,7 +123,49 @@ def populate_db():
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/",
                   yearCourseSemester=compsci31)
     comp3001.put()
+    comp3033 = Module(key_name='comp3033', title='Computational Biology',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3033/",
+                  yearCourseSemester=compsci31)
+    comp3033.put()
+    comp3032 = Module(key_name='comp3032', title='Intelligent Algorithms',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3032/",
+                  yearCourseSemester=compsci31)
+    comp3032.put()
+    comp3016 = Module(key_name='comp3016', title='Hypertext and Web Technologies', 
+                  ecs_page='http://www.google.com', 
+                  yearCourseSemester=compsci31)
+    comp3016.put()
+    comp3020 = Module(key_name='comp3020', title='Individual Project', 
+                  ecs_page='http://www.google.com',
+                  yearCourseSemester=compsci31)
+    comp3020.put()
+    info3005 = Module(key_name='info3005', title='Security & Information Technology', 
+                  ecs_page='http://www.google.com', 
+                  yearCourseSemester=compsci31)
+    info3005.put()
 
+    sub1 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=comp3001)
+    sub2 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=info3005)
+    sub3 = Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=current_user, module=comp3016)
+    sub1.put()
+    sub2.put()
+    sub3.put()
+
+    assesCwk3001 = Assessment(title='perl assignment',
+                        dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'), 
+                        specLink=db.Link("http://www.google.com/"), 
+                        handin=db.Link("http://www.google.com/"), 
+                        module=comp3001)
+    assesCwk3001.put()
+    assesCwk3005 = Assessment(title='security assignment 2',
+                        dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'), 
+                        specLink=db.Link("http://www.google.com/"), 
+                        handin=db.Link("http://www.google.com/"), 
+                        module=comp3001)
+    assesCwk3005.put()
+
+	grade1 = Grade(student=current_user, assessment=assesCwk3001, mark=100)
+    grade.put()
 
 populate_db()
 app = webapp2.WSGIApplication([
