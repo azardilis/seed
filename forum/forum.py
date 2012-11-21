@@ -28,13 +28,16 @@ class SignInPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/index.html')
         self.response.out.write(template.render())
     
-    def post(self): #proper authorisation should go here
+    def post(self): #authenticate the user
         global current_user
-        #q = User.all()
-       #q.filter('key_name',cgi.escape(self.request.get('user')))
-        #current_user = q.get()
-	current_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
-        self.redirect("/main")
+	potential_user=None
+	potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
+	if potential_user is not None and potential_user.password==self.request.get('password'):
+		current_user=potential_user
+        	self.redirect("/main")
+	else:	
+		#proper error message should be displayed (some javascript or something)
+		print "The username and password do not match, please try again!"
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
