@@ -20,17 +20,20 @@ from datetime import datetime
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-global current_user
+global current_user 
 
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(webapp2.RequestHandler):
     def get(self):
-        template = jinja_environment.get_template('templates/index.html')
-        self.response.out.write(template.render())
+	if 'current_user' not in globals():
+        	template = jinja_environment.get_template('templates/index.html')
+       		self.response.out.write(template.render())
+	else:
+		self.redirect("/main")
+
     
     def post(self): #authenticate the user
         global current_user
-	potential_user=None
 	potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
 	if potential_user is not None and potential_user.password==self.request.get('password'):
 		current_user=potential_user
@@ -43,13 +46,18 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         #passing variables to template, namely the current user and the subs that need
         #to be displayed in the homepage
-        homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-        template_values = {
+
+	global current_user
+	if 'current_user' in globals():        
+		homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+        	template_values = {
                            'current_user':current_user,
                            'subscriptions':homepage_subs
-                           }
-        template = jinja_environment.get_template('templates/signin.html')
-        self.response.out.write(template.render(template_values))
+                           	}
+        	template = jinja_environment.get_template('templates/signin.html')
+        	self.response.out.write(template.render(template_values))
+	else:
+		self.redirect("/")
         
 class ForumPage(webapp2.RequestHandler):
     def get(self):
