@@ -1,12 +1,78 @@
 <html>
+  <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
 	<body>
-	  Hello, world!
+	  All the modules for your course!
+	  <p> Year 1 </p>
+	  
+	  <p> Semester 1 </p>
+	  {% if y1s1 %}
+	    <ul>
+	      {% for module in y1s1 %}
+	      <li> Module:{{module.title}} </li>
+	      {% endfor %}
+	    </ul>
+	  {% endif %}
+	  
+	  <p> Semester 2 </p>
+	  {% if y1s2 %}
 	  <ul>
-	    {% for module in year1modules %}
+	    {% for module in y1s2 %}
+	    <li>
+	      Module:{{module.title}} 
+	      </li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
+
+	  <p> Year 2 </p>
+	  
+	  <p> Semester 1 </p>
+	  {% if y2s1 %}
+	  <ul>
+	    {% for module in y2s1 %}
 	    <li>
 	      Module:{{module.title}} 
 	    </li>
 	    {% endfor %}
 	  </ul>
+	  {% endif %}
+
+	  <p> Semester 2 </p>
+	  {% if y2s2 %}
+	  <ul>
+	    {% for module in y2s2 %}
+	    <li>
+	      Module:{{module.title}} 
+	      </li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
+
+	  <p> Year 3 </p>
+	  
+	  <p> Semester 1 </p>
+	  {% if y3s1 %}
+	  <ul>
+	    {% for module in y3s1 %}
+	    <li>
+	      Module:{{module.title}} 
+	    </li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
+
+	  <p> Semester 2 </p>
+	  {% if y3s2 %}
+	  <ul>
+	    {% for module in y3s2 %}
+	    <li>
+	      Module:{{module.title}} 
+	      </li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
+	  
 	 </body>
 </html>
