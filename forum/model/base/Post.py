@@ -1,11 +1,12 @@
 from google.appengine.ext import db
+from google.appengine.ext.db import polymodel
 import Thread
 import User
 
 
 
 
-class Post(db.Model) :
+class Post(polymodel.PolyModel) :
 	subject = db.StringProperty(required=True)
 	body = db.StringProperty(required=True)
 	thread = db.ReferenceProperty(Thread.Thread, collection_name='posts', required=True)
