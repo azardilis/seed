@@ -61,8 +61,14 @@ class MainPage(webapp2.RequestHandler):
         
 class ForumPage(webapp2.RequestHandler):
     def get(self):
-        template = jinja_environment.get_template('templates/forum.html')
-        self.response.out.write(template.render({}))
+        ycs_list = YearCourseSemester.all()
+        ycs_list.filter('year =', 3)
+        ycs = ycs_list.get()
+        template_params = {
+            'year1modules': ycs.modules
+            }
+        template = jinja_environment.get_template('templates/modules.html')
+        self.response.out.write(template.render(template_params))
 
 class AboutPage(webapp2.RequestHandler):
     def get(self):
