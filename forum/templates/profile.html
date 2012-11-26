@@ -1,0 +1,21 @@
+<html>
+     <head>
+       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+  </head>
+  <body>
+	<h2>{{user.full_name}}</h2>
+	<br><br>
+	<img src={{user.avatar}}>
+	<p>Course: {{user.course}}</p>
+	<p>Year: {{user.year}}</p>
+	<br>
+	<p>Karma: {{user.karma}}</p>
+	
+	<br>
+	<p><b>Modules you are subscribed to</b></p>
+	{% for sub in subscriptions %}
+	<p>{{sub.module.title}}</p>
+	{% endfor %}
+	 
+  </body>
+</html>
