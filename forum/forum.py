@@ -22,6 +22,15 @@ jinja_environment = jinja2.Environment(
 
 global current_user 
 
+
+def getYCS(year, course, semester):
+    ycs_list = YearCourseSemester.all()
+    ycs_list.filter('year =', year)
+    ycs_list.filter('course =', course)
+    ycs_list.filter('semester =', semester)
+    ycs = ycs_list.get()
+    return ycs.modules
+
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(webapp2.RequestHandler):
     def get(self):
@@ -62,14 +71,22 @@ class MainPage(webapp2.RequestHandler):
 from functions.ForumPopulator import populate_forum
 
 class ForumPage(webapp2.RequestHandler):
-	
     def get(self):
-        ycs_list = YearCourseSemester.all()
-        ycs_list.filter('year =', 3)
-        ycs = ycs_list.get()
+        course = "compsci"
+        y1s1 = getYCS(1, course, 1)
+        y1s2 = getYCS(1, course, 2)
+        y2s1 = getYCS(2, course, 1)
+        y2s2 = getYCS(2, course, 2)
+        y3s1 = getYCS(3, course, 1)
+        y3s2 = getYCS(3, course, 2) 
         template_params = {
-            'year1modules': ycs.modules
-            }
+            'y1s1': y1s1,
+            'y1s2': y1s2,
+            'y2s1': y2s1,
+            'y2s2': y2s2,
+            'y3s1': y3s1,
+            'y3s2': y3s2
+        }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_params))
     	populate_forum()
@@ -166,7 +183,10 @@ def populate_db():
     comp3020 = Module(key_name='comp3020', title='Individual Project', 
                   ecs_page='http://www.google.com',
                   yearCourseSemester=compsci31)
-    comp3020.put()
+    comp1314 = Module(key_name='comp1314', title='Introduction to Everything', 
+                  ecs_page='http://goo.gl/S0e62',
+                  yearCourseSemester=compsci11)
+    comp1314.put()
     info3005 = Module(key_name='info3005', title='Security & Information Technology', 
                   ecs_page='http://www.google.com', 
                   yearCourseSemester=compsci31)
