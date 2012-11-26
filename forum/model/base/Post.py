@@ -1,13 +1,11 @@
 from google.appengine.ext import db
-from google.appengine.ext.db import polymodel
 import Thread
 import User
 
-class Post(polymodel.PolyModel) :
-	subject = db.StringProperty(required=True)
+class Post(db.Model) :
 	body = db.StringProperty(required=True)
 	thread = db.ReferenceProperty(Thread.Thread, collection_name='posts')
-	votes = db.IntegerProperty(required=True)
+	votes = db.IntegerProperty(default=0)
 	poster = db.ReferenceProperty(User.User, collection_name='posts', required=True)
-	timestamp = db.DateTimeProperty(auto_now_add=True, required=True)
-	answer = db.BooleanProperty(required=True)
+	timestamp = db.DateTimeProperty(auto_now_add=True)
+	answer = db.BooleanProperty(default=False)

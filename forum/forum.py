@@ -64,11 +64,6 @@ from functions.ForumPopulator import populate_forum
 class ForumPage(webapp2.RequestHandler):
 	
     def get(self):
-<<<<<<< HEAD
-        template = jinja_environment.get_template('templates/forum.html')
-	populate_forum()
-        self.response.out.write(template.render({}))
-=======
         ycs_list = YearCourseSemester.all()
         ycs_list.filter('year =', 3)
         ycs = ycs_list.get()
@@ -77,7 +72,9 @@ class ForumPage(webapp2.RequestHandler):
             }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_params))
->>>>>>> b094c211e0fcddc5cd1cc4272855531a7cfb5be9
+    	populate_forum()
+
+
 
 class AboutPage(webapp2.RequestHandler):
     def get(self):
