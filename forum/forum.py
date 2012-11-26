@@ -34,17 +34,6 @@ class SignInPage(webapp2.RequestHandler):
     
     def post(self): #authenticate the user
         global current_user
-<<<<<<< HEAD
-        q = User.all()
-	q.filter('__key__ =', Key.from_path('User', cgi.escape(self.request.get('user'))))
-	current_user = q.get()
-	if current_user :
-		self.response.write(current_user.username)
-	else : 
-		self.redirect("/")
-
-        #self.redirect("/main")
-=======
 	potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
 	if potential_user is not None and potential_user.password==self.request.get('password'):
 		current_user=potential_user
@@ -52,7 +41,6 @@ class SignInPage(webapp2.RequestHandler):
 	else:	
 		#proper error message should be displayed (some javascript or something)
 		print "The username and password do not match, please try again!"
->>>>>>> e8cb4902d0ad4850fc3952620f6325bff83c6b46
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
@@ -70,10 +58,14 @@ class MainPage(webapp2.RequestHandler):
         	self.response.out.write(template.render(template_values))
 	else:
 		self.redirect("/")
-        
+
+from functions.ForumPopulator import populate_forum
+
 class ForumPage(webapp2.RequestHandler):
+	
     def get(self):
         template = jinja_environment.get_template('templates/forum.html')
+	populate_forum()
         self.response.out.write(template.render({}))
 
 class AboutPage(webapp2.RequestHandler):

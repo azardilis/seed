@@ -3,19 +3,25 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-  <section id="content" class="content">
   
+     <section id="content" class="content"> 
     {% include "/templates/test.html" %}
-    Welcome to the site, {{current_user.full_name}} <p>
-    Your modules: <br>
-    <ul>
+    <section id="header">
+    <p>Welcome to the site, {{current_user.full_name}}</p> 
+     <span id="modules_tag"> Your modules:
+    <img src="/stylesheets/resources/larrow.png" alt="larrow" >
+
+   <ul id="modulebar" class="modulebar">
     {% for sub in subscriptions %}
     <li>
-      <a href="{{sub.module.ecs_page}}">{{sub.module.title}}</a>
+      <a href="{{sub.module.ecs_page}}">{{sub.module.title}}</a> <span class="separator"> | </span>
     </li>
     {% endfor %}
     </ul>
-    </p>
+
+    <img src="/stylesheets/resources/rarrow.png" alt="rarrow" >
+    </section>
+
 
     <ul id='sidebar'>
 	     <a href="/main"><li class="first" ><span>Home</span></li></a>
@@ -25,6 +31,7 @@
 	     <a href="https://secure.ecs.soton.ac.uk/"><li><span>Intranet</span></li></a>
 	     <a href="/contact"><li class="last"><span>Contact</span></li></a>
     </ul>
+
 </section>
   </body>
 </html>
