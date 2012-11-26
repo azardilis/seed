@@ -75,6 +75,21 @@ class ForumPage(webapp2.RequestHandler):
     	populate_forum()
 
 
+class ProfilePage(webapp2.RequestHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/profile.html')
+        user_key = current_user.full_name#here instead of ".full_name" put ".key" and you will get the key
+        userQ=User.all()
+        userQ=userQ.filter('full_name',user_key)#not sure how to get the key attribute tried most possible, but no result
+        user = userQ.get()
+        subsQ = Subscription.all()
+        subsQ=subsQ.filter('subscribed_user',user.key())
+        template_values={
+                        'user':user,
+                        'subscriptions':subsQ
+                        
+                        }
+        self.response.out.write(template.render(template_values))
 
 class AboutPage(webapp2.RequestHandler):
     def get(self):
@@ -251,7 +266,8 @@ app = webapp2.WSGIApplication([
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
-                                   ('/something',EmailSent)                                 
+                                   ('/something',EmailSent),
+                                   ('/profile',ProfilePage)
                                 ], debug=True)
                                
 
