@@ -91,14 +91,15 @@ class ForumPage(webapp2.RequestHandler):
         self.response.out.write(template.render(template_params))
     	populate_forum()
 
-
+'''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
     def get(self):
         template = jinja_environment.get_template('templates/profile.html')
-        user_key = current_user.full_name#here instead of ".full_name" put ".key" and you will get the key
+        user_key = current_user.key()
         userQ=User.all()
-        userQ=userQ.filter('full_name',user_key)#not sure how to get the key attribute tried most possible, but no result
+        userQ=userQ.filter('__key__ = ' ,user_key)
         user = userQ.get()
+	
         subsQ = Subscription.all()
         subsQ=subsQ.filter('subscribed_user',user.key())
         template_values={
