@@ -5,6 +5,7 @@ import cgi
 from google.appengine.api import mail
 from model.base.Module import Module
 from model.base.User import User
+from model.base.Thread import Thread
 from model.base.YearCourseSemester import YearCourseSemester
 from model.base.Lecturer import Lecturer
 from model.base.Rating import Rating
@@ -69,27 +70,42 @@ class MainPage(webapp2.RequestHandler):
 		self.redirect("/")
 
 from functions.ForumPopulator import populate_forum
+from functions.ForumPopulator import get_children
+from functions.ForumPopulator import get_posts 
+
 
 class ForumPage(webapp2.RequestHandler):
     def get(self):
-        course = "compsci"
-        y1s1 = getYCS(1, course, 1)
-        y1s2 = getYCS(1, course, 2)
-        y2s1 = getYCS(2, course, 1)
-        y2s2 = getYCS(2, course, 2)
-        y3s1 = getYCS(3, course, 1)
-        y3s2 = getYCS(3, course, 2) 
-        template_params = {
-            'y1s1': y1s1,
-            'y1s2': y1s2,
-            'y2s1': y2s1,
-            'y2s2': y2s2,
-            'y3s1': y3s1,
-            'y3s2': y3s2
-        }
-        template = jinja_environment.get_template('templates/modules.html')
-        self.response.out.write(template.render(template_params))
+        #course = "compsci"
+        #y1s1 = getYCS(1, course, 1)
+        #y1s2 = getYCS(1, course, 2)
+        #y2s1 = getYCS(2, course, 1)
+        #y2s2 = getYCS(2, course, 2)
+        #y3s1 = getYCS(3, course, 1)
+        #y3s2 = getYCS(3, course, 2) 
+        #template_params = {
+        #    'y1s1': y1s1,
+        #    'y1s2': y1s2,
+        #    'y2s1': y2s1,
+        #    'y2s2': y2s2,
+        #    'y3s1': y3s1,
+        #    'y3s2': y3s2
+        #}
+        template = jinja_environment.get_template('templates/forum.html')
     	populate_forum()
+	q = Thread.all()
+	thrd = q.get()
+	tid = thrd.key().id()
+	lvl_one_posts = get_posts(tid)
+	posts = ''
+	all_posts = get_children(lvl_one_posts,posts);
+	
+	template_params = {
+		'thread' : thrd,
+		'posts' : all_posts
+	}
+        self.response.out.write(template.render(template_params))
+	
 
 
 class ProfilePage(webapp2.RequestHandler):

@@ -1,3 +1,4 @@
+import logging
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from model.base.Thread import Thread
@@ -17,9 +18,61 @@ def populate_forum():
 
     t = Thread(subject='Some subject',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
     t.put()
-    for i in range(15):
+    for i in range(3):
     	p = Post(body='yada'+str(i),poster=rg, thread=t, answer = False)
 	p.put()
+	for g in range(1,4) :
+    		n = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False) #, parent=db.Key(str(p.key())))
+		n.put()
+    		o = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False) #, parent=db.Key(str(p.key())))
+		o.put()
 
+    		r = Post(body='yadayada3',poster=rg, reply=n, answer = False)#, parent=db.Key(str(n.key())))
+		r.put()
+    r = Post(body='#This has no replies ',poster=rg, thread = t, answer = False)#, parent=db.Key(str(n.key())))
+    r.put()
+		
+
+#this function will handle the parent child relationships and git out 
 def get_posts(tid):
-    pass
+    t = Thread.get_by_id(int(tid))
+    p = [p for p in t.posts]
+    return p 
+
+def get_children(plist , posts):
+	
+	for p in plist :
+		posts = make_article(posts)
+		posts = make_post(p,posts)
+
+		if p.replies : 
+			posts = make_section(posts)
+			for r in p.replies :
+				a = list ()
+				a.append(r)
+				posts = get_children(a,posts)
+			posts = close_section(posts)
+		posts = close_article(posts)
+
+	return posts
+
+def make_article(posts):
+	posts += '<article class="post">'
+	return posts 
+
+def close_article(posts):
+	posts += '</article>'	
+	return posts
+
+def make_section(posts):
+	posts +='<section class="posts">'	
+	return posts
+
+def close_section(posts) :
+	posts += '</section>'
+	return posts
+
+def make_post(p,posts) :
+	posts += p.body
+	return posts
+	

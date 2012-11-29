@@ -1,12 +1,55 @@
 <html>
      <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    
+<style type="text/css">
+	
+	
+	section.thread{
+		border : 1px solid green;
+		padding : 10px;	
+		margin-bottom : 10px;
+	}	
+	
+	.l1posts{
+	}
+	
+	.posts{
+
+	}
+	
+	.post{
+		border : 1px solid red;	
+		padding :  2%;
+		margin : 1%;
+	}
+	
+	
+#pagecontent{
+	
+	border:1px solid red;
+	position : relative;
+	float:left;	
+	display : block ;
+	margin : 10px;
+	padding : 10px;
+	width : 600px ;
+}	
+	
+#thread{
+
+}
+	
+
+</style>           
+    
   </head>
-  <body>
-    
-    
-    
-     <ul id='sidebar'>
+ <body>
+  
+ <section id="content" class="content"> 
+   
+
+    <ul id='sidebar'>
 	     <a href="/main"><li class="first" ><span>Home</span></li></a>
 	     <a href="/forum"><li><span>Forum</span></li></a>
 	     <a href="/about"><li><span>About</span></li></a>
@@ -15,5 +58,14 @@
 	     <a href="/contact"><li class="last"><span>Contact</span></li></a>
     </ul>
 
-  </body>
+	<section id="pagecontent">
+		<article id='thread'>
+		<h1>{{thread.subject}}</h1>
+		<p>{{thread.body}}</p>
+		</article>
+		<section id='responses'>
+			{{posts}}		
+		</section>
+	</section>
+</section>
 </html>
