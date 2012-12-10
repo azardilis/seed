@@ -3,7 +3,7 @@ import Category
 from google.appengine.ext import db
 
 class Thread(db.Model) :
-	category = db.ReferenceProperty(Category.Category, collection_name='threads')
+	category = db.ReferenceProperty(Category.Category,required=True, collection_name='threads')
 	tags = db.ListProperty(str, required=True)
 	subject = db.StringProperty(required=True)
         body = db.StringProperty(required=True)

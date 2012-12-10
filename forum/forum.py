@@ -102,7 +102,27 @@ class ForumPage(webapp2.RequestHandler):
 	}
 
         self.response.out.write(template.render(template_params))
-	
+
+class CategoriesPage(webapp2.RequestHandler):
+	def get(self):
+		mcode = cgi.escape(self.request.get('mid'))
+		if not mcode is '' : 
+			template = jinja_environment.get_template('templates/forum_categories.html')
+			q = Module.all()
+			q.filter('__key__ =',Key.from_path('Module',mcode))
+			module = q.get()
+
+			categs = module.categories
+			
+			template_values= {
+				'cats' : categs
+			}
+
+			self.response.out.write(template.render(template_values))
+			
+		else : print 'mcode empty' 
+
+
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -167,9 +187,19 @@ def reset_db():
 
     for sub in Subscription.all():
         sub.delete()
-        
+    
+    for sub in Category.all() :
+    	sub.delete()
+    
+    for i in Thread.all():
+    	i.delete()
+
+    for i in Post.all():
+    	i.delete()
+
 #function to populate the db at the start of the app,
 #that is if you don't have your own copy locally
+
 def populate_db():
 
     ###### RESET #######
@@ -296,13 +326,8 @@ def populate_db():
     q.filter('__key__ =',Key.from_path('User','az2g10'))
     rg = q.get()
 
-    for post in Post.all():
-    	post.delete()
 
-    for thread in Thread.all():
-    	thread.delete()
-
-    t = Thread(subject='Some subject',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
+    t = Thread(category=categGeneral3001,subject='Some subject',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
     t.put()
     for i in range(3):
     	p = Post(body='yada'+str(i),poster=rg, thread=t, answer = False)
@@ -324,9 +349,9 @@ app = webapp2.WSGIApplication([
                                    ('/'     , SignInPage),
                                    ('/main' , MainPage),
                                    ('/forum', ForumPage),
-				   #('/categories,ForumCategories'),
-				   #('/threads,CategoryThreads'),
-				   #('/showthread,ShowThread')
+				   ('/categories',CategoriesPage),
+				   #('/threads,CategoryThreads),
+				   #('/showthread,ShowThread)
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),

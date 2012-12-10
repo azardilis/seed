@@ -1,7 +1,7 @@
 <html>
      <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-    
+	
 <style type="text/css">
 	
 	.post{
@@ -39,7 +39,10 @@
 	<section id="pagecontent" class="cleared">
 		<h1>Your subscriptions </h1>
 		{% for sub in subscriptions%}
-			<a href="/mod_cat?mid={{sub.module.key().name() }}"><button>{{ sub.module.key().name().upper() }} : {{ sub.module.title }}</button> </a></br>
+			<a href="/categories?mid={{sub.module.key().name() }}">
+				<button>{{ sub.module.key().name().upper() }} : {{ sub.module.title }}</button>
+			</a>
+			</br>
 		
 		{% endfor %}
 	</section>

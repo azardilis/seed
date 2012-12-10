@@ -1,33 +1,58 @@
 <html>
-     <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-    
-<style type="text/css">
-	
-	.post{
-		border : 1px solid red;	
-		padding :  2%;
-		margin : 1%;
-	}
-	
-	#pagecontent{
-		position : relative;
-		float:left;	
-		display : block ;
-		margin : 10px;
-		padding : 10px;
-		width : 600px ;
-	}	
+	<head>
+		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 		
-	#thread{
-		border : 1px solid green ;
-		padding : 10px ;
-		margin : 5px ;
-	}
+		<script src="js/jq-1.8.3.js"></script>
+		<script src="js/jqui-1.9.2.js"></script>
+		<script>
+			$(function() {
+				$( "#categories" )
+				.accordion({
+					header: "> section > h2",
+					collapsible : true,
+					active:false
+				})
+				.sortable({
+					axis: "y",
+					handle: ".handler",
+					stop: function( event, ui ) {
+					ui.item.children( "h2" ).triggerHandler( "focusout" );
+					}
+				});
+			});
+		</script>
 
-</style>           
-    
-  </head>
+		<style type="text/css">
+			
+			#pagecontent{
+				position : relative;
+				float:left;	
+				display : block ;
+				margin : 10px;
+				padding : 10px;
+				width : 800px ;
+			}
+			
+			h2.handler{
+				padding : 5px ;
+				text-align : center ;
+				margin : 0px ;
+				border : 1px solid black ;
+				border-radius : 20px ;
+			}
+			
+			h2.handler:hover{
+				cursor : pointer ;
+				color : blue ;
+			}
+			
+			section.hadlercontent{
+				margin-left : 10px ;
+				border : 	1px solid red ;
+			}
+			
+		</style>           	    
+	  </head>
  <body>
   
  <section id="content" class="content"> 
@@ -37,12 +62,16 @@
 	{% include "/templates/sidebar.html"%}
 
 	<section id="pagecontent" class="cleared">
-		<article id='thread'>
-		<h1>{{thread.subject}}</h1>
-		<p>{{thread.body}}</p>
-		</article>
-		<section id='responses'>
-			{{posts}}		
+		
+		<section id="categories">
+			<section class="category">			
+				{% for c in cats %}
+					<h2 class="handler">{{ c.name }}</h2>
+							 <section class="hadlercontent">
+							<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>
+							</section>
+				{% endfor %}
+			</section>
 		</section>
 	</section>
 	
