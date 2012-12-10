@@ -6,15 +6,12 @@ span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, 
 }
 
 body{
-position : relative ;
-width : 100% ;
-
 padding : 10px ;
 background-image: url("resources/bg1.jpg");
-height : auto;
+
 }
 
-a:active ,a:visited , a:link ,a:hover{
+#sidebar a:active ,#sidebar a:visited ,#sidebar  a:link ,#sidebar a:hover{
 	text-decoration: none ;	
 	color : white ;
 	text-align: left;
@@ -31,28 +28,24 @@ a:active ,a:visited , a:link ,a:hover{
   position : relative ;
   left : 50% ;  
   margin-left : -500px ;
-  height : 98%;
+  height : auto ;
+  padding : 20px;
 }
 
 
 #header p , #header img{
 	display : inline ;	
-	}
-
-#test{
-	 	width : 50px;
-	 	}
+}
 
 #header ul {
 	display: inline;
 	list-style: none;
-
  	overflow: hidden;
-	}
+}
 
 #header ul  li{
 	display: inline;	
-	}
+}
 
 #modulebar li a {
 	color: white;	
@@ -61,7 +54,7 @@ a:active ,a:visited , a:link ,a:hover{
 	line-height: 32px ;
 	padding :5px;
 	margin : 3px; 
-	}		
+}		
 
 #sidebar{
 	width : 150px;	
@@ -77,12 +70,12 @@ a:active ,a:visited , a:link ,a:hover{
 #sidebar .first {
 	border-top-left-radius : 10px ;
 	border-top-right-radius : 10px ;	
-	}
+}
 	
-	#sidebar .last {
+#sidebar .last {
 	border-bottom-left-radius : 10px ;
 	border-bottom-right-radius : 10px ;	
-	}
+}
 
 #sidebar li{
 	line-height: 35px;
@@ -91,17 +84,28 @@ a:active ,a:visited , a:link ,a:hover{
 	width : 150px ;
 	background-color:#007275 ;
 	opacity : 0.8 ;	
-	}
+}
 	
-	#sidebar li span{
-		padding-left: 5px ;	
-		line-height: 40px ;	
-		}
+#sidebar li span{
+	padding-left: 5px ;	
+	line-height: 40px ;	
+}
 	
 #sidebar li:hover{
 		background-color : #005355;
 		opacity : 1;
 	}
 	
+/*this is neat*/
+section.cleared:after{
+	content : "." ;
+	visibility : hidden ;
+	display : block ;
+	height : 0px ;
+	clear : both ;
+}
 
-	
+#pagecontent{
+	border : 1px solid red ;
+	padding : 10px ;
+}

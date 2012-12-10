@@ -3,15 +3,29 @@
      <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
    </head>
    <body>
-	<form name="email" action="/something" method='POST'>
-		<p>Subject</p>
-		<textarea name="subject" cols="30" rows="1"></textarea>
-		<br>
-		<p>Message</p>
-		<textarea name="message" cols="60" rows="5"></textarea>
-		<br>
-		<input type="submit" value="Send">
-	</form>
+   
+   <section id="content" class="content"> 
+    <!--{% include "/templates/test.html" %} -->
+ 
+	<!-- This includes the sidebar-->
+	{% include "/templates/sidebar.html"%}
+
+	<section id="pagecontent" class="cleared">
+	<!-- Add whatever content you want here-->
+	
+		<form name="email" action="/something" method='POST'>
+			<p>Subject</p>
+			<textarea name="subject" cols="30" rows="1"></textarea>
+			<br>
+			<p>Message</p>
+			<textarea name="message" cols="60" rows="5"></textarea>
+			<br>
+			<input type="submit" value="Send">
+		</form>
+	</section>
+	<section class="cleared">	</section>
+	</section>
+
    </body>
 </html>
 	                   
