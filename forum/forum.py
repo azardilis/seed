@@ -123,7 +123,7 @@ class ThreadPage(webapp2.RequestHandler):
 		tid = cgi.escape(self.request.get('tid'))
 		logging.debug(tid)
 		#make sure that tid is numeric, else issue fatal error 
-		t_k  = Key.from_path('Thread',tid)
+		t_k  = Key.from_path('Thread',int(tid))
 		t = db.get(t_k)
 		template = jinja_environment.get_template('templates/forum_thread.html')
 
