@@ -11,7 +11,8 @@
 					header: "> section > h2",
 					collapsible : true,
 					active:false
-				})
+				});
+				/*
 				.sortable({
 					axis: "y",
 					handle: ".handler",
@@ -19,6 +20,7 @@
 					ui.item.children( "h2" ).triggerHandler( "focusout" );
 					}
 				});
+				*/
 			});
 		</script>
 
@@ -30,6 +32,8 @@
 				display : block ;
 				margin : 10px;
 				padding : 10px;
+				
+				/*look into changing this*/
 				width : 800px ;
 			}
 			
@@ -47,9 +51,26 @@
 			}
 			
 			section.hadlercontent{
-				margin-left : 10px ;
-				border : 	1px solid red ;
+				/*this is funny business as well*/
+				margin : 30px ;
+				margin-top : 0px;
+				margin-bottom : 0px;
+				display : block ;
 			}
+			
+			article.thread{
+				border : 	1px solid red ;
+				padding : 10px;
+			}
+			
+			a{
+				text-decoration : none ;
+			}
+			
+			article.thread:hover{
+				background : gray ;
+			}
+			
 			
 		</style>           	    
 	  </head>
@@ -65,10 +86,15 @@
 		
 		<section id="categories">
 			<section class="category">			
-				{% for c in cats %}
-					<h2 class="handler">{{ c.name }}</h2>
+				{% for c in complete %}					
+					<h2 class="handler">{{  c[0].name }}</h2>
 							 <section class="hadlercontent">
-							<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>
+								{% for th in c[1] %}
+								<a href="">
+								<!-- after adding all the functionality, make this pretty and display all stats (like ratings and so on) -->
+									<article class="thread">{{th.body}}</article>
+								</a>
+								{% endfor %}
 							</section>
 				{% endfor %}
 			</section>

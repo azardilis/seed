@@ -113,9 +113,16 @@ class CategoriesPage(webapp2.RequestHandler):
 			module = q.get()
 
 			categs = module.categories
+			complete = list()
+
+			for c in categs :
+				ct = c.threads
+				l = [c,ct]
+				complete.append(l)
+
 			
 			template_values= {
-				'cats' : categs
+				'complete' : complete
 			}
 
 			self.response.out.write(template.render(template_values))
