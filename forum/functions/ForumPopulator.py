@@ -22,14 +22,14 @@ def populate_forum():
     	p = Post(body='yada'+str(i),poster=rg, thread=t, answer = False)
 	p.put()
 	for g in range(1,4) :
-    		n = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False) #, parent=db.Key(str(p.key())))
+    		n = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False)
 		n.put()
-    		o = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False) #, parent=db.Key(str(p.key())))
+    		o = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False)
 		o.put()
 
-    		r = Post(body='yadayada3',poster=rg, reply=n, answer = False)#, parent=db.Key(str(n.key())))
+    		r = Post(body='yadayada3',poster=rg, reply=n, answer = False)
 		r.put()
-    r = Post(body='#This has no replies ',poster=rg, thread = t, answer = False)#, parent=db.Key(str(n.key())))
+    r = Post(body='#This has no replies ',poster=rg, thread = t, answer = False)
     r.put()
 		
 

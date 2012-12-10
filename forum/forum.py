@@ -5,6 +5,7 @@ import cgi
 from google.appengine.api import mail
 from model.base.Module import Module
 from model.base.User import User
+from model.base.Post import Post
 from model.base.Thread import Thread
 from model.base.YearCourseSemester import YearCourseSemester
 from model.base.Lecturer import Lecturer
@@ -69,7 +70,6 @@ class MainPage(webapp2.RequestHandler):
 	else:
 		self.redirect("/")
 
-from functions.ForumPopulator import populate_forum
 from functions.ForumPopulator import get_children
 from functions.ForumPopulator import get_posts 
 
@@ -91,19 +91,16 @@ class ForumPage(webapp2.RequestHandler):
         #    'y3s1': y3s1,
         #    'y3s2': y3s2
         #}
-        template = jinja_environment.get_template('templates/forum.html')
-    	populate_forum()
-	q = Thread.all()
-	thrd = q.get()
-	tid = thrd.key().id()
-	lvl_one_posts = get_posts(tid)
-	posts = ''
-	all_posts = get_children(lvl_one_posts,posts);
-	
+        template = jinja_environment.get_template('templates/forum_subscriptions.html')
+	userQ = User.all()
+	userQ.filter('__key__ =',current_user.key())
+	user = userQ.get() #is this really necessary ???
+	subs = 	user.subscriptions
+
 	template_params = {
-		'thread' : thrd,
-		'posts' : all_posts
+		'subscriptions' : subs 
 	}
+
         self.response.out.write(template.render(template_params))
 	
 
@@ -121,7 +118,6 @@ class ProfilePage(webapp2.RequestHandler):
         template_values={
                         'user':user,
                         'subscriptions':subsQ
-                        
                         }
         self.response.out.write(template.render(template_values))
 
@@ -294,12 +290,43 @@ def populate_db():
     #create Post called t1reply1_1_1 making its post=t1reply1_1
     #create Post called t1reply2 making its post=thread1
     #create Thread called thread2 making its category=categGeneral3001 again
+   
+    #dios scripts for polulation
+    q = User.all();
+    q.filter('__key__ =',Key.from_path('User','az2g10'))
+    rg = q.get()
+
+    for post in Post.all():
+    	post.delete()
+
+    for thread in Thread.all():
+    	thread.delete()
+
+    t = Thread(subject='Some subject',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
+    t.put()
+    for i in range(3):
+    	p = Post(body='yada'+str(i),poster=rg, thread=t, answer = False)
+	p.put()
+	for g in range(1,4) :
+    		n = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False)
+		n.put()
+    		o = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False)
+		o.put()
+
+    		r = Post(body='yadayada3',poster=rg, reply=n, answer = False)
+		r.put()
+    r = Post(body='#This has no replies ',poster=rg, thread = t, answer = False)
+    r.put()
+    
 
 populate_db()
 app = webapp2.WSGIApplication([
                                    ('/'     , SignInPage),
                                    ('/main' , MainPage),
                                    ('/forum', ForumPage),
+				   #('/categories,ForumCategories'),
+				   #('/threads,CategoryThreads'),
+				   #('/showthread,ShowThread')
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
