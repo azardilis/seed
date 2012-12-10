@@ -1,5 +1,9 @@
 import webapp2
 import jinja2
+
+#imported for debugging reasons
+import logging
+
 import os
 import cgi
 from google.appengine.api import mail
@@ -76,21 +80,6 @@ from functions.ForumPopulator import get_posts
 
 class ForumPage(webapp2.RequestHandler):
     def get(self):
-        #course = "compsci"
-        #y1s1 = getYCS(1, course, 1)
-        #y1s2 = getYCS(1, course, 2)
-        #y2s1 = getYCS(2, course, 1)
-        #y2s2 = getYCS(2, course, 2)
-        #y3s1 = getYCS(3, course, 1)
-        #y3s2 = getYCS(3, course, 2) 
-        #template_params = {
-        #    'y1s1': y1s1,
-        #    'y1s2': y1s2,
-        #    'y2s1': y2s1,
-        #    'y2s2': y2s2,
-        #    'y3s1': y3s1,
-        #    'y3s2': y3s2
-        #}
         template = jinja_environment.get_template('templates/forum_subscriptions.html')
 	userQ = User.all()
 	userQ.filter('__key__ =',current_user.key())
@@ -129,7 +118,25 @@ class CategoriesPage(webapp2.RequestHandler):
 			
 		else : print 'mcode empty' 
 
+class ThreadPage(webapp2.RequestHandler):
+	def get(self):
+		tid = cgi.escape(self.request.get('tid'))
+		logging.debug(tid)
+		#make sure that tid is numeric, else issue fatal error 
+		t_k  = Key.from_path('Thread',tid)
+		t = db.get(t_k)
+		template = jinja_environment.get_template('templates/forum_thread.html')
 
+		l1p = get_posts(tid)
+		posts = ''
+		posts = get_children(l1p,posts)
+
+		template_params = {
+			'thread': t ,
+			'posts' : posts
+		}
+
+		self.response.out.write(template.render(template_params))
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -336,6 +343,14 @@ def populate_db():
 
     t = Thread(category=categGeneral3001,subject='Some subject',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
     t.put()
+    
+    for d in range (0,10) :
+    	if d%2 == 0 :
+    		t = Thread(category=categGeneral3001,subject='Some subject number -> '+str(d),body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
+    	else :
+		t = Thread(category=categCoursework3001,subject='Some subject',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
+   	t.put()
+
     for i in range(3):
     	p = Post(body='yada'+str(i),poster=rg, thread=t, answer = False)
 	p.put()
@@ -358,7 +373,7 @@ app = webapp2.WSGIApplication([
                                    ('/forum', ForumPage),
 				   ('/categories',CategoriesPage),
 				   #('/threads,CategoryThreads),
-				   #('/showthread,ShowThread)
+				   ('/showthread',ThreadPage),
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
