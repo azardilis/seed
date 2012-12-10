@@ -1,0 +1,50 @@
+<html>
+     <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    
+<style type="text/css">
+	
+	.post{
+		border : 1px solid red;	
+		padding :  2%;
+		margin : 1%;
+	}
+	
+	#pagecontent{
+		position : relative;
+		float:left;	
+		display : block ;
+		margin : 10px;
+		padding : 10px;
+		width : 600px ;
+	}	
+		
+	#thread{
+		border : 1px solid green ;
+		padding : 10px ;
+		margin : 5px ;
+	}
+
+</style>           
+    
+  </head>
+ <body>
+  
+ <section id="content" class="content"> 
+   
+
+	<!-- This includes the sidebar-->
+	{% include "/templates/sidebar.html"%}
+
+	<section id="pagecontent" class="cleared">
+		<h1>Your subscriptions </h1>
+		{% for sub in subscriptions%}
+			<a href="/mod_cat?mid={{sub.module.key().name() }}"><button>{{ sub.module.key().name().upper() }} : {{ sub.module.title }}</button> </a></br>
+		
+		{% endfor %}
+	</section>
+	
+	<section class="cleared">	</section>
+	
+</body>
+</html>

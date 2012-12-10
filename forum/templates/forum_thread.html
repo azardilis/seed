@@ -1,0 +1,52 @@
+<html>
+     <head>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    
+<style type="text/css">
+	
+	.post{
+		border : 1px solid red;	
+		padding :  2%;
+		margin : 1%;
+	}
+	
+	#pagecontent{
+		position : relative;
+		float:left;	
+		display : block ;
+		margin : 10px;
+		padding : 10px;
+		width : 600px ;
+	}	
+		
+	#thread{
+		border : 1px solid green ;
+		padding : 10px ;
+		margin : 5px ;
+	}
+
+</style>           
+    
+  </head>
+ <body>
+  
+ <section id="content" class="content"> 
+   
+
+	<!-- This includes the sidebar-->
+	{% include "/templates/sidebar.html"%}
+
+	<section id="pagecontent" class="cleared">
+		<article id='thread'>
+		<h1>{{thread.subject}}</h1>
+		<p>{{thread.body}}</p>
+		</article>
+		<section id='responses'>
+			{{posts}}		
+		</section>
+	</section>
+	
+	<section class="cleared">	</section>
+	
+</body>
+</html>
