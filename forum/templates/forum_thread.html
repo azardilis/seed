@@ -1,28 +1,68 @@
 <html>
      <head>
+	<script src="js/jq-1.8.3.js"></script>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-    
+	<script type="text/javascript">
+	$(document).ready(function()
+
+		$("#replyform").submit(function(event)
+		{
+			var $form = $(this),
+			$inputs = $form.find("input, button,textarea"),
+			serializedData = $form.serialize();
+
+			$inputs.attr("disabled", "disabled");
+
+			$.ajax(
+			{
+				url: "/replythread",
+				type: "POST",
+				data: serializedData,
+				contentType: 'application/x-www-form-urlencoded',
+				dataType: 'html',
+				success: function(data, textStatus)
+				{
+					alert("Server replied : " + data);
+				},
+				error: function(xmlhttp, textStatus, errorThrown)
+				{
+					alert('There was an error while creating a new thread.');
+				},
+				complete: function()
+				{
+					$inputs.removeAttr("disabled");
+				}
+			});
+			event.preventDefault();
+		});
+});
+       
+        </script>
+
+
+
 <style type="text/css">
 	
-	.post{
-		border : 1px solid red;	
+	.post {
+		border : 1px solid blue;	
 		padding :  2%;
 		margin : 1%;
 	}
 	
-	#pagecontent{
-		position : relative;
-		float:left;	
-		display : block ;
-		margin : 10px;
-		padding : 10px;
-		width : 600px ;
-	}	
-		
 	#thread{
 		border : 1px solid green ;
 		padding : 10px ;
 		margin : 5px ;
+	}
+	
+	
+	#replyform{
+		padding :  2%;
+		margin : 1%;
+	}
+	
+	#replyform *{
+		display : block ;
 	}
 
 </style>           
@@ -41,6 +81,15 @@
 		<h1>{{ thread.subject }}</h1>
 		<p>{{ thread.body }}</p>
 		</article>
+		<section id="reply">
+			<form method="POST" action="/replythread" id="replyform">
+				<input type="hidden" name="tid" value="{{thread.key().id()}}">
+				<input type="hidden" name="sbj" value="RE:{{thread.subject}}">
+				<textarea name="bd" cols="70" rows="8"></textarea>
+				<input type="submit" value="Reply!">
+			</form>
+		</section>
+		
 		<section id='responses'>
 			{{posts}}		
 		</section>

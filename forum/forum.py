@@ -183,7 +183,23 @@ class CreateNewThread(webapp2.RequestHandler):
 			self.response.out.write('Created thread')
 		else :
 			self.response.out.write('category not found')
+class ReplyToThread(webapp2.RequestHandler):
+	def post(self):
+		tid = int(cgi.escape(self.request.get('tid')))
+		t_k = Key.from_path('Thread',tid)
+		thrd = db.get(t_k)
+		
+		if thrd :
+			bd = cgi.escape(self.request.get('bd'))
+			sbj = cgi.escape(self.request.get('sbj'))
 
+			p = Post(body=bd, thread = thrd, poster = current_user, subject=sbj)
+			p.put()
+
+			self.response.out.write('probably replied to thread ')
+		else :
+			self.response.out.write('Thread not found')
+			logging.error('Thread not found, tid : '+str(tid)+'<')
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -413,7 +429,7 @@ def populate_db():
     r.put()
     
 
-populate_db()
+#populate_db()
 app = webapp2.WSGIApplication([
                                    ('/'     , SignInPage),
                                    ('/main' , MainPage),
@@ -423,6 +439,7 @@ app = webapp2.WSGIApplication([
 				   ('/showthread',ThreadPage),
 				   ('/newthread',NewThread),
 				   ('/createnewthread',CreateNewThread),
+				   ('/replythread',ReplyToThread),
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),

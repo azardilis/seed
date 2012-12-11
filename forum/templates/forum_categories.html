@@ -8,11 +8,16 @@
 			$(function() {
 				$( "#categories" )
 				.accordion({
-					header: "> section > section.handler  ",
+					header: "> section.category > section.handler ",
 					collapsible : true,
 					active:false
 				});
 			});
+			
+			$('a').onclick(function(){
+				alert('hello');
+			});
+			
 		</script>
 
 		<style type="text/css">
@@ -32,15 +37,14 @@
 				display : inline ; /*make all elements appear on the same line*/
 			}
 			
-			section.handler h3{
+			section.handler h3{				
 				border : 1px solid green ;
-				width : 80% ;	
+				width : 80% ;
 			}
 			
 			section.handler .more{
 				position : relative ;
 				float : right ;
-				border:1px solid red;
 				z-index : 999;
 			}
 			
@@ -84,9 +88,9 @@
 		
 		<section id="categories">
 			<section class="category">			
-				{% for c in complete %}					
+				{% for c in complete %}				
 					<section class="handler">
-						<h3>{{  c[0].name }}</h3>
+						<h3 >{{  c[0].name }}</h3>
 						<a href="/threads?cid={{ c[0].key().id()}}" class="more">Show more...</a>
 					</section>
 							 <section class="handlercontent">
