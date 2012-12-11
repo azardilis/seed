@@ -156,8 +156,20 @@ class ViewAllThreadsPage(webapp2.RequestHandler):
 			logging.error('no category found '+str(cid))
 
 class NewThread(webapp2.RequestHandler):
-	def post(self):
+	def get(self):
+		cid = cgi.escape(self.request.get('catid'))
+		template = jinja_environment.get_template('templates/newthread.html')
 		
+		if cid :
+			template_params = {
+				'cid' : cid
+			}
+			self.response.out.write(template.render(template_params))
+		else : logging.error('newthread : empty cid >'+str(cid)+'<')
+class CreateNewThread(webaapp2.RequestHandler):
+	pass
+
+
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -396,14 +408,10 @@ app = webapp2.WSGIApplication([
 				   ('/threads',ViewAllThreadsPage),
 				   ('/showthread',ThreadPage),
 				   ('/newthread',NewThread),
+				   ('/createnewthread',CreateNewThread),
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
                                    ('/something',EmailSent),
                                    ('/profile',ProfilePage)
                                 ], debug=True)
-                               
-
-
-    
-
