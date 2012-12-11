@@ -105,7 +105,7 @@ class CategoriesPage(webapp2.RequestHandler):
 			complete = list()
 
 			for c in categs :
-				ct = c.threads.order('timestamp').fetch(2) #just to limit what is fetched, later change to 10
+				ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10
 				l = [c,ct]
 				complete.append(l)
 

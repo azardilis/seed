@@ -33,8 +33,7 @@
 				},
 				error: function(xmlhttp, textStatus, errorThrown)
 				{
-					var resp = "Error --> " + errorThrown + '<-->' + textStatus + '<-->' + xmlhttp.responseText + '<-->' + xmlhttp.readyState;
-					alert(resp);
+					alert('There was an error while creating a new thread.');
 				},
 				complete: function()
 				{
