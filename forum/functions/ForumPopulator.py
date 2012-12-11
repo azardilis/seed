@@ -36,7 +36,8 @@ def populate_forum():
 #this function will handle the parent child relationships and git out 
 def get_posts(tid):
     t = Thread.get_by_id(int(tid))
-    p = [p for p in t.posts]
+    #the bit below only fetches the 10 most recent posts 
+    p = [p for p in t.posts.order('-timestamp').fetch(10)]
     return p 
 
 def get_children(plist , posts):

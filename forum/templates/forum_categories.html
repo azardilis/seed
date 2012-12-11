@@ -5,19 +5,29 @@
 		<script src="js/jq-1.8.3.js"></script>
 		<script src="js/jqui-1.9.2.js"></script>
 		<script>
+			/*
+			$(document).ready(function(){
+				$('.handler').click(function(){
+					var e = $(this);
+					var ch = e.children('.more');
+					for (a in ch){
+						console.log(ch[a].innerHTML);
+					}
+					alert('clicked handler, size '+ch.size());
+				});
+			
+			});
+			*/
+		
 			$(function() {
 				$( "#categories" )
 				.accordion({
-					header: "> section.category > section.handler ",
+					header: ".handler ",
 					collapsible : true,
 					active:false
 				});
+				
 			});
-			
-			$('a').onclick(function(){
-				alert('hello');
-			});
-			
 		</script>
 
 		<style type="text/css">
@@ -38,7 +48,6 @@
 			}
 			
 			section.handler h3{				
-				border : 1px solid green ;
 				width : 80% ;
 			}
 			
@@ -53,7 +62,6 @@
 				margin : 30px ;
 				margin-top : 0px;
 				margin-bottom : 0px;
-				display : block ;
 			}
 			
 			article.thread{
@@ -93,17 +101,17 @@
 						<h3 >{{  c[0].name }}</h3>
 						<a href="/threads?cid={{ c[0].key().id()}}" class="more">Show more...</a>
 					</section>
-							 <section class="handlercontent">
-								{% for th in c[1] %}
-								<!-- after adding all the functionality, make this pretty and display all stats (like ratings and so on) -->
-									<article class="thread">
-										<a href="/showthread?tid={{ th.key().id() }}">
-											<b>{{th.subject}}</b>
-										</a>
-										<p>{{th.body}}</p>
-									</article>
-								{% endfor %}
-							</section>
+					 <section class="handlercontent">
+					{% for th in c[1] %}
+						<!-- after adding all the functionality, make this pretty and display all stats (like ratings and so on) -->
+						<article class="thread">
+							<a href="/showthread?tid={{ th.key().id() }}">
+								<b>{{th.subject}}</b>
+							</a>
+							<p>{{th.body}}</p>
+						</article>
+					{% endfor %}
+					</section>
 				{% endfor %}
 			</section>
 		</section>
