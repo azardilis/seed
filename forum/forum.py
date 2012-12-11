@@ -105,7 +105,7 @@ class CategoriesPage(webapp2.RequestHandler):
 			complete = list()
 
 			for c in categs :
-				ct = c.threads.fetch(2) #just to limit what is fetched, later change to 10
+				ct = c.threads.order('timestamp').fetch(2) #just to limit what is fetched, later change to 10
 				l = [c,ct]
 				complete.append(l)
 
@@ -166,9 +166,23 @@ class NewThread(webapp2.RequestHandler):
 			}
 			self.response.out.write(template.render(template_params))
 		else : logging.error('newthread : empty cid >'+str(cid)+'<')
-class CreateNewThread(webaapp2.RequestHandler):
-	pass
 
+class CreateNewThread(webapp2.RequestHandler):
+	def post(self):
+		bd = cgi.escape(self.request.get('body'))
+		sbj = cgi.escape(self.request.get('subject'))
+		tgs = cgi.escape(self.request.get('tags'))
+		cid = int(cgi.escape(self.request.get('cid')))
+		
+		c_k = Key.from_path('Category', cid)
+		cat = db.get(c_k)
+		
+		if cat :
+			t = Thread(category = cat,poster=current_user, tags=tgs.split(','),subject=sbj,body =bd )
+			t.put()
+			self.response.out.write('Created thread')
+		else :
+			self.response.out.write('category not found')
 
 
 '''Uses User Key to query the right User Entity'''

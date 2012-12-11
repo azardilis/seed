@@ -10,7 +10,42 @@
 	</style>
        
        <script type="text/javascript">
+	$(document).ready(function()
+{
+		$("#newthreadform").submit(function(event)
+		{
+			var $form = $(this),
+			$inputs = $form.find("input, button,textarea"),
+			serializedData = $form.serialize();
+
+			$inputs.attr("disabled", "disabled");
+
+			$.ajax(
+			{
+				url: "/createnewthread",
+				type: "POST",
+				data: serializedData,
+				contentType: 'application/x-www-form-urlencoded',
+				dataType: 'html',
+				success: function(data, textStatus)
+				{
+					alert("Server replied : " + data);
+				},
+				error: function(xmlhttp, textStatus, errorThrown)
+				{
+					var resp = "Error --> " + errorThrown + '<-->' + textStatus + '<-->' + xmlhttp.responseText + '<-->' + xmlhttp.readyState;
+					alert(resp);
+				},
+				complete: function()
+				{
+					$inputs.removeAttr("disabled");
+				}
+			});
+			event.preventDefault();
+		});
+});
        
+       </script>
   </head>
   <body>
 <section id="content" class="content">  
@@ -18,15 +53,19 @@
 	{% include "/templates/sidebar.html" %}
 
 	<section id="pagecontent" class="cleared">
-		<form action="" method="POST" id="newthreadform">
-		<input type="text" placeholder="Title" name="subject">
-		<input type="hidden" name="cid" value="{{ cid}}">
-		<textarea name="subject" cols="30"  rows="20">body </textarea>
+		<section id='serverResponse'>
+		
+		</section>
+		<form action="/createnewthread" method="POST" id="newthreadform">
+			<input type="text" placeholder="Title" name="subject">
+			<input type="text" placeholder = "comma separated tag list" name="tags">
+			<input type="hidden" name="cid" value="{{ cid}}">
+			<textarea name="body" cols="30"  rows="20">body </textarea>
 
-		<input type="submit" value="Submit">
-		<a href="/threads?cid={{cid}}">
-			<button>Cancel</button>
-		</a>
+			<input type="submit" value="Submit">
+			<a href="/threads?cid={{cid}}">
+				<button>Cancel</button>
+			</a>
 
 		</form>
 		
