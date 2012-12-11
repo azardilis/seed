@@ -8,19 +8,10 @@
 			$(function() {
 				$( "#categories" )
 				.accordion({
-					header: "> section > h3",
+					header: "> section > section.handler  ",
 					collapsible : true,
 					active:false
 				});
-				/*
-				.sortable({
-					axis: "y",
-					handle: ".handler",
-					stop: function( event, ui ) {
-					ui.item.children( "h3" ).triggerHandler( "focusout" );
-					}
-				});
-				*/
 			});
 		</script>
 
@@ -37,18 +28,33 @@
 				width : 800px ;
 			}
 			
-			h3.handler{
-				padding : 5px ;
-				text-align : center ;
+			section.handler{
+				padding : 10px ;
 				margin : 0px ;
 				border : 1px solid black ;
-				border-radius : 3px ;
+				border-radius : 5px ;
 			}
 			
-			h3.handler:hover{
+			section.handler:hover{
 				cursor : pointer ;
-				color : blue ;
 			}
+			
+			section.handler *{
+				display : inline ; /*make all elements appear on the same line*/
+			}
+			
+			section.handler h3{
+				border : 1px solid green ;
+				width : 80% ;	
+			}
+			
+			section.handler .more{
+				position : relative ;
+				float : right ;
+				border:1px solid red;
+				z-index : 999;
+			}
+			
 			
 			section.handlercontent{
 				/*this is funny business as well*/
@@ -77,10 +83,6 @@
 				background : #B8DBFF;
 			}
 			
-			section.handlercontent:nth-child(odd){
-				background : #A3E0FF
-			}
-			
 		</style>           	    
 	  </head>
  <body>
@@ -96,7 +98,10 @@
 		<section id="categories">
 			<section class="category">			
 				{% for c in complete %}					
-					<h3 class="handler">{{  c[0].name }}</h3>
+					<section class="handler">
+						<h3>{{  c[0].name }}</h3>
+						<a href="/threads?cid={{ c[0].key().id()}}" class="more">Show more...</a>
+					</section>
 							 <section class="handlercontent">
 								{% for th in c[1] %}
 								<!-- after adding all the functionality, make this pretty and display all stats (like ratings and so on) -->

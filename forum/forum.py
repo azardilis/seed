@@ -105,7 +105,7 @@ class CategoriesPage(webapp2.RequestHandler):
 			complete = list()
 
 			for c in categs :
-				ct = c.threads
+				ct = c.threads.fetch(2) #just to limit what is fetched, later change to 10
 				l = [c,ct]
 				complete.append(l)
 
@@ -137,6 +137,27 @@ class ThreadPage(webapp2.RequestHandler):
 		}
 
 		self.response.out.write(template.render(template_params))
+
+class ViewAllThreadsPage(webapp2.RequestHandler):
+	def get(self):
+		cid = cgi.escape(self.request.get('cid'))
+		c_k = Key.from_path('Category',int(cid))
+		category = db.get(c_k)
+		
+		if category :
+			threads = category.threads
+			template_vars = {
+				'category' : category,
+				'threads':threads
+			}
+			template = jinja_environment.get_template('templates/forum_category_all.html')
+			self.response.out.write(template.render(template_vars))
+		else :
+			logging.error('no category found '+str(cid))
+
+class NewThread(webapp2.RequestHandler):
+	def post(self):
+		
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -372,8 +393,9 @@ app = webapp2.WSGIApplication([
                                    ('/main' , MainPage),
                                    ('/forum', ForumPage),
 				   ('/categories',CategoriesPage),
-				   #('/threads,CategoryThreads),
+				   ('/threads',ViewAllThreadsPage),
 				   ('/showthread',ThreadPage),
+				   ('/newthread',NewThread),
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),

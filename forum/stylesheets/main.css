@@ -1,4 +1,18 @@
+
+
 /*clear everything up*/
+
+/*@import url(http://fonts.googleapis.com/css?family=Anaheim);*/
+/*
+@font-face {
+  font-family: 'Anaheim';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Anaheim'), local('Anaheim-Regular'), url(http://themes.googleusercontent.com/static/fonts/anaheim/v1/9grF9iDBrnUvUAGLpfiBHQ.woff) format('woff');
+}
+*/
+
+
 
 span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, h1,h2,h3{
 	margin : 0 px;
@@ -8,6 +22,9 @@ span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, 
 body{
 padding : 10px ;
 background-image: url("resources/bg1.jpg");
+
+/*font-family: 'Anaheim', sans-serif;*/
+/*font-family:'Georgia', serif;*/
 
 }
 
@@ -19,7 +36,6 @@ background-image: url("resources/bg1.jpg");
 }
 
 #content {
-  font-family:Georgia, serif;
   margin : 10px ;
   background-color: white;
   max-width: 1000px ;
