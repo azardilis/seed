@@ -1,10 +1,10 @@
 <html>
      <head>
 	<script src="js/jq-1.8.3.js"></script>
+	<script src="js/functions.js"></script>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<script type="text/javascript">
-	$(document).ready(function()
-
+	$(document).ready(function(){
 		$("#replyform").submit(function(event)
 		{
 			var $form = $(this),
@@ -23,6 +23,7 @@
 				success: function(data, textStatus)
 				{
 					alert("Server replied : " + data);
+					appendPost(serializedData);
 				},
 				error: function(xmlhttp, textStatus, errorThrown)
 				{
