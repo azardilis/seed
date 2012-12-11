@@ -1,0 +1,39 @@
+<html>
+     <head>
+       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+       <script src="js/jq-1.8.3.js"></script>
+	<style type="text/css">
+		
+		#newthreadform *{
+			display : block ;
+		}
+	</style>
+       
+       <script type="text/javascript">
+       
+  </head>
+  <body>
+<section id="content" class="content">  
+	<!-- This includes the sidebar-->
+	{% include "/templates/sidebar.html" %}
+
+	<section id="pagecontent" class="cleared">
+		<form action="" method="POST" id="newthreadform">
+		<input type="text" placeholder="Title" name="subject">
+		<input type="hidden" name="cid" value="{{ cid}}">
+		<textarea name="subject" cols="30"  rows="20">body </textarea>
+
+		<input type="submit" value="Submit">
+		<a href="/threads?cid={{cid}}">
+			<button>Cancel</button>
+		</a>
+
+		</form>
+		
+	</section>
+
+	<section class="cleared"></section>
+</section>
+     
+  </body>
+</html>

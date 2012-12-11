@@ -1,0 +1,94 @@
+<html>
+	<head>
+		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+		
+		<script src="js/jq-1.8.3.js"></script>
+		<script src="js/jqui-1.9.2.js"></script>
+
+		<style type="text/css">
+			
+			section.handler{
+				padding : 10px ;
+				margin : 0px ;
+				border : 1px solid black ;
+				border-radius : 5px ;
+			}
+			
+			section.handler:hover{
+				cursor : pointer ;
+			}
+			
+			section.handler *{
+				display : inline ; /*make all elements appear on the same line*/
+			}
+			
+			section.handler h3 {
+				
+			}
+			
+			section.handler .newth{
+				position : relative ;
+				float : right ;
+			}
+			
+			section.handlercontent{
+				/*this is funny business as well*/
+				margin : 30px ;
+				margin-top : 0px;
+				margin-bottom : 0px;
+				display : block ;
+			}
+			
+			article.thread{
+				border : 	1px solid #829B9B ;
+				padding : 10px;
+				background : #ccdee8;
+			}
+			
+			a{
+				text-decoration : underline ;
+				color : #02527d ;
+			}
+			
+			a:hover {
+				/*color : #003366 ;*/
+			}
+			
+			article.thread:hover{
+				background : #B8DBFF;
+			}
+			
+		</style>           	    
+	  </head>
+ <body>
+  
+ <section id="content" class="content"> 
+   
+
+	<!-- This includes the sidebar-->
+	{% include "/templates/sidebar.html"%}
+
+	<section id="pagecontent" class="cleared">
+			<section class="category">			
+								
+					<section class="handler">
+						<h3>{{  category.name }}</h3><a href="/newthread?catid={{ category.key().id()}}" class="newth">Create new...</a>
+					</section>
+							 <section class="handlercontent">
+								{% for th in threads %}
+								
+									<article class="thread">
+										<a href="/showthread?tid={{ th.key().id() }}">
+											<b>{{th.subject}}</b>
+										</a>
+										<p>{{th.body}}</p>
+									</article>
+								{% endfor %}
+							</section>
+			</section>
+	</section>
+	
+	<section class="cleared">	</section>
+	
+</body>
+</html>
