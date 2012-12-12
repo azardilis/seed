@@ -5,8 +5,40 @@ function appendPost(strngurl){
 	//process the stringurl here to add attributes/remove attributes - in particular, we want the post ID, so that we can retrieve at a later time
 	var txt = document.createTextNode(strngurl);
 	sE.appendChild(txt);
-
-	//this appends to the document
 	var rSection = document.getElementById('responses');
-	rSection.appendChild(sE);
+	//add node to the beginning of the posts
+	rSection.insertBefore(sE,rSection.childNodes[0]);
 }
+
+$(document).ready(function(){
+		$("#replyform").submit(function(event)
+		{
+			var $form = $(this),
+			$inputs = $form.find("input, button,textarea"),
+			serializedData = $form.serialize();
+
+			$inputs.attr("disabled", "disabled");
+
+			$.ajax(
+			{
+				url: "/replythread",
+				type: "POST",
+				data: serializedData,
+				contentType: 'application/x-www-form-urlencoded',
+				dataType: 'html',
+				success: function(data, textStatus)
+				{
+					appendPost(serializedData);
+				},
+				error: function(xmlhttp, textStatus, errorThrown)
+				{
+					alert('There was an error while creating a new thread.');
+				},
+				complete: function()
+				{
+					$inputs.removeAttr("disabled");
+				}
+			});
+			event.preventDefault();
+		});
+});

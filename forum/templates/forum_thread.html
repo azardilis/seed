@@ -4,38 +4,7 @@
 	<script src="js/functions.js"></script>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<script type="text/javascript">
-	$(document).ready(function(){
-		$("#replyform").submit(function(event)
-		{
-			var $form = $(this),
-			$inputs = $form.find("input, button,textarea"),
-			serializedData = $form.serialize();
-
-			$inputs.attr("disabled", "disabled");
-
-			$.ajax(
-			{
-				url: "/replythread",
-				type: "POST",
-				data: serializedData,
-				contentType: 'application/x-www-form-urlencoded',
-				dataType: 'html',
-				success: function(data, textStatus)
-				{
-					appendPost(serializedData);
-				},
-				error: function(xmlhttp, textStatus, errorThrown)
-				{
-					alert('There was an error while creating a new thread.');
-				},
-				complete: function()
-				{
-					$inputs.removeAttr("disabled");
-				}
-			});
-			event.preventDefault();
-		});
-});
+	
        
         </script>
 
@@ -96,6 +65,6 @@
 	</section>
 	
 	<section class="cleared">	</section>
-	
+</section>
 </body>
 </html>

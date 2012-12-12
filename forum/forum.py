@@ -8,6 +8,7 @@ import os
 import cgi
 from google.appengine.api import mail
 from model.base.Module import Module
+from functions.ForumFunctions import * # functions to handle posts and shit
 from model.base.User import User
 from model.base.Post import Post
 from model.base.Thread import Thread
@@ -73,10 +74,6 @@ class MainPage(webapp2.RequestHandler):
         	self.response.out.write(template.render(template_values))
 	else:
 		self.redirect("/")
-
-from functions.ForumPopulator import get_children
-from functions.ForumPopulator import get_posts 
-
 
 class ForumPage(webapp2.RequestHandler):
     def get(self):
@@ -183,6 +180,7 @@ class CreateNewThread(webapp2.RequestHandler):
 			self.response.out.write('Created thread')
 		else :
 			self.response.out.write('category not found')
+
 class ReplyToThread(webapp2.RequestHandler):
 	def post(self):
 		tid = int(cgi.escape(self.request.get('tid')))
