@@ -4,18 +4,23 @@
 	
 <style type="text/css">
 	
-	.post{
-		border : 1px solid red;	
-		padding :  2%;
-		margin : 1%;
-	}
-		
-	#thread{
-		border : 1px solid green ;
-		padding : 10px ;
-		margin : 5px ;
-	}
-
+p.box{
+text-align:center;
+font-size:12pt;
+}
+h1{
+color:#1E90FF;
+text-align:left;
+font-size:16pt;
+}
+div.subs{
+width:300px;
+height:100px;
+padding:10px;
+border:5px solid black;
+margin:0px;
+border-style:inset;
+}
 </style>           
     
   </head>
@@ -31,7 +36,8 @@
 		<h1>Your subscriptions </h1>
 		{% for sub in subscriptions%}
 			<a href="/categories?mid={{sub.module.key().name() }}">
-				<button>{{ sub.module.key().name().upper() }} : {{ sub.module.title }}</button>
+				<div class="subs"><p class="box">{{ sub.module.key().name().upper() }}</p> <p class="box">{{ sub.module.title }}</p>
+				</div>
 			</a>
 			</br>
 		
