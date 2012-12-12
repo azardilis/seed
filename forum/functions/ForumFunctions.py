@@ -33,7 +33,7 @@ def get_children(plist , posts, lvl):
 def make_toolbar(p,posts):
 	pid = str(p.key().id())
 	html =''' 
-	<section id="class">
+	<section id="controls">
 		<span class="controls">
 			<p class="reply" pid="'''+pid+'''">Reply</p>
 			<p class="quote" pid="'''+pid+'''">Quote</p>
@@ -42,7 +42,7 @@ def make_toolbar(p,posts):
 		</span>
 	<form id="rf'''+pid+'''" class="psreplyform" method="post" action="/replypost">
 				<input type="hidden" value="'''+pid+'''" name="r2pid">
-				<textarea name="replybox" rows="5" cols="50"></textarea>
+				<textarea name="bd" rows="5" cols="50"></textarea>
 				<input type="submit" value="Reply">
 			</form>
 	</section>

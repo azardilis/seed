@@ -191,10 +191,10 @@ class ReplyToThread(webapp2.RequestHandler):
 			bd = cgi.escape(self.request.get('bd'))
 			sbj = cgi.escape(self.request.get('sbj'))
 
-			p = Post(body=bd, thread = thrd, poster = current_user, subject=sbj)
+			p = Post(body=bd, thread = thrd, poster = current_user)
 			p.put()
 
-			self.response.out.write('Replied to thread successfully!')
+			self.response.out.write(p.key().id())
 		else :
 			self.response.out.write('Thread not found')
 			logging.error('Thread not found, tid : '+str(tid)+'<')
@@ -206,10 +206,10 @@ class ReplyToPost(webapp2.RequestHandler):
 		pst = db.get(p_k)
 	
 		if pst :
-			bd = cgi.escape(self.request.get('replybox'))
+			bd = cgi.escape(self.request.get('bd'))
 			p = Post(reply=pst,poster=current_user,body=bd)
 			p.put()
-			self.response.out.write('Replied')
+			self.response.out.write(str(p.key().id())+'-'+str(pid))
 		else :
 			self.response.out.write('Could not reply')
 			logging.error('Couldnt find post, pid : '+pid+'<')

@@ -4,55 +4,8 @@
 	<script src="js/functions.js"></script>
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<script type="text/javascript">
-		$(document).ready(function(){
-			$('p.reply').click(function(){
-				var e = $(this);
-				var pid = e.attr('pid');
-				$('#rf'+pid).slideDown();
-			});
-			
-			$('p.quote').click(function(){
-				var e = $(this);
-				var pid = e.attr('pid');
-				var poster = $('article.art#'+pid).attr('poster');
-				var qs = "[quote="+poster+"]"+$('article.art#'+pid).html()+"[/quote]";
-				$('#rf'+pid+' textarea').html(qs);
-				$('#rf'+pid).slideDown();
-			});
-			
-		$('form.psreplyform').submit(function(event)
-		{
-			var $form = $(this),
-			$inputs = $form.find("input, button,textarea"),
-			serializedData = $form.serialize();
-			alert('clicked1');
-			
-			$inputs.attr("disabled", "disabled");
-			$.ajax(
-			{
-				url: "/replypost",
-				type: "POST",
-				data: serializedData,
-				contentType: 'application/x-www-form-urlencoded',
-				dataType: 'html',
-				success: function(data, textStatus)
-				{
-					alert('refresh');
-				},
-				error: function(xmlhttp, textStatus, errorThrown)
-				{
-					alert('There was an error while creating a new thread.');
-				},
-				complete: function()
-				{
-					$inputs.removeAttr("disabled");
-				}
-			});
-			event.preventDefault();
-		});
 		
-			
-		});
+		
         </script>
 
 
@@ -119,7 +72,6 @@
 		<section id="reply">
 			<form method="POST" action="/replythread" id="replyform">
 				<input type="hidden" name="tid" value="{{thread.key().id()}}">
-				<input type="hidden" name="sbj" value="RE:{{thread.subject}}">
 				<textarea name="bd" cols="70" rows="8"></textarea>
 				<input type="submit" value="Reply!">
 			</form>
