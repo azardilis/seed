@@ -11,8 +11,8 @@
 				$('h3.handler').click(function(){
 					var e = $(this);
 					var ch = e.attr('id');					
-					$('section.handlercontent').slideUp();
-					$('#cont'+ch).slideToggle();
+					$('section.handlercontent').slideUp(); /*slide all contents up*/
+					$('#cont'+ch).slideToggle(); /*slide the content of this one down*/
 				});
 			});
 		</script>
@@ -45,7 +45,7 @@
 				margin : 30px ;
 				margin-top : 0px;
 				margin-bottom : 0px;
-				display: none ;
+				display: none ; /* this will hide the content*/
 			}
 			
 			article.thread{

@@ -2,12 +2,25 @@
      <head>
 	<script src="js/jq-1.8.3.js"></script>
 	<script src="js/functions.js"></script>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<script type="text/javascript">
-	
-       
+		$(document).ready(function(){
+			$('p.reply').click(function(){
+				var e = $(this);
+				var pid = e.attr('pid');
+				$('#rf'+pid).slideDown();
+			});
+			
+			$('p.quote').click(function(){
+				var e = $(this);
+				var pid = e.attr('pid');
+				var poster = $('article.art#'+pid).attr('poster');
+				var qs = "[quote="+poster+"]"+$('article.art#'+pid).html()+"[/quote]";
+				$('#rf'+pid+' textarea').html(qs);
+				$('#rf'+pid).slideDown();
+			});
+		});
         </script>
-
 
 
 <style type="text/css">
@@ -32,6 +45,26 @@
 	
 	#replyform *{
 		display : block ;
+	}
+	
+	span.controls *{
+		display : inline;
+		color : #005566;
+		font-size : 9pt;
+		
+	}
+	
+	span.controls p:hover{
+		cursor : pointer ;
+		text-decoration : underline;
+	}
+	
+	form.replyform{
+		display : none ;
+	}
+	
+	form.replyform *{
+		display : block 
 	}
 
 </style>           
