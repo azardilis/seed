@@ -5,56 +5,39 @@
 		<script src="js/jq-1.8.3.js"></script>
 		<script src="js/jqui-1.9.2.js"></script>
 		<script>
-			/*
-			$(document).ready(function(){
-				$('.handler').click(function(){
-					var e = $(this);
-					var ch = e.children('.more');
-					for (a in ch){
-						console.log(ch[a].innerHTML);
-					}
-					alert('clicked handler, size '+ch.size());
-				});
-			
-			});
-			*/
 		
-			$(function() {
-				$( "#categories" )
-				.accordion({
-					header: ".handler ",
-					collapsible : true,
-					active:false
+			/*custom acordion :D*/
+			$(document).ready(function(){
+				$('h3.handler').click(function(){
+					var e = $(this);
+					var ch = e.attr('id');					
+					$('section.handlercontent').slideUp();
+					$('#cont'+ch).slideToggle();
 				});
-				
 			});
 		</script>
 
 		<style type="text/css">
 			
-			section.handler{
+			section.container{
 				padding : 10px ;
 				margin : 0px ;
 				border : 1px solid black ;
 				border-radius : 5px ;
 			}
 			
-			section.handler:hover{
-				cursor : pointer ;
-			}
-			
-			section.handler *{
+			section.container *{
 				display : inline ; /*make all elements appear on the same line*/
 			}
 			
-			section.handler h3{				
+			section.container h3{				
 				width : 80% ;
+				cursor : pointer ;
 			}
 			
-			section.handler .more{
+			section.container .more{
 				position : relative ;
 				float : right ;
-				z-index : 999;
 			}
 			
 			section.handlercontent{
@@ -62,6 +45,7 @@
 				margin : 30px ;
 				margin-top : 0px;
 				margin-bottom : 0px;
+				display: none ;
 			}
 			
 			article.thread{
@@ -76,7 +60,7 @@
 			}
 			
 			a:hover {
-				/*color : #003366 ;*/
+				color : #003366 ;
 			}
 			
 			article.thread:hover{
@@ -97,11 +81,11 @@
 		<section id="categories">
 			<section class="category">			
 				{% for c in complete %}				
-					<section class="handler">
-						<h3 >{{  c[0].name }}</h3>
+					<section class="container">
+						<h3 class="handler"  id="{{c[0].key().id()}}">{{  c[0].name }}</h3>
 						<a href="/threads?cid={{ c[0].key().id()}}" class="more">Show more...</a>
 					</section>
-					 <section class="handlercontent">
+					 <section class="handlercontent" id="cont{{c[0].key().id()}}">
 					{% for th in c[1] %}
 						<!-- after adding all the functionality, make this pretty and display all stats (like ratings and so on) -->
 						<article class="thread">
@@ -118,6 +102,6 @@
 	</section>
 	
 	<section class="cleared">	</section>
-	
+</section>
 </body>
 </html>
