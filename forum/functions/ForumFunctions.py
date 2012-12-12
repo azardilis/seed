@@ -12,7 +12,7 @@ def get_posts(tid):
     p = [p for p in t.posts.order('-timestamp').fetch(10)]
     return p 
 
-def get_children(plist , posts):
+def get_children(plist , posts, lvl):
 	
 	for p in plist :
 		posts = make_article(posts)
@@ -24,7 +24,7 @@ def get_children(plist , posts):
 			for r in p.replies :
 				a = list ()
 				a.append(r)
-				posts = get_children(a,posts)
+				posts = get_children(a,posts, lvl+1)
 			posts = close_section(posts)
 		posts = close_article(posts)
 
@@ -37,10 +37,10 @@ def make_toolbar(p,posts):
 		<span class="controls">
 			<p class="reply" pid="'''+pid+'''">Reply</p>
 			<p class="quote" pid="'''+pid+'''">Quote</p>
-			<p class="voteup" pid="'''+pid+'''">Vote Up</p>
-			<p class="votedown" pid="'''+pid+'''">Vote Down</p>
+			<p class="voteup" pid="'''+pid+'''">Vote-Up</p>
+			<p class="votedown" pid="'''+pid+'''">Vote-Down</p>
 		</span>
-			<form id="rf'''+pid+'''" class="replyform" method="post" action="postreply">
+	<form id="rf'''+pid+'''" class="psreplyform" method="post" action="/replypost">
 				<input type="hidden" value="'''+pid+'''" name="r2pid">
 				<textarea name="replybox" rows="5" cols="50"></textarea>
 				<input type="submit" value="Reply">
@@ -67,6 +67,6 @@ def close_section(posts) :
 
 #make show all the deatils here)
 def make_post(p,posts) :
-	posts += '<article class="art" poster="'+p.poster.key().name()+'" pid='+str(p.key().id())+' id="'+str(p.key().id())+'">'+nl2br(p.body)+'</article>'
+	posts += '<article class="art" poster="'+p.poster.key().name()+'" pid="'+str(p.key().id())+'" id="'+str(p.key().id())+'">'+nl2br(p.body)+'</article>'
 	return posts
 	

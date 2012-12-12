@@ -16,7 +16,7 @@ $(document).ready(function(){
 			var $form = $(this),
 			$inputs = $form.find("input, button,textarea"),
 			serializedData = $form.serialize();
-
+			alert('called2');
 			$inputs.attr("disabled", "disabled");
 
 			$.ajax(
@@ -32,7 +32,7 @@ $(document).ready(function(){
 				},
 				error: function(xmlhttp, textStatus, errorThrown)
 				{
-					alert('There was an error while creating a new thread.');
+					alert('There was an error while replying to thread.');
 				},
 				complete: function()
 				{

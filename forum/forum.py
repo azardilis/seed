@@ -126,7 +126,7 @@ class ThreadPage(webapp2.RequestHandler):
 
 		l1p = get_posts(tid)
 		posts = ''
-		posts = get_children(l1p,posts)
+		posts = get_children(l1p,posts,1)
 
 		template_params = {
 			'thread': t ,
@@ -194,10 +194,25 @@ class ReplyToThread(webapp2.RequestHandler):
 			p = Post(body=bd, thread = thrd, poster = current_user, subject=sbj)
 			p.put()
 
-			self.response.out.write('probably replied to thread ')
+			self.response.out.write('Replied to thread successfully!')
 		else :
 			self.response.out.write('Thread not found')
 			logging.error('Thread not found, tid : '+str(tid)+'<')
+
+class ReplyToPost(webapp2.RequestHandler):
+	def post(self):
+		pid = int(cgi.escape(self.request.get('r2pid')))
+		p_k = Key.from_path('Post', pid)
+		pst = db.get(p_k)
+	
+		if pst :
+			bd = cgi.escape(self.request.get('replybox'))
+			p = Post(reply=pst,poster=current_user,body=bd)
+			p.put()
+			self.response.out.write('Replied')
+		else :
+			self.response.out.write('Could not reply')
+			logging.error('Couldnt find post, pid : '+pid+'<')
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -438,6 +453,7 @@ app = webapp2.WSGIApplication([
 				   ('/newthread',NewThread),
 				   ('/createnewthread',CreateNewThread),
 				   ('/replythread',ReplyToThread),
+				   ('/replypost',ReplyToPost),
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
