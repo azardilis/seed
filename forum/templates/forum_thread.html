@@ -6,10 +6,57 @@
 	<script type="text/javascript">
 		$(document).ready(function(){
 			
-		
+			$('p.voteup').click(function(){
+				var e = $(this);
+				var pid = e.attr('pid');
+				var dt = 'pid='+pid
+				$.ajax(
+				{
+					url:'/vup' ,
+					type:'POST',
+					data : dt ,
+					contentType : 'application/x-www-form-urlencoded',
+					dataType : 'html',
+					success:function(data,textStatus){
+						e.siblings('p.score').html(data);
+					},
+					error: function(xmlhttp, textStatus, errorThrown)
+					{
+						alert('There was an error while voting.');
+					},
+					complete: function()
+					{
+						console.log('request should have completed');
+					}
+				});
+			});
+			
+			$('p.votedown').click(function(){
+				var e = $(this);
+				var pid = e.attr('pid');
+				var dt = 'pid='+pid
+				$.ajax(
+				{
+					url:'/vdown' ,
+					type:'POST',
+					data : dt ,
+					contentType : 'application/x-www-form-urlencoded',
+					dataType : 'html',
+					success:function(data,textStatus){
+						e.siblings('p.score').html(data);
+					},
+					error: function(xmlhttp, textStatus, errorThrown)
+					{
+						alert('There was an error while voting.');
+					},
+					complete: function()
+					{
+						console.log('request should have completed');
+					}
+				});
+			});
+			
 		});
-	
-	
         </script>
 
 

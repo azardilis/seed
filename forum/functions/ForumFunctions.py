@@ -38,8 +38,8 @@ def make_toolbar(p,posts):
 			<p class="score" pid="'''+pid+'''">'''+str(p.votes)+'''</p>
 			<p class="reply" pid="'''+pid+'''">Reply</p>
 			<p class="quote" pid="'''+pid+'''">Quote</p>
-			<p class="voteup" pid="'''+pid+'''">Vote-Up</p>
-			<p class="votedown" pid="'''+pid+'''">Vote-Down</p>
+			<p class="voteup" pid="'''+pid+'''" url="/vup">Vote-Up</p>
+			<p class="votedown" pid="'''+pid+'''" url="/vdown">Vote-Down</p>
 		</span>
 	<form id="rf'''+pid+'''" class="psreplyform" method="post" action="/replypost">
 				<input type="hidden" value="'''+pid+'''" name="r2pid">

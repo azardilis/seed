@@ -1,9 +1,7 @@
 import webapp2
 import jinja2
-
 #imported for debugging reasons
 import logging
-
 import os
 import cgi
 from google.appengine.api import mail
@@ -209,10 +207,39 @@ class ReplyToPost(webapp2.RequestHandler):
 			bd = cgi.escape(self.request.get('bd'))
 			p = Post(reply=pst,poster=current_user,body=bd)
 			p.put()
-			self.response.out.write(str(p.key().id())+'-'+str(pid))
+			self.response.out.write(str(p.key().id()))
 		else :
 			self.response.out.write('Could not reply')
 			logging.error('Couldnt find post, pid : '+pid+'<')
+
+class VoteUpPost(webapp2.RequestHandler):
+	def post(self):	
+		pid = int(cgi.escape(self.request.get('pid')))
+		p_k = Key.from_path('Post',pid)
+		pst = db.get(p_k)
+		
+		if pst :
+			pst.votes = pst.votes +1
+			pst.put()
+			self.response.out.write(pst.votes)
+		else :
+			self.response.out.write('couldnt get post')
+			logging.error('unable to get post w/ pid '+str(pid)+'<')
+
+
+class VoteDownPost(webapp2.RequestHandler):
+	def post(self):	
+		pid = int(cgi.escape(self.request.get('pid')))
+		p_k = Key.from_path('Post',pid)
+		pst = db.get(p_k)
+		
+		if pst :
+			pst.votes = pst.votes-1
+			pst.put()
+			self.response.out.write(pst.votes)
+		else :
+			self.response.out.write('couldnt get post')
+			logging.error('unable to get post w/ pid '+str(pid)+'<')
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -454,6 +481,8 @@ app = webapp2.WSGIApplication([
 				   ('/createnewthread',CreateNewThread),
 				   ('/replythread',ReplyToThread),
 				   ('/replypost',ReplyToPost),
+				   ('/vup',VoteUpPost),
+				   ('/vdown',VoteDownPost),
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
