@@ -80,9 +80,20 @@ class ForumPage(webapp2.RequestHandler):
 	userQ.filter('__key__ =',current_user.key())
 	user = userQ.get() #is this really necessary ???
 	subs = 	user.subscriptions
+	ratings=[]
+	for s in subs:
+		ratQ=Rating.all()
+		ratQ.filter("module",s.module)
+		ratings.append(ratQ)	
+
+	for r in ratings:
+		for h in r:
+			self.response.write(h.lecturer.key().name())
+
 
 	template_params = {
-		'subscriptions' : subs 
+		'subscriptions' : subs,
+		'ratings':ratings
 	}
 
         self.response.out.write(template.render(template_params))
@@ -313,6 +324,10 @@ def reset_db():
 
     for i in Post.all():
     	i.delete()
+	
+    for i in Rating.all():
+    	i.delete()
+
 
 #function to populate the db at the start of the app,
 #that is if you don't have your own copy locally

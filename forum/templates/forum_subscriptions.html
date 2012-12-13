@@ -22,6 +22,19 @@ border:5px solid black;
 margin:0px;
 border-style:inset;
 }
+
+div.break{
+width:300px;
+height:100px;
+padding:0px;
+border solid black;
+}
+div.img.pos{
+position:absolute;
+top:10px;
+right:30px;
+}
+
 </style>           
     
   </head>
@@ -36,10 +49,11 @@ border-style:inset;
 	<section id="pagecontent" class="cleared">
 		<h1>Your subscriptions </h1>
 		{% for sub in subscriptions%}
-			<a href="/categories?mid={{sub.module.key().name() }}">
-				<div class="subs"><p class="box">{{ sub.module.key().name().upper() }}</p> <p class="box">{{ sub.module.title }}</p>
+				<div class="subs">
+				<img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Smiley face" height="20" width="20"> 
+				<p class="box"><a href="/categories?mid={{sub.module.key().name() }}">{{ sub.module.key().name().upper() }}</a></p>
+				<p class="box"><a href="/categories?mid={{sub.module.key().name() }}">{{ sub.module.title }}</a></p>
 				</div>
-			</a>
 			</br>
 		
 		{% endfor %}
