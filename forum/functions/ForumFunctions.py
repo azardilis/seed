@@ -35,6 +35,7 @@ def make_toolbar(p,posts):
 	html =''' 
 	<section id="controls">
 		<span class="controls">
+			<p class="score" pid="'''+pid+'''">'''+str(p.votes)+'''</p>
 			<p class="reply" pid="'''+pid+'''">Reply</p>
 			<p class="quote" pid="'''+pid+'''">Quote</p>
 			<p class="voteup" pid="'''+pid+'''">Vote-Up</p>
