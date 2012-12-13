@@ -90,5 +90,8 @@ def parse_quotes(p):
 		det+= '<p class="quotext">'+grps[1]+'</p>'
 		det += '</blockquote>'
 		bd = re.sub(r'\[quote=([a-z0-9]{6,8})\](.+)\[\/quote\]',det, bd)
+
+		#this is funny business, improve 
+		bd = parse_quotes(bd)
 		
 	return bd 
