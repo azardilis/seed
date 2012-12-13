@@ -15,7 +15,34 @@ body{
 	background-image: url("resources/bg1.jpg");
 	font-family : 'Segan-Light',sans-serif ;
 }
+/* CSS for Profile Page Header*/
+#profile_header{
+	background-color: white;
+	width: 870px;
+	height: 200px;
+	margin: 0 0 0 20px; /* top right bottom left */
+	padding: 0;
+}
+#profile_header img{
+	 float: left;
+}
+#profile_header #col1{
+	 width: 320px;
+	 height: 200px;
+	 float: left;
+	 background-color: green;
+}
 
+#profile_header #col2{
+	 width: 320px;
+	 height: 200px;
+	 float: right;
+	 margin: 0;
+	 padding: 0;
+	 background-color: red;
+}
+
+/*----------------------------------*/
 #sidebar a:active ,#sidebar a:visited ,#sidebar  a:link ,#sidebar a:hover{
 	text-decoration: none ;	
 	color : white ;

@@ -5,14 +5,19 @@
        
   </head>
   <body>
-	<h2>{{user.full_name}}</h2>
-	<br><br>
-	<img src={{user.avatar}}>
-	<p>Course: {{user.course}}</p>
-	<p>Year: {{user.year}}</p>
-	<br>
-	<p>Karma: {{user.karma}}</p>
-	
+	<div id=profile_header>
+		<img src={{user.avatar}} width="200" height="200">
+		<div id=col1>
+			<h1>{{user.full_name}}</h1>
+			<p id=course>Course: {{user.course}} {{user.year}}</p>
+			<p id=karma>Karma: {{user.karma}}</p>
+		</div>
+		<div id=col2>
+			<h2>Created Topic</h2>
+			<h2>Commnents Posted</h2>
+		</div>
+						
+	</div>
 	<br>
 	<p><b>Modules you are subscribed to</b></p>
 	{% for sub in subscriptions %}
