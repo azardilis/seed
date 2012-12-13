@@ -4,7 +4,7 @@ function appendPost(arr){
 	var bd = '' ;
 	for (i in arr){
 		if (arr[i][0] === 'bd'){
-			bd = arr[i][0];
+			bd = arr[i][1];
 		}
 	}
 	

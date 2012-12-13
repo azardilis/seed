@@ -1,31 +1,19 @@
-
+@font-face {
+  font-family: 'Segan-Light';
+  font-style: normal;
+  src: local('fonts/Segan-Light-ttf');
+}
 
 /*clear everything up*/
-
-/*@import url(http://fonts.googleapis.com/css?family=Anaheim);*/
-/*
-@font-face {
-  font-family: 'Anaheim';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Anaheim'), local('Anaheim-Regular'), url(http://themes.googleusercontent.com/static/fonts/anaheim/v1/9grF9iDBrnUvUAGLpfiBHQ.woff) format('woff');
-}
-*/
-
-
-
-span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, h1,h2,h3{
+span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, h1,h2,h3,article{
 	margin : 0px;
 	padding:0px;	
 }
 
 body{
-padding : 10px ;
-background-image: url("resources/bg1.jpg");
-
-/*font-family: 'Anaheim', sans-serif;*/
-/*font-family:'Georgia', serif;*/
-
+	padding : 10px ;
+	background-image: url("resources/bg1.jpg");
+	font-family : 'Segan-Light',sans-serif ;
 }
 
 #sidebar a:active ,#sidebar a:visited ,#sidebar  a:link ,#sidebar a:hover{

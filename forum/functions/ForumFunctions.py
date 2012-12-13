@@ -67,6 +67,27 @@ def close_section(posts) :
 
 #make show all the deatils here)
 def make_post(p,posts) :
-	posts += '<article class="art" poster="'+p.poster.key().name()+'" pid="'+str(p.key().id())+'" id="'+str(p.key().id())+'">'+nl2br(p.body)+'</article>'
+	posts += '<article class="art" poster="'+p.poster.key().name()+'" pid="'+str(p.key().id())+'" id="'+str(p.key().id())+'">'+parse_quotes(nl2br(p.body))+'</article>'
 	return posts
 	
+#this is buggy as hell !
+def parse_quotes(p):
+	bd = p 
+	exp = re.compile(r'''
+			\[quote=([a-z0-9]{6,8})
+			\]
+			(.+)
+			\[\/quote\]
+			''',re.VERBOSE)
+	res = exp.search(bd)
+	
+	if res :
+		grps = res.groups()
+		det = '<blockquote>'
+		det += '<p class="details">'+grps[0]+' wrote : </p>'
+		det += '<hr/>'
+		det+= '<p class="quotext">'+grps[1]+'</p>'
+		det += '</blockquote>'
+		bd = re.sub(r'\[quote=([a-z0-9]{6,8})\](.+)\[\/quote\]',det, bd)
+		
+	return bd 

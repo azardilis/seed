@@ -5,13 +5,27 @@
 		<script src="js/jq-1.8.3.js"></script>
 		<script src="js/jqui-1.9.2.js"></script>
 		<script>
-		
 			/*custom acordion :D*/
 			$(document).ready(function(){
-				$('h3.handler').click(function(){
+				$('p.handler').click(function(){
 					var e = $(this);
 					var ch = e.attr('id');					
 					$('section.handlercontent').slideUp(); /*slide all contents up*/
+					
+					/*remove box shadows from all handlers*/
+					$('section.container').css({'-moz-box-shadow':'',
+										'-webkit-box-shadow':'',
+										'box-shadow':''});
+					
+					
+					
+					e.parent().css({'-moz-box-shadow':'inset 0px 0px 1px 1px #88ccff',
+										'-webkit-box-shadow':'inset 0px 0px 1px 1px #88ccff',
+										'box-shadow':'inset 0px 0px 1px 1px #88ccff'
+										});
+					
+					/*add to current handler*/
+					
 					$('#cont'+ch).slideToggle(); /*slide the content of this one down*/
 				});
 			});
@@ -22,7 +36,7 @@
 			section.container{
 				padding : 10px ;
 				margin : 0px ;
-				border : 1px solid black ;
+				border : 1px solid #88ccff ;
 				border-radius : 5px ;
 			}
 			
@@ -30,9 +44,14 @@
 				display : inline ; /*make all elements appear on the same line*/
 			}
 			
-			section.container h3{				
-				width : 80% ;
+			section.container:hover{
+				background:#eeffff;
+			}
+			
+			p.handler{				
 				cursor : pointer ;
+				color : #02527d ;
+				font-size : 20px ;
 			}
 			
 			section.container .more{
@@ -49,7 +68,7 @@
 			}
 			
 			article.thread{
-				border : 	1px solid #829B9B ;
+				border : 1px solid #829B9B ;
 				padding : 10px;
 				background : #ccdee8;
 			}
@@ -82,7 +101,7 @@
 			<section class="category">			
 				{% for c in complete %}				
 					<section class="container">
-						<h3 class="handler"  id="{{c[0].key().id()}}">{{  c[0].name }}</h3>
+						<p class="handler"  id="{{c[0].key().id()}}">{{  c[0].name }}</p>
 						<a href="/threads?cid={{ c[0].key().id()}}" class="more">Show more...</a>
 					</section>
 					 <section class="handlercontent" id="cont{{c[0].key().id()}}">
