@@ -442,7 +442,7 @@ def populate_db():
     r.put()
     
 
-#populate_db()
+populate_db()
 app = webapp2.WSGIApplication([
                                    ('/'     , SignInPage),
                                    ('/main' , MainPage),
