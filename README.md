@@ -23,3 +23,13 @@ Start allocating tasks for the coding part of the coursework
 Discuss any difficulties or objections that might have come up in others people tasks
 
 --------------------------------------------------------------------------------------
+
+
+TODO :
+	dio:
+		implement control so that one can only vote up/down at most once
+		implement javascript to add controls to posts on ajax add of elements
+		implement javascript to make <blockquote> to [quote] so that they don't get escaped
+		in forumfunctions, make better recursion for bquotes
+		implement styling so that a bquote inside a bquote is visible
+		implement some more styling
