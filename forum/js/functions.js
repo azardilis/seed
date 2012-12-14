@@ -90,14 +90,14 @@ $(document).ready(function(){
 		});
 		event.preventDefault();
 	});
-	
+
 	/*This toggles the reply box on for replying to a POST*/
 	$('p.reply').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
 		$('#rf'+pid).slideDown();
 	});
-	
+
 	/*This toggles the reply box on for replying to a POST and inputs the quote*/		
 	$('p.quote').click(function(){
 		var e = $(this);
@@ -107,7 +107,7 @@ $(document).ready(function(){
 		$('#rf'+pid+' textarea').html(qs);
 		$('#rf'+pid).slideDown();
 	});
-	
+
 	/*This is AJAX for replying to a POST*/
 	$('form.psreplyform').submit(function(event)
 	{
@@ -138,7 +138,7 @@ $(document).ready(function(){
 		});
 		event.preventDefault();
 	});
-	
+
 	$('p.voteup').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
@@ -163,7 +163,7 @@ $(document).ready(function(){
 			}
 		});
 	});
-	
+
 	$('p.votedown').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
@@ -188,6 +188,48 @@ $(document).ready(function(){
 			}
 		});
 	});
+
+	/*AJAX for marking an answer*/
+	$('p.ans').click(function(){
+		var e = $(this);
+		var pid = e.attr('pid');
+		var dt = 'pid='+pid;
+		var trd = $('article#thread');
+		var tid = trd.attr('tid');
+		dt +='&tid='+tid;
+
+		$.ajax(
+		{
+			url:'/solution' ,
+			type:'POST',
+			data : dt ,
+			contentType : 'application/x-www-form-urlencoded',
+			dataType : 'html',
+			success:function(data){
+				if(data === 'ok'){
+					var par_section = e.parent().parent().parent();		
+					
+					if(par_section.attr('class') === 'ans'){
+						par_section.attr('class','post');
+					}else{
+						$('section.ans').attr('class','post'); /*reset all other answers*/
+						par_section.attr('class','ans');
+					}
+				}else{
+					console.log('Some error occured, response :'+data)
+				}
+			},
+			error: function(xmlhttp, textStatus, errorThrown)
+			{
+				console.log('Error in marking answer');
+			},
+			complete: function()
+			{
+				console.log('request should have completed');
+			}
+		});
+	});
+
 });
 
 function returnArray(str){

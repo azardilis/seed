@@ -6,52 +6,6 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/forum_thread.css" />
 
-	<script type="text/javascript">
-	$(document).ready(function(){
-
-		$('p.ans').click(function(){
-			var e = $(this);
-			var pid = e.attr('pid');
-			var dt = 'pid='+pid;
-			var trd = $('article#thread');
-			var tid = trd.attr('tid');
-			dt +='&tid='+tid;
-
-			$.ajax(
-			{
-				url:'/solution' ,
-				type:'POST',
-				data : dt ,
-				contentType : 'application/x-www-form-urlencoded',
-				dataType : 'html',
-				success:function(data){
-					if(data === 'ok'){
-						var par_section = e.parent().parent().parent();		
-						
-						if(par_section.attr('class') === 'ans'){
-							par_section.attr('class','post');
-						}else{
-							$('section.ans').attr('class','post'); /*reset all other answers*/
-							par_section.attr('class','ans');
-						}
-					}else{
-						console.log('Some error occured, response :'+data)
-					}
-				},
-				error: function(xmlhttp, textStatus, errorThrown)
-				{
-					console.log('Error in marking answer');
-				},
-				complete: function()
-				{
-					console.log('request should have completed');
-				}
-			});
-		});
-
-	});
-	</script>
-
 </head>
 <body>
 
