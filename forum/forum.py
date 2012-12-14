@@ -130,7 +130,7 @@ class ThreadPage(webapp2.RequestHandler):
 		if t :
 			template = jinja_environment.get_template('templates/forum_thread.html')
 
-			l1p = get_posts(tid)
+			l1p = get_posts(int(cgi.escape(self.request.get('tid'))))
 			posts = ''
 			posts = get_children(l1p,posts,1)
 	
