@@ -140,7 +140,7 @@ class ThreadPage(webapp2.RequestHandler):
 			}
 			self.response.out.write(template.render(template_params))
 		else :
-			self.repsinse.out.write('Unable to find thread '+str(tid)+'<')
+			self.response.out.write('Unable to find thread '+str(tid)+'<')
 
 class ViewAllThreadsPage(webapp2.RequestHandler):
 	def get(self):
