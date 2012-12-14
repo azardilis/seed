@@ -74,29 +74,61 @@ class MainPage(webapp2.RequestHandler):
 		self.redirect("/")
 
 class ForumPage(webapp2.RequestHandler):
-    def get(self):
-        template = jinja_environment.get_template('templates/forum_subscriptions.html')
-	userQ = User.all()
-	userQ.filter('__key__ =',current_user.key())
-	user = userQ.get() #is this really necessary ???
-	subs = 	user.subscriptions
-	ratings=[]
-	for s in subs:
-		ratQ=Rating.all()
-		ratQ.filter("module",s.module)
-		ratings.append(ratQ)	
+    	def get(self):
+		sub_to_delete=cgi.escape(self.request.get('mod'))
+	
+		if not sub_to_delete is '':
+			template = jinja_environment.get_template('templates/forum_subscriptions.html')
+			userQ = User.all()
+			userQ.filter('__key__ =',current_user.key())
+			user = userQ.get() #is this really necessary ???
+			
+			subs = 	user.subscriptions
+			self.response.write(subs.get())
+			subs.filter("__key__",Key(sub_to_delete))
+			subs.get().delete()
+			subs=user.subscriptions
+#			subs=user.subscriptions
+			ratings=[]
+			#for s in subs:
+			#	ratQ=Rating.all()
+			#	ratQ.filter("module",s.module)
+			#	ratings.append(ratQ)	
 
-	for r in ratings:
-		for h in r:
-			self.response.write(h.lecturer.key().name())
+			#for r in ratings:
+			#	for h in r:
+			#		self.response.write(h.lecturer.key().name())
+		
+			template_params = {
+				'subscriptions' : subs,
+				'ratings':ratings
+			}
 
+        		self.response.out.write(template.render(template_params))
+		
+		else:
+			template = jinja_environment.get_template('templates/forum_subscriptions.html')
+			userQ = User.all()
+			userQ.filter('__key__ =',current_user.key())
+			user = userQ.get() #is this really necessary ???
+			subs = 	user.subscriptions
+			ratings=[]
+			for s in subs:
+				ratQ=Rating.all()
+				ratQ.filter("module",s.module)
+				ratings.append(ratQ)	
 
-	template_params = {
-		'subscriptions' : subs,
-		'ratings':ratings
-	}
+#			for r in ratings:
+#				for h in r:
+#					self.response.write(h.lecturer.key().name())
+	
+			template_params = {
+				'subscriptions' : subs,
+				'ratings':ratings
+			}
 
-        self.response.out.write(template.render(template_params))
+        		self.response.out.write(template.render(template_params))	
+		
 
 class CategoriesPage(webapp2.RequestHandler):
 	def get(self):
