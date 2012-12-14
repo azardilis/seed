@@ -15,11 +15,15 @@ font-size:16pt;
 margin : 10px;
 }
 div.subs{
+position : relative ;
+float : left ;
 width:300px;
+margin:4px;
+border-radius : 8px ;
+
 height:100px;
 padding:10px;
 border:5px solid black;
-margin:0px;
 border-style:inset;
 }
 
@@ -29,10 +33,8 @@ height:100px;
 padding:0px;
 border solid black;
 }
-div.img.pos{
-position:absolute;
-top:10px;
-right:30px;
+div img.pos{
+position:relative;
 }
 
 </style>           
@@ -53,9 +55,7 @@ right:30px;
 				<img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Smiley face" height="20" width="20"> 
 				<p class="box"><a href="/categories?mid={{sub.module.key().name() }}">{{ sub.module.key().name().upper() }}</a></p>
 				<p class="box"><a href="/categories?mid={{sub.module.key().name() }}">{{ sub.module.title }}</a></p>
-				</div>
-			</br>
-		
+				</div>		
 		{% endfor %}
 	</section>
 	
