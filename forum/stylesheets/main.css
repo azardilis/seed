@@ -61,6 +61,7 @@ body{
   margin-left : -500px ;
   height : auto ;
   padding : 20px;
+  overflow: auto;
 }
 
 
@@ -86,7 +87,7 @@ body{
 	padding :5px;
 	margin : 3px; 
 }		
-
+/*CSS for the sidebar*/
 #sidebar{
 	width : 150px;	
 	background-color: 	#DDD;
@@ -126,8 +127,10 @@ body{
 		background-color : #005355;
 		opacity : 1;
 	}
+/*---*/
 	
-/*this is neat*/
+/*CSS for extending the white content pane to include all ements*/
+/*possible not needed any more*/
 section.cleared:after{
 	content : "." ;
 	visibility : hidden ;
@@ -135,7 +138,9 @@ section.cleared:after{
 	height : 0px ;
 	clear : both ;
 }
+/*---*/
 
+/*CSS for styiling the container of the content of each page*/
 #pagecontent{
 	position : relative;
 	float:left;	
@@ -144,3 +149,4 @@ section.cleared:after{
 	padding : 10px;
 	width : 80% ;
 }
+/*----*/

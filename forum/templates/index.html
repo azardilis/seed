@@ -3,10 +3,37 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-    <form name="input" action="/" method="post">
-      <p> Username: <input type="text" name="user"> </p>
-      <p> Password: <input type="password" name="password"></p>
-      <input type="submit" value="Submit">
- </form>
+  
+ <section id="content" class="content"> 
+    <!--{% include "/templates/test.html" %} -->
+    <section id="header">
+		<p>Welcome to the site, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
+		<p id="modules_tag"> Your modules: </p>
+		<img src="/stylesheets/resources/larrow.png" alt="larrow" >	    
+		<ul id="modulebar" class="modulebar">
+	    	{% for sub in subscriptions %}
+			<li>
+			<a href="{{sub.module.ecs_page}}">{{sub.module.title}}</a> <span class="separator"> | </span>
+			</li>
+		{% endfor %}
+		</ul>
+		<img src="/stylesheets/resources/rarrow.png" alt="rarrow" >
+	</section>
+
+	<!-- This includes the sidebar-->
+	{% include "/templates/sidebar.html"%}
+
+<section id="pagecontent" class="cleared">
+
+<!-- Add whatever content you want here-->
+<h1>@ OIKO </h1>
+<h2>edit your stuff in template forum_subscriptions!</h2>
+<h2>Thank you,</h2>
+<h2>love,</h2>
+<h2>Dio.</h2>
+
+</section>
+<section class="cleared">	</section>
+</section>
   </body>
 </html>

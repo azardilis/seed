@@ -1,50 +1,10 @@
 <html>
      <head>
        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+       <link type="text/css" rel="stylesheet" href="/stylesheets/newthread.css" />
        <script src="js/jq-1.8.3.js"></script>
-	<style type="text/css">
-		
-		#newthreadform *{
-			display : block ;
-		}
-	</style>
+       <script type="text/javascript" src="js/newthread.js"></script>
        
-       <script type="text/javascript">
-	$(document).ready(function()
-	{
-		$("#newthreadform").submit(function(event)
-		{
-			var $form = $(this),
-			$inputs = $form.find("input, button,textarea"),
-			serializedData = $form.serialize();
-
-			$inputs.attr("disabled", "disabled");
-
-			$.ajax(
-			{
-				url: "/createnewthread",
-				type: "POST",
-				data: serializedData,
-				contentType: 'application/x-www-form-urlencoded',
-				dataType: 'html',
-				success: function(data, textStatus)
-				{
-					alert("Server replied : " + data);
-				},
-				error: function(xmlhttp, textStatus, errorThrown)
-				{
-					alert('There was an error while creating a new thread.');
-				},
-				complete: function()
-				{
-					$inputs.removeAttr("disabled");
-				}
-			});
-			event.preventDefault();
-		});
-});
-       
-       </script>
   </head>
   <body>
 <section id="content" class="content">  
