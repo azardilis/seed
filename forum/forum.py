@@ -132,7 +132,7 @@ class ThreadPage(webapp2.RequestHandler):
 
 			l1p = get_posts(int(cgi.escape(self.request.get('tid'))))
 			posts = ''
-			posts = get_children(l1p,posts,1)
+			posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()))
 	
 			template_params = {
 				'thread': t ,
@@ -252,13 +252,20 @@ class VoteDownPost(webapp2.RequestHandler):
 class ToggleSolution(webapp2.RequestHandler) :
 	def post(self):
 		thrd = retrieve_thread(self.request.get('tid'))
-		if thrd :
-			if thrd.poster.key() == current_user.key() :
-				pst = retrieve_post(self.request.get('pid'))
-				if pst and (pst in thrd.replies): # just making sure it is a lvl1 reply
-					pst.answer = not pst.anwer
-					pst.put()
-					self.response.out.write('toggled state')
+		pst = retrieve_post(self.request.get('pid'))
+		if thrd and pst  :
+			if str(thrd.poster.key()) == str(current_user.key()) :# and (pst in thrd.posts):
+				
+				for p in thrd.posts: #reset all current answers 
+					p.answer = False 
+
+				pst.answer = not pst.answer
+				pst.put()
+				self.response.out.write('toggled state')
+			else :
+					self.response.out.write('Unable to vote on answer, curr_user_k :'+str(current_user.key())+', poster_k:'+str(thrd.poster.key()))
+		else :
+			logging.error('Unable to find thread or post')
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -348,6 +355,9 @@ def populate_db():
     ###### POPULATE ######
     current_user = User(key_name='az2g10', full_name='argyris', password='1234', course='cs', year=3)
     current_user.put()
+
+    user = User(key_name='dpm3g10',full_name='dio',password='1234',course='cs',year=3)
+    user.put()
 
     compsci11 = YearCourseSemester(year=int(1), semester=int(1), course='compsci')
     compsci11.put()

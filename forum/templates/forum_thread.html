@@ -9,12 +9,13 @@
 	<script type="text/javascript">
 	$(document).ready(function(){
 
-		$('p.ans').click(functiion(){
+		$('p.ans').click(function(){
 			var e = $(this);
 			var pid = e.attr('pid');
 			var dt = 'pid='+pid;
 			var trd = $('article#thread');
 			var tid = trd.attr('tid');
+			dt +='&tid='+tid;
 
 			$.ajax(
 			{
@@ -23,20 +24,26 @@
 				data : dt ,
 				contentType : 'application/x-www-form-urlencoded',
 				dataType : 'html',
-				success:function(data,textStatus){
-					e.siblings('p.score').html(data);
+				success:function(data){					
+					if(e.parent().parent().parent().attr('class') === 'ans'){
+						e.parent().parent().parent().attr('class','post');
+					}else{
+						$('section.ans').attr('class','post'); /*reset all other answers*/
+						var par_section = e.parent().parent().parent();
+						par_section.attr('class','ans');
+					}
 				},
 				error: function(xmlhttp, textStatus, errorThrown)
 				{
-					alert('There was an error while voting.');
+					console.log('Error in marking answer');
 				},
 				complete: function()
 				{
 					console.log('request should have completed');
 				}
 			});
-
 		});
+
 	});
 	</script>
 
