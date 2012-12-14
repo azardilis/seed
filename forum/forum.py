@@ -347,6 +347,15 @@ def reset_db():
     for i in Rating.all():
     	i.delete()
 
+	for i in Assessment.all():
+        i.delete()
+
+    for i in Grade.all():
+		i.delete()
+
+	for i in Lecturer.all():
+		i.delete()
+
 
 #function to populate the db at the start of the app,
 #that is if you don't have your own copy locally
