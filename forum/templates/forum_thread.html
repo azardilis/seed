@@ -24,13 +24,18 @@
 				data : dt ,
 				contentType : 'application/x-www-form-urlencoded',
 				dataType : 'html',
-				success:function(data){					
-					if(e.parent().parent().parent().attr('class') === 'ans'){
-						e.parent().parent().parent().attr('class','post');
+				success:function(data){
+					if(data === 'ok'){
+						var par_section = e.parent().parent().parent();		
+						
+						if(par_section.attr('class') === 'ans'){
+							par_section.attr('class','post');
+						}else{
+							$('section.ans').attr('class','post'); /*reset all other answers*/
+							par_section.attr('class','ans');
+						}
 					}else{
-						$('section.ans').attr('class','post'); /*reset all other answers*/
-						var par_section = e.parent().parent().parent();
-						par_section.attr('class','ans');
+						console.log('Some error occured, response :'+data)
 					}
 				},
 				error: function(xmlhttp, textStatus, errorThrown)

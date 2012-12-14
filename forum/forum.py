@@ -254,16 +254,20 @@ class ToggleSolution(webapp2.RequestHandler) :
 		thrd = retrieve_thread(self.request.get('tid'))
 		pst = retrieve_post(self.request.get('pid'))
 		if thrd and pst  :
-			if str(thrd.poster.key()) == str(current_user.key()) :# and (pst in thrd.posts):
+			if str(thrd.poster.key()) == str(current_user.key())  and (pst.key() in [p.key() for p in thrd.posts]):
 				
-				for p in thrd.posts: #reset all current answers 
-					p.answer = False 
+				for ps in thrd.posts: #reset all current answers 
+					if not ps.key() is pst.key() :
+						pass
+					#	p.answer = False 
 
 				pst.answer = not pst.answer
 				pst.put()
-				self.response.out.write('toggled state')
+				self.response.out.write('ok')
+				logging.info('toggled state')
 			else :
-					self.response.out.write('Unable to vote on answer, curr_user_k :'+str(current_user.key())+', poster_k:'+str(thrd.poster.key()))
+				self.response.out.write('Failing checks')
+				logging.error('curr_user_k :'+str(current_user.key())+', poster_k:'+str(thrd.poster.key())+', post in thrd.posts = '+(pst.key() in [p.key() for p in thrd.posts]) )
 		else :
 			logging.error('Unable to find thread or post')
 
