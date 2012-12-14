@@ -257,9 +257,9 @@ class ToggleSolution(webapp2.RequestHandler) :
 			if str(thrd.poster.key()) == str(current_user.key())  and (pst.key() in [p.key() for p in thrd.posts]):
 				
 				for ps in thrd.posts: #reset all current answers 
-					if not ps.key() is pst.key() :
-						pass
-					#	p.answer = False 
+					if not (ps.key() is pst.key()) :
+						ps.answer = False 
+						ps.put()
 
 				pst.answer = not pst.answer
 				pst.put()
