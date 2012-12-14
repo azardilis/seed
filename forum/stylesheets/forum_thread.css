@@ -1,0 +1,75 @@
+.post {
+	border : 1px dotted #88ccff;
+	border-radius : 5px;
+	padding :  2%;
+	padding-right : 0% ;
+	margin: 1%;
+	margin-right : 0%;
+	margin-bottom : 0%;
+}
+
+#thread{
+	border : 1px solid #88ff88		;
+	padding : 10px ;
+	margin : 5px ;
+}
+
+
+#replyform{
+	padding :  2%;
+	margin : 1%;
+}
+
+#replyform *{
+	display : block ;
+}
+
+#controls{
+	position: relative;	
+}
+
+span.controls *{
+	display : inline;
+	color : #005566;
+	font-size : 9pt;
+}
+
+span.controls p:hover{
+	cursor : pointer ;
+	text-decoration : underline;
+}
+
+span.controls p.score {
+	text-decoration : none ;
+	cursor : default ;
+	font-size : 13pt ;
+}
+
+form.psreplyform{
+	display : none ;
+}
+
+form.psreplyform *{
+	display : block 
+}
+
+blockquote{
+	background : #88bbcc ;
+	margin : 5px;
+	border : 3px solid #aaaaff ;
+	border-radius : 10px ;
+	padding : 5px;
+}
+
+blockquote p.details{
+	color : white ;
+}
+
+blockquote p.quotext{
+	color : white ;
+	font-style: italic;
+}
+
+hr{
+	color : #66aaaa;
+}

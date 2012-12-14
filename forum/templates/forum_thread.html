@@ -4,105 +4,52 @@
 	<script src="js/functions.js"></script>
 	
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/forum_thread.css" />
 
 	<script type="text/javascript">
 	$(document).ready(function(){
+
+		$('p.ans').click(functiion(){
+			var e = $(this);
+			var pid = e.attr('pid');
+			var dt = 'pid='+pid;
+			var trd = $('article#thread');
+			var tid = trd.attr('tid');
+
+			$.ajax(
+			{
+				url:'/solution' ,
+				type:'POST',
+				data : dt ,
+				contentType : 'application/x-www-form-urlencoded',
+				dataType : 'html',
+				success:function(data,textStatus){
+					e.siblings('p.score').html(data);
+				},
+				error: function(xmlhttp, textStatus, errorThrown)
+				{
+					alert('There was an error while voting.');
+				},
+				complete: function()
+				{
+					console.log('request should have completed');
+				}
+			});
+
+		});
 	});
 	</script>
-
-
-	<style type="text/css">
-	
-	.post {
-		border : 1px solid #88ccff;
-		border-radius : 5px;
-		padding :  2%;
-		padding-right : 0% ;
-		margin: 1%;
-		margin-right : 0%;
-		margin-bottom : 0%;
-	}
-	
-	#thread{
-		border : 1px solid #88ff88		;
-		padding : 10px ;
-		margin : 5px ;
-	}
-	
-	
-	#replyform{
-		padding :  2%;
-		margin : 1%;
-	}
-	
-	#replyform *{
-		display : block ;
-	}
-	
-	span.controls *{
-		display : inline;
-		color : #005566;
-		font-size : 9pt;
-		
-	}
-	
-	span.controls p:hover{
-		cursor : pointer ;
-		text-decoration : underline;
-	}
-	
-	
-	
-	span.controls p.score {
-		text-decoration : none ;
-		cursor : default ;
-		font-size : 13pt ;
-	}
-	
-	form.psreplyform{
-		display : none ;
-	}
-	
-	form.psreplyform *{
-		display : block 
-	}
-	
-	blockquote{
-		background : #88bbcc ;
-		margin : 5px;
-		border : 3px solid #aaaaff ;
-		border-radius : 10px ;
-		padding : 5px;
-		
-		/*correct this*/
-		text-decoration : italics ;
-	}
-	
-	blockquote p.details{
-		color : white ;
-	}
-	
-	blockquote p.quotext{
-		color : white ;
-	}
-	
-	hr{
-		color : #66aaaa;
-	}
-
-	</style>
 
 </head>
 <body>
 
 	<section id="content" class="content"> 
 
-
 		<!-- This includes the sidebar-->
 		{% include "/templates/sidebar.html"%}
 
 		<section id="pagecontent" class="cleared">
-			<article id='thread'>
+			<article id='thread' tid={{thread.key().id()}}>
 				<h1>{{ thread.subject }}</h1>
 				<p>{{ thread.body }}</p>
 			</article>
@@ -118,8 +65,6 @@
 				{{posts}}		
 			</section>
 		</section>
-
-		<section class="cleared">	</section>
 	</section>
 </body>
 </html>

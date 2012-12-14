@@ -140,14 +140,14 @@ class ThreadPage(webapp2.RequestHandler):
 			}
 			self.response.out.write(template.render(template_params))
 		else :
-			self.response.out.write('Unable to find thread '+str(tid)+'<')
+			self.response.out.write('Unable to find thread '+str(self.request.get('ti'))+'<')
 
 class ViewAllThreadsPage(webapp2.RequestHandler):
 	def get(self):
 		category = retrieve_category(self.request.get('cid')) 
 		
 		if category :
-			threads = category.threads
+			threads = category.threads.order('-timestamp')
 			template_vars = {
 				'category' : category,
 				'threads':threads
@@ -156,6 +156,7 @@ class ViewAllThreadsPage(webapp2.RequestHandler):
 			self.response.out.write(template.render(template_vars))
 		else :
 			logging.error('no category found '+str(cid))
+			self.response.out.write('Couldn\'t get category')
 
 class NewThread(webapp2.RequestHandler):
 	def get(self):
@@ -180,7 +181,8 @@ class CreateNewThread(webapp2.RequestHandler):
 		if cat :
 			t = Thread(category = cat,poster=current_user, tags=tgs.split(','),subject=sbj,body =bd )
 			t.put()
-			self.response.out.write('Created thread')
+			self.redirect('/showthread?tid='+str(t.key().id()))
+
 		else :
 			self.response.out.write('category not found')
 
@@ -249,15 +251,14 @@ class VoteDownPost(webapp2.RequestHandler):
 
 class ToggleSolution(webapp2.RequestHandler) :
 	def post(self):
-		tid = int(cgi.escape(self.request.get('tid')))	
-		t_k = Key.from_path('Thread',tid)
-		thrd = db.get(t_k)
-
+		thrd = retrieve_thread(self.request.get('tid'))
 		if thrd :
 			if thrd.poster.key() == current_user.key() :
-				pass
-				
-
+				pst = retrieve_post(self.request.get('pid'))
+				if pst and (pst in thrd.replies): # just making sure it is a lvl1 reply
+					pst.answer = not pst.anwer
+					pst.put()
+					self.response.out.write('toggled state')
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
@@ -466,7 +467,7 @@ def populate_db():
     rg = q.get()
 
 
-    t = Thread(category=categGeneral3001,subject='Some subject',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
+    t = Thread(category=categGeneral3001,subject='Busy thread',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
     t.put()
     
     for d in range (0,10) :
@@ -505,6 +506,7 @@ app = webapp2.WSGIApplication([
 				   ('/replypost',ReplyToPost),
 				   ('/vup',VoteUpPost),
 				   ('/vdown',VoteDownPost),
+				   ('/solution',ToggleSolution),
                                    ('/about', AboutPage),
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),

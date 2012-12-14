@@ -17,7 +17,7 @@ def get_children(plist , posts, lvl):
 	for p in plist :
 		posts = make_article(posts)
 		posts = make_post(p,posts)
-		posts = make_toolbar(p,posts)
+		posts = make_toolbar(p,posts,lvl)
 
 		if len(p.replies.fetch(1) ) > 0 : #little dirty hack to check if any responses exist
 			posts = make_section(posts)
@@ -30,24 +30,54 @@ def get_children(plist , posts, lvl):
 
 	return posts
 
-def make_toolbar(p,posts):
+def make_answer(p,posts) :
 	pid = str(p.key().id())
-	html =''' 
-	<section id="controls">
-		<span class="controls">
-			<p class="score" pid="'''+pid+'''">'''+str(p.votes)+'''</p>
-			<p class="reply" pid="'''+pid+'''">Reply</p>
-			<p class="quote" pid="'''+pid+'''">Quote</p>
-			<p class="voteup" pid="'''+pid+'''" url="/vup">Vote-Up</p>
-			<p class="votedown" pid="'''+pid+'''" url="/vdown">Vote-Down</p>
-		</span>
-	<form id="rf'''+pid+'''" class="psreplyform" method="post" action="/replypost">
+	html = '''
+		<section class="isanswer" pid="'''+pid+'''">
+			Answer? 
+			
+		</section>
+	'''
+	return posts+html
+
+def make_toolbar(p,posts,lvl):
+	pid = str(p.key().id())
+	if lvl == 1 :
+		html =''' 
+		<section id="controls">
+			<span class="controls">
+				<p class="score" pid="'''+pid+'''">'''+str(p.votes)+'''</p>
+				<p class="reply" pid="'''+pid+'''">Reply</p>
+				<p class="quote" pid="'''+pid+'''">Quote</p>
+				<p class="voteup" pid="'''+pid+'''" >Vote-Up</p>
+				<p class="votedown" pid="'''+pid+'''" >Vote-Down</p>
+				<p class="ans" pid="'''+pid+'''" >Mark as Answer</p>
+			</span>
+			<form id="rf'''+pid+'''" class="psreplyform" method="post" action="/replypost">
 				<input type="hidden" value="'''+pid+'''" name="r2pid">
 				<textarea name="bd" rows="5" cols="50"></textarea>
 				<input type="submit" value="Reply">
 			</form>
-	</section>
-	'''
+		</section>
+		'''
+	else:
+		html =''' 
+		<section id="controls">
+			<span class="controls">
+				<p class="score" pid="'''+pid+'''">'''+str(p.votes)+'''</p>
+				<p class="reply" pid="'''+pid+'''">Reply</p>
+				<p class="quote" pid="'''+pid+'''">Quote</p>
+				<p class="voteup" pid="'''+pid+'''" url="/vup">Vote-Up</p>
+				<p class="votedown" pid="'''+pid+'''" url="/vdown">Vote-Down</p>
+			</span>
+			<form id="rf'''+pid+'''" class="psreplyform" method="post" action="/replypost">
+				<input type="hidden" value="'''+pid+'''" name="r2pid">
+				<textarea name="bd" rows="5" cols="50"></textarea>
+				<input type="submit" value="Reply">
+			</form>
+		</section>
+		'''
+	
 	return posts+html
 
 def make_article(posts):
@@ -81,8 +111,7 @@ def parse_quotes(p):
 			\[\/quote\]
 			''',re.VERBOSE)
 	res = exp.search(bd)
-	
-	if res :
+	while res :
 		grps = res.groups()
 		det = '<blockquote>'
 		det += '<p class="details">'+grps[0]+' wrote : </p>'
@@ -90,8 +119,6 @@ def parse_quotes(p):
 		det+= '<p class="quotext">'+grps[1]+'</p>'
 		det += '</blockquote>'
 		bd = re.sub(r'\[quote=([a-z0-9]{6,8})\](.+)\[\/quote\]',det, bd)
-
-		#this is funny business, improve 
-		bd = parse_quotes(bd)
+		res = exp.search(bd)
 		
 	return bd 

@@ -61,6 +61,7 @@ body{
   margin-left : -500px ;
   height : auto ;
   padding : 20px;
+  overflow: auto;
 }
 
 
@@ -129,6 +130,7 @@ body{
 /*---*/
 	
 /*CSS for extending the white content pane to include all ements*/
+/*possible not needed any more*/
 section.cleared:after{
 	content : "." ;
 	visibility : hidden ;
