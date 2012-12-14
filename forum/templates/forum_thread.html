@@ -1,66 +1,17 @@
 <html>
-     <head>
+<head>
 	<script src="js/jq-1.8.3.js"></script>
 	<script src="js/functions.js"></script>
+	
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+
 	<script type="text/javascript">
-		$(document).ready(function(){
-			
-			$('p.voteup').click(function(){
-				var e = $(this);
-				var pid = e.attr('pid');
-				var dt = 'pid='+pid
-				$.ajax(
-				{
-					url:'/vup' ,
-					type:'POST',
-					data : dt ,
-					contentType : 'application/x-www-form-urlencoded',
-					dataType : 'html',
-					success:function(data,textStatus){
-						e.siblings('p.score').html(data);
-					},
-					error: function(xmlhttp, textStatus, errorThrown)
-					{
-						alert('There was an error while voting.');
-					},
-					complete: function()
-					{
-						console.log('request should have completed');
-					}
-				});
-			});
-			
-			$('p.votedown').click(function(){
-				var e = $(this);
-				var pid = e.attr('pid');
-				var dt = 'pid='+pid
-				$.ajax(
-				{
-					url:'/vdown' ,
-					type:'POST',
-					data : dt ,
-					contentType : 'application/x-www-form-urlencoded',
-					dataType : 'html',
-					success:function(data,textStatus){
-						e.siblings('p.score').html(data);
-					},
-					error: function(xmlhttp, textStatus, errorThrown)
-					{
-						alert('There was an error while voting.');
-					},
-					complete: function()
-					{
-						console.log('request should have completed');
-					}
-				});
-			});
-			
-		});
-        </script>
+	$(document).ready(function(){
+	});
+	</script>
 
 
-<style type="text/css">
+	<style type="text/css">
 	
 	.post {
 		border : 1px solid #88ccff;
@@ -139,36 +90,36 @@
 		color : #66aaaa;
 	}
 
-</style>           
-    
-  </head>
- <body>
-  
- <section id="content" class="content"> 
-   
+	</style>
 
-	<!-- This includes the sidebar-->
-	{% include "/templates/sidebar.html"%}
+</head>
+<body>
 
-	<section id="pagecontent" class="cleared">
-		<article id='thread'>
-		<h1>{{ thread.subject }}</h1>
-		<p>{{ thread.body }}</p>
-		</article>
-		<section id="reply">
-			<form method="POST" action="/replythread" id="replyform">
-				<input type="hidden" name="tid" value="{{thread.key().id()}}">
-				<textarea name="bd" cols="70" rows="8"></textarea>
-				<input type="submit" value="Reply!">
-			</form>
+	<section id="content" class="content"> 
+
+
+		<!-- This includes the sidebar-->
+		{% include "/templates/sidebar.html"%}
+
+		<section id="pagecontent" class="cleared">
+			<article id='thread'>
+				<h1>{{ thread.subject }}</h1>
+				<p>{{ thread.body }}</p>
+			</article>
+			<section id="reply">
+				<form method="POST" action="/replythread" id="replyform">
+					<input type="hidden" name="tid" value="{{thread.key().id()}}">
+					<textarea name="bd" cols="70" rows="8"></textarea>
+					<input type="submit" value="Reply!">
+				</form>
+			</section>
+
+			<section id='responses'>
+				{{posts}}		
+			</section>
 		</section>
-		
-		<section id='responses'>
-			{{posts}}		
-		</section>
+
+		<section class="cleared">	</section>
 	</section>
-	
-	<section class="cleared">	</section>
-</section>
 </body>
 </html>

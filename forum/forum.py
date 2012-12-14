@@ -40,7 +40,7 @@ def getYCS(year, course, semester):
 class SignInPage(webapp2.RequestHandler):
     def get(self):
 	if 'current_user' not in globals():
-        	template = jinja_environment.get_template('templates/index.html')
+        	template = jinja_environment.get_template('templates/signin.html')
        		self.response.out.write(template.render())
 	else:
 		self.redirect("/main")
@@ -68,7 +68,7 @@ class MainPage(webapp2.RequestHandler):
                            'current_user':current_user,
                            'subscriptions':homepage_subs
                            	}
-        	template = jinja_environment.get_template('templates/signin.html')
+        	template = jinja_environment.get_template('templates/index.html')
         	self.response.out.write(template.render(template_values))
 	else:
 		self.redirect("/")
@@ -126,29 +126,25 @@ class CategoriesPage(webapp2.RequestHandler):
 
 class ThreadPage(webapp2.RequestHandler):
 	def get(self):
-		tid = cgi.escape(self.request.get('tid'))
-		logging.debug(tid)
-		#make sure that tid is numeric, else issue fatal error 
-		t_k  = Key.from_path('Thread',int(tid))
-		t = db.get(t_k)
-		template = jinja_environment.get_template('templates/forum_thread.html')
+		t =retrieve_thread(self.request.get('tid'))
+		if t :
+			template = jinja_environment.get_template('templates/forum_thread.html')
 
-		l1p = get_posts(tid)
-		posts = ''
-		posts = get_children(l1p,posts,1)
-
-		template_params = {
-			'thread': t ,
-			'posts' : posts
-		}
-
-		self.response.out.write(template.render(template_params))
+			l1p = get_posts(tid)
+			posts = ''
+			posts = get_children(l1p,posts,1)
+	
+			template_params = {
+				'thread': t ,
+				'posts' : posts
+			}
+			self.response.out.write(template.render(template_params))
+		else :
+			self.repsinse.out.write('Unable to find thread '+str(tid)+'<')
 
 class ViewAllThreadsPage(webapp2.RequestHandler):
 	def get(self):
-		cid = cgi.escape(self.request.get('cid'))
-		c_k = Key.from_path('Category',int(cid))
-		category = db.get(c_k)
+		category = retrieve_category(self.request.get('cid')) 
 		
 		if category :
 			threads = category.threads
@@ -178,10 +174,8 @@ class CreateNewThread(webapp2.RequestHandler):
 		bd = cgi.escape(self.request.get('body'))
 		sbj = cgi.escape(self.request.get('subject'))
 		tgs = cgi.escape(self.request.get('tags'))
-		cid = int(cgi.escape(self.request.get('cid')))
-		
-		c_k = Key.from_path('Category', cid)
-		cat = db.get(c_k)
+
+		cat = retrieve_category(self.request.get('cid'))
 		
 		if cat :
 			t = Thread(category = cat,poster=current_user, tags=tgs.split(','),subject=sbj,body =bd )
@@ -237,12 +231,13 @@ class VoteUpPost(webapp2.RequestHandler):
 			self.response.out.write('couldnt get post')
 			logging.error('unable to get post w/ pid '+str(pid)+'<')
 
+from functions.RetrieveFunctions import *
 
 class VoteDownPost(webapp2.RequestHandler):
 	def post(self):	
-		pid = int(cgi.escape(self.request.get('pid')))
-		p_k = Key.from_path('Post',pid)
-		pst = db.get(p_k)
+		#pid = int(cgi.escape(self.request.get('pid')))
+		#p_k = Key.from_path('Post',pid)
+		pst = retrieve_post(self.request.get('pid'))#db.get(p_k)
 		
 		if pst :
 			pst.votes = pst.votes-1
@@ -251,6 +246,18 @@ class VoteDownPost(webapp2.RequestHandler):
 		else :
 			self.response.out.write('couldnt get post')
 			logging.error('unable to get post w/ pid '+str(pid)+'<')
+
+class ToggleSolution(webapp2.RequestHandler) :
+	def post(self):
+		tid = int(cgi.escape(self.request.get('tid')))	
+		t_k = Key.from_path('Thread',tid)
+		thrd = db.get(t_k)
+
+		if thrd :
+			if thrd.poster.key() == current_user.key() :
+				pass
+				
+
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
