@@ -74,8 +74,8 @@ class MainPage(webapp2.RequestHandler):
             self.redirect("/")
 
 class ForumPage(webapp2.RequestHandler):
-<<<<<<< HEAD
-    	def get(self):
+	
+	def get(self):
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 	
 		if not sub_to_delete is '':
@@ -89,7 +89,6 @@ class ForumPage(webapp2.RequestHandler):
 			subs.filter("__key__",Key(sub_to_delete))
 			subs.get().delete()
 			subs=user.subscriptions
-#			subs=user.subscriptions
 			ratings=[]
 			#for s in subs:
 			#	ratQ=Rating.all()
@@ -113,48 +112,18 @@ class ForumPage(webapp2.RequestHandler):
 			userQ.filter('__key__ =',current_user.key())
 			user = userQ.get() #is this really necessary ???
 			subs = 	user.subscriptions
-			ratings=[]
+			mod_info=[]
+			
 			for s in subs:
 				ratQ=Rating.all()
 				ratQ.filter("module",s.module)
-				ratings.append(ratQ)	
-
-#			for r in ratings:
-#				for h in r:
-#					self.response.write(h.lecturer.key().name())
-	
+				mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,ratQ))
+		
 			template_params = {
-				'subscriptions' : subs,
-				'ratings':ratings
+				'mod_info':mod_info
 			}
 
         		self.response.out.write(template.render(template_params))	
-		
-=======
-    def get(self):
-        template = jinja_environment.get_template('templates/forum_subscriptions.html')
-        userQ = User.all()
-        userQ.filter('__key__ =',current_user.key())
-        user = userQ.get() #is this really necessary ???
-        subs =  user.subscriptions
-        ratings=[]
-        for s in subs:
-            ratQ=Rating.all()
-            ratQ.filter("module",s.module)
-            ratings.append(ratQ)
-
-        for r in ratings:
-            for h in r:
-                self.response.write(h.lecturer.key().name())
-
-
-        template_params = {
-                'subscriptions' : subs,
-                'ratings':ratings
-        }
-
-        self.response.out.write(template.render(template_params))
->>>>>>> 1c27811ec7e52a6fc301cbe78e76554e3bcc1c0c
 
 class CategoriesPage(webapp2.RequestHandler):
     def get(self):
@@ -378,6 +347,13 @@ class EmailSent(webapp2.RequestHandler):
                        subject=subject,
                        body=message)
         self.response.out.write(template.render({}))
+
+class ModuleInfo:
+	def __init__(self,sub_key,sub_code,sub_name,mod_lecturers):
+		self.sub_key=sub_key
+		self.sub_code=sub_code
+		self.sub_name=sub_name
+		self.mod_lecturers=mod_lecturers
 
 
 def reset_db():

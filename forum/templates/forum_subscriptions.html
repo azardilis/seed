@@ -50,11 +50,14 @@ position:relative;
 
 	<section id="pagecontent" class="cleared">
 		<h1>Your subscriptions </h1>
-		{% for sub in subscriptions%}
+		{% for sub in mod_info%}
 				<div class="subs">
-				<a href="/forum?mod={{sub.key()}}"><img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Smiley face" height="20" width="20"></a> 
-				<p class="box"><a href="/categories?mid={{sub.module.key().name() }}">{{ sub.module.key().name().upper() }}</a></p>
-				<p class="box"><a href="/categories?mid={{sub.module.key().name() }}">{{ sub.module.title }}</a></p>
+				<a href="/forum?mod={{sub.sub_key}}"><img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Delete Sub" height="20" width="20"></a> 
+				<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p>
+				<p class="box"><a href="/categories?mid={{sub.sub_name }}">{{ sub.sub_name }}</a></p>
+				{% for rat in sub.mod_lecturers %}
+				<p class="box">{{rat.key().name()}}</p>
+				{% endfor %}
 				</div>		
 		{% endfor %}
 	</section>
