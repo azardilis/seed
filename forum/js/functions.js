@@ -1,27 +1,44 @@
-/*append a post to the body of the thread (at level 1)*/
-function appendPost(arr,newID){
-	var bd = '' ;
-	for (i in arr){
-		if (arr[i][0] === 'bd'){
-			bd = arr[i][1];
-		}
-	}
-	
-	var sE = document.createElement('section');
-	sE.setAttribute('class','post');
+/*
+function that splits the serialized string of data that is
+ sent to the server
+ */
+ function returnArray(str){
+ 	var arr = str.split("&");
+ 	for (i in arr){
+ 		arr[i] = arr[i].split("=");
+ 	}
+ 	return arr;
+ }
 
-	var art = document.createElement('article');
-	
-	var txt = document.createTextNode(bd+' (refresh page for actions).');
-	art.appendChild(txt);
-	sE.appendChild(art);
-	
-	var rSection = document.getElementById('responses');
+ /*makes the toolbar for each post*/
+ function makeToolbar(pid){
+
+ }
+
+ /*append a post to the body of the thread (at level 1)*/
+ function appendPost(arr,newID){
+ 	var bd = '' ;
+ 	for (i in arr){
+ 		if (arr[i][0] === 'bd'){
+ 			bd = arr[i][1];
+ 		}
+ 	}
+
+ 	var sE = document.createElement('section');
+ 	sE.setAttribute('class','post');
+
+ 	var art = document.createElement('article');
+
+ 	var txt = document.createTextNode(bd+' (refresh page for actions).');
+ 	art.appendChild(txt);
+ 	sE.appendChild(art);
+
+ 	var rSection = document.getElementById('responses');
 	//add node to the beginning of the posts
 	rSection.insertBefore(sE,rSection.childNodes[0]);
 }
 
-/*appends to post*/
+/*appends to post at level n > 1*/
 function appendToPost(arr,newID){
 
 	var bd = '' ;
@@ -39,32 +56,30 @@ function appendToPost(arr,newID){
 	
 	var psts = document.getElementById('replies'+reply_to_post);
 
-	if(psts){
-
-	}else{
+	if(!psts){
 		psts = document.createElement('section');
 		psts.setAttribute('class','posts');
 		psts.setAttribute('id','replies'+reply_to_post);
-
-		var sE = document.createElement('section');
-		sE.setAttribute('class','post');
-
-		var art = document.createElement('article');
-		art.setAttribute('poster',poster);
-		art.setAttribute('pid',reply_to_post);
-		art.setAttribute('id','pst'+newID);
-
-		var txt = document.createTextNode(bd+' (refresh page for actions).');
-		art.appendChild(txt);
-
-
-		sE.appendChild(art);
-		psts.appendChild(sE);
-
-		var appHere = $('#pst'+reply_to_post).parent();
-		appHere.append(psts);
 	}
+	var sE = document.createElement('section');
+	sE.setAttribute('class','post');
+
+	var art = document.createElement('article');
+	art.setAttribute('poster',poster);
+	art.setAttribute('pid',reply_to_post);
+	art.setAttribute('id','pst'+newID);
+
+	var txt = document.createTextNode(bd+' (refresh page for actions).');
+	art.appendChild(txt);
+
+
+	sE.appendChild(art);
+	psts.appendChild(sE);
+
+	var appHere = $('#pst'+reply_to_post).parent();
+	appHere.append(psts);
 }
+
 
 $(document).ready(function(){
 	
@@ -90,7 +105,7 @@ $(document).ready(function(){
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
-				alert('There was an error while replying to thread.');
+				console.log('There was an error while replying to thread.');
 			},
 			complete: function()
 			{
@@ -149,6 +164,7 @@ $(document).ready(function(){
 		event.preventDefault();
 	});
 
+	/*AJAX for voting up a post*/
 	$('p.voteup').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
@@ -165,7 +181,7 @@ $(document).ready(function(){
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
-				alert('There was an error while voting.');
+				console.log(textStatus);
 			},
 			complete: function()
 			{
@@ -174,6 +190,7 @@ $(document).ready(function(){
 		});
 	});
 
+	/*AJAX for voting down post*/
 	$('p.votedown').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
@@ -190,7 +207,7 @@ $(document).ready(function(){
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
-				alert('There was an error while voting.');
+				console.log(textStatus);
 			},
 			complete: function()
 			{
@@ -239,14 +256,4 @@ $(document).ready(function(){
 			}
 		});
 	});
-
 });
-
-function returnArray(str){
-	var arr = str.split("&");
-	for (i in arr){
-		arr[i] = arr[i].split("=");
-	}
-	
-	return arr;
-}
