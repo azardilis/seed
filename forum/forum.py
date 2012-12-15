@@ -74,7 +74,6 @@ class MainPage(webapp2.RequestHandler):
             self.redirect("/")
 
 class ForumPage(webapp2.RequestHandler):
-<<<<<<< HEAD
     	def get(self):
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 	
@@ -130,31 +129,6 @@ class ForumPage(webapp2.RequestHandler):
 
         		self.response.out.write(template.render(template_params))	
 		
-=======
-    def get(self):
-        template = jinja_environment.get_template('templates/forum_subscriptions.html')
-        userQ = User.all()
-        userQ.filter('__key__ =',current_user.key())
-        user = userQ.get() #is this really necessary ???
-        subs =  user.subscriptions
-        ratings=[]
-        for s in subs:
-            ratQ=Rating.all()
-            ratQ.filter("module",s.module)
-            ratings.append(ratQ)
-
-        for r in ratings:
-            for h in r:
-                self.response.write(h.lecturer.key().name())
-
-
-        template_params = {
-                'subscriptions' : subs,
-                'ratings':ratings
-        }
-
-        self.response.out.write(template.render(template_params))
->>>>>>> 1c27811ec7e52a6fc301cbe78e76554e3bcc1c0c
 
 class CategoriesPage(webapp2.RequestHandler):
     def get(self):

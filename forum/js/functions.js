@@ -10,7 +10,6 @@ function appendPost(arr){
 		}
 	}
 	
-	
 	var sE = document.createElement('section');
 	sE.setAttribute('class','post');
 
@@ -54,7 +53,7 @@ function appendToPost(arr){
 	sE.appendChild(art);
 	psts.appendChild(sE);
 	
-	var appHere = $('article.art#'+parent).parent();
+	var appHere = $('#pst'+parent).parent();
 	appHere.append(psts);
 }
 
@@ -66,6 +65,7 @@ $(document).ready(function(){
 		var $form = $(this);
 		var $inputs = $form.find("input, button,textarea") ;
 		serializedData = $form.serialize();
+		console.log(serializedData);
 		$inputs.attr("disabled", "disabled");
 
 		$.ajax(
@@ -102,8 +102,8 @@ $(document).ready(function(){
 	$('p.quote').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
-		var poster = $('article.art#'+pid).attr('poster');
-		var qs = "[quote="+poster+"]"+$('article.art#'+pid).html()+"[/quote]";
+		var poster = $('article#pst'+pid).attr('poster');
+		var qs = "[quote="+poster+"]"+$('article#pst'+pid).html()+"[/quote]";
 		$('#rf'+pid+' textarea').html(qs);
 		$('#rf'+pid).slideDown();
 	});
@@ -112,8 +112,9 @@ $(document).ready(function(){
 	$('form.psreplyform').submit(function(event)
 	{
 		var $form = $(this);
-		var $inputs = $form.find("input, button,textarea") ;
-		var serializedData = $form.serialize();			
+		var $inputs = $form.find("input,textarea").not(':submit', ':hidden') ;
+		var serializedData = $form.serialize();	
+		console.log(serializedData);		
 		$inputs.attr("disabled", "disabled");
 		$.ajax(
 		{
@@ -125,6 +126,7 @@ $(document).ready(function(){
 			success: function(data, textStatus)
 			{
 				appendToPost(returnArray(serializedData));
+				$inputs.val('');
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
@@ -133,7 +135,6 @@ $(document).ready(function(){
 			complete: function()
 			{
 				$inputs.removeAttr("disabled");
-				$inputs.html('');
 			}
 		});
 		event.preventDefault();

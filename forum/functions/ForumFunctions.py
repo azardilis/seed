@@ -9,7 +9,7 @@ def nl2br(txt) :
 def get_posts(tid):
     t = Thread.get_by_id(int(tid))
     #the bit below only fetches the 10 most recent posts 
-    p = [p for p in t.posts.order('-timestamp').fetch(10)]
+    p = [p for p in t.posts.order('-answer').order('-timestamp').fetch(10)]
     return p 
 
 def get_children(plist , posts, lvl,usrstat):
