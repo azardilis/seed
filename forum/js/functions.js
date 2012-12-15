@@ -1,8 +1,5 @@
-
-
-
 /*append a post to the body of the thread (at level 1)*/
-function appendPost(arr){
+function appendPost(arr,newID){
 	var bd = '' ;
 	for (i in arr){
 		if (arr[i][0] === 'bd'){
@@ -15,7 +12,7 @@ function appendPost(arr){
 
 	var art = document.createElement('article');
 	
-	var txt = document.createTextNode('You replied : '+bd+' (refresh page for actions).');
+	var txt = document.createTextNode(bd+' (refresh page for actions).');
 	art.appendChild(txt);
 	sE.appendChild(art);
 	
@@ -25,36 +22,48 @@ function appendPost(arr){
 }
 
 /*appends to post*/
-function appendToPost(arr){
+function appendToPost(arr,newID){
 
 	var bd = '' ;
-	var parent  = 0 ;
+	var reply_to_post  = 0 ;
+	var poster = '';
 	for (i in arr){
 		if (arr[i][0] === 'bd'){
 			bd = arr[i][1];
 		}else if(arr[i][0] === 'r2pid'){
-			parent = arr[i][1] ;
+			reply_to_post = arr[i][1] ;
+		}else if(arr[i][0] === 'poster'){
+			poster = arr[i][1];
 		}
 	}
 	
-	var psts = document.createElement('section');
-	psts.setAttribute('class','posts');
-	
-	var sE = document.createElement('section');
-	sE.setAttribute('class','post');
+	var psts = document.getElementById('replies'+reply_to_post);
 
-	var art = document.createElement('article');
-	art.setAttribute('class','art');
-	
-	var txt = document.createTextNode('You replied : '+bd+' (refresh page for actions).');
-	art.appendChild(txt);
-	
-	
-	sE.appendChild(art);
-	psts.appendChild(sE);
-	
-	var appHere = $('#pst'+parent).parent();
-	appHere.append(psts);
+	if(psts){
+
+	}else{
+		psts = document.createElement('section');
+		psts.setAttribute('class','posts');
+		psts.setAttribute('id','replies'+reply_to_post);
+
+		var sE = document.createElement('section');
+		sE.setAttribute('class','post');
+
+		var art = document.createElement('article');
+		art.setAttribute('poster',poster);
+		art.setAttribute('pid',reply_to_post);
+		art.setAttribute('id','pst'+newID);
+
+		var txt = document.createTextNode(bd+' (refresh page for actions).');
+		art.appendChild(txt);
+
+
+		sE.appendChild(art);
+		psts.appendChild(sE);
+
+		var appHere = $('#pst'+reply_to_post).parent();
+		appHere.append(psts);
+	}
 }
 
 $(document).ready(function(){
@@ -75,9 +84,9 @@ $(document).ready(function(){
 			data: serializedData,
 			contentType: 'application/x-www-form-urlencoded',
 			dataType: 'html',
-			success: function(data, textStatus)
+			success: function(data)
 			{
-				appendPost(returnArray(serializedData));
+				appendPost(returnArray(serializedData),data);
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
@@ -125,8 +134,8 @@ $(document).ready(function(){
 			dataType: 'html',
 			success: function(data, textStatus)
 			{
-				appendToPost(returnArray(serializedData));
-				$inputs.val('');
+				appendToPost(returnArray(serializedData), data);
+				//$inputs.val('');
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
