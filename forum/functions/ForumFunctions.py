@@ -123,6 +123,7 @@ def parse_quotes(p):
 		
 	return bd 
 
+#look into implementing this with proper data serialization
 def serialize_ajax_info(u , p,r2pid ):
 	resp = 'poster='+str(u.key().name())
 	resp += '&'

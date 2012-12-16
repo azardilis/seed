@@ -79,64 +79,31 @@ class ForumPage(webapp2.RequestHandler):
 	
     	def get(self):
 		sub_to_delete=cgi.escape(self.request.get('mod'))
-	
+		template = jinja_environment.get_template('templates/forum_subscriptions.html')
+		subs = 	current_user.subscriptions
+
 		if not sub_to_delete is '':
-			template = jinja_environment.get_template('templates/forum_subscriptions.html')
-			userQ = User.all()
-			userQ.filter('__key__ =',current_user.key())
-			user = userQ.get() #is this really necessary ???
-			
-			subs = 	user.subscriptions
 			subs.filter("__key__",Key(sub_to_delete))
 			subs.get().delete()
-			subs=user.subscriptions
-			mod_info=[]
+
+		mod_info=[]
+		lecturers=[]
+	
+		for s in subs:
+			ratQ=Rating.all()
+			ratQ.filter("module",s.module)
+			for rat in ratQ:
+				lectQ=Lecturer.all()
+				lectQ.filter("__key__",rat.lecturer.key())
+				lec=lectQ.get()
+				lecturers.append(lec)
+			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
 			lecturers=[]
 
-			for s in subs:
-				ratQ=Rating.all()
-				ratQ.filter("module",s.module)
-				for rat in ratQ:
-					lectQ=Lecturer.all()
-					lectQ.filter("__key__",rat.lecturer.key())
-					lec=lectQ.get()
-					lecturers.append(lec)
-
-				mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
-				lecturers=[]
-		
-			template_params = {
-				'mod_info':mod_info
-			}
-
-        		self.response.out.write(template.render(template_params))
-		
-		else:
-			template = jinja_environment.get_template('templates/forum_subscriptions.html')
-			userQ = User.all()
-			userQ.filter('__key__ =',current_user.key())
-			user = userQ.get() #is this really necessary ???
-			subs = 	user.subscriptions
-			mod_info=[]
-			lecturers=[]
-			
-			for s in subs:
-				ratQ=Rating.all()
-				ratQ.filter("module",s.module)
-				for rat in ratQ:
-					lectQ=Lecturer.all()
-					lectQ.filter("__key__",rat.lecturer.key())
-					lec=lectQ.get()
-					lecturers.append(lec)
-
-				mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
-				lecturers=[]
-		
-			template_params = {
-				'mod_info':mod_info
-			}
-
-        		self.response.out.write(template.render(template_params))	
+		template_params = {
+			'mod_info':mod_info
+		}
+        	self.response.out.write(template.render(template_params))	
 
 class CategoriesPage(webapp2.RequestHandler):
     def get(self):
