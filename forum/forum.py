@@ -76,61 +76,61 @@ class MainPage(webapp2.RequestHandler):
             self.redirect("/")
 
 class ForumPage(webapp2.RequestHandler):
-    	def get(self):
-		sub_to_delete=cgi.escape(self.request.get('mod'))
-	
-		if not sub_to_delete is '':
-			template = jinja_environment.get_template('templates/forum_subscriptions.html')
-			userQ = User.all()
-			userQ.filter('__key__ =',current_user.key())
-			user = userQ.get() #is this really necessary ???
-			
-			subs = 	user.subscriptions
-			self.response.write(subs.get())
-			subs.filter("__key__",Key(sub_to_delete))
-			subs.get().delete()
-			subs=user.subscriptions
-#			subs=user.subscriptions
-			ratings=[]
-			#for s in subs:
-			#	ratQ=Rating.all()
-			#	ratQ.filter("module",s.module)
-			#	ratings.append(ratQ)	
+    def get(self):
+        sub_to_delete=cgi.escape(self.request.get('mod'))
 
-			#for r in ratings:
-			#	for h in r:
-			#		self.response.write(h.lecturer.key().name())
-		
-			template_params = {
-				'subscriptions' : subs,
-				'ratings':ratings
-			}
+        if not sub_to_delete is '':
+            template = jinja_environment.get_template('templates/forum_subscriptions.html')
+            userQ = User.all()
+            userQ.filter('__key__ =',current_user.key())
+            user = userQ.get() #is this really necessary ???
 
-        		self.response.out.write(template.render(template_params))
-		
-		else:
-			template = jinja_environment.get_template('templates/forum_subscriptions.html')
-			userQ = User.all()
-			userQ.filter('__key__ =',current_user.key())
-			user = userQ.get() #is this really necessary ???
-			subs = 	user.subscriptions
-			ratings=[]
-			for s in subs:
-				ratQ=Rating.all()
-				ratQ.filter("module",s.module)
-				ratings.append(ratQ)	
+            subs =  user.subscriptions
+            self.response.write(subs.get())
+            subs.filter("__key__",Key(sub_to_delete))
+            subs.get().delete()
+            subs=user.subscriptions
+#                       subs=user.subscriptions
+            ratings=[]
+            #for s in subs:
+            #       ratQ=Rating.all()
+            #       ratQ.filter("module",s.module)
+            #       ratings.append(ratQ)
 
-#			for r in ratings:
-#				for h in r:
-#					self.response.write(h.lecturer.key().name())
-	
-			template_params = {
-				'subscriptions' : subs,
-				'ratings':ratings
-			}
+            #for r in ratings:
+            #       for h in r:
+            #               self.response.write(h.lecturer.key().name())
 
-        		self.response.out.write(template.render(template_params))	
-		
+            template_params = {
+                    'subscriptions' : subs,
+                    'ratings':ratings
+            }
+
+            self.response.out.write(template.render(template_params))
+
+        else:
+            template = jinja_environment.get_template('templates/forum_subscriptions.html')
+            userQ = User.all()
+            userQ.filter('__key__ =',current_user.key())
+            user = userQ.get() #is this really necessary ???
+            subs =  user.subscriptions
+            ratings=[]
+            for s in subs:
+                ratQ=Rating.all()
+                ratQ.filter("module",s.module)
+                ratings.append(ratQ)
+
+#                       for r in ratings:
+#                               for h in r:
+#                                       self.response.write(h.lecturer.key().name())
+
+            template_params = {
+                    'subscriptions' : subs,
+                    'ratings':ratings
+            }
+
+            self.response.out.write(template.render(template_params))
+
 
 class CategoriesPage(webapp2.RequestHandler):
     def get(self):
@@ -224,7 +224,7 @@ class CreateNewThread(webapp2.RequestHandler):
 
 class ReplyToThread(webapp2.RequestHandler):
     def post(self):
-	thrd = retrieve_thread(self.request.get('tid'))
+        thrd = retrieve_thread(self.request.get('tid'))
 
         if thrd :
             bd = cgi.escape(self.request.get('bd'))
@@ -240,7 +240,7 @@ class ReplyToThread(webapp2.RequestHandler):
 
 class ReplyToPost(webapp2.RequestHandler):
     def post(self):
-        pst =retrieve_post(self.request.get('r2pid')) 
+        pst =retrieve_post(self.request.get('r2pid'))
         if pst :
             bd = cgi.escape(self.request.get('bd'))
             p = Post(reply=pst,poster=current_user,body=bd)
@@ -252,13 +252,13 @@ class ReplyToPost(webapp2.RequestHandler):
 
 class VoteUpPost(webapp2.RequestHandler):
     def post(self):
-        pst =retrieve_post(self.request.get('pid')) 
+        pst =retrieve_post(self.request.get('pid'))
 
         if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
             pst.votes = pst.votes +1
             pst.put()
             v = Vote(user=current_user,post=pst,value=1)
-	    v.put()
+            v.put()
             self.response.out.write(pst.votes)
         else :
             self.response.out.write('Didn\'t vote up')
@@ -270,10 +270,10 @@ class VoteDownPost(webapp2.RequestHandler):
         pst = retrieve_post(self.request.get('pid'))
 
         if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
-	    pst.votes = pst.votes-1
+            pst.votes = pst.votes-1
             pst.put()
             v = Vote(user=current_user,post=pst,value=-1)
-	    v.put()
+            v.put()
             self.response.out.write(pst.votes)
         else :
             self.response.out.write('Didn\'t vote down')
@@ -385,9 +385,9 @@ def reset_db():
 
     for i in Lecturer.all():
         i.delete()
-    
+
     for i in Vote.all():
-    	i.delete()
+        i.delete()
 
 
 #function to populate the db at the start of the app,
