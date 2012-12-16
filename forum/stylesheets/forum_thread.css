@@ -1,7 +1,8 @@
+/*CSS for handling the posts */
 section.post , section.ans{
 	border : 1px dotted #88ccff;
 	border-radius : 5px;
-	padding :  2%;
+	padding :  3%;
 	padding-right : 0% ;
 	margin-bottom: 1%;
 }
@@ -14,11 +15,65 @@ section.ans{
 	background : #88ff88;
 }
 
-#thread{
+article.ans{
+	background : #88ff88;
+}
+
+#responses{
+	position :relative;
+	float : left ;
+	width : 100%;
+}
+
+/*end posts css*/
+
+/*CSS for styling the thread*/
+section.thread{
 	padding : 10px ;
 	margin : 5px ;
 	overflow : auto;
+
+	border : 1px solid #88ff88;
+	overflow : auto ;
+	padding : 1%;
+	border-radius : 10px ;
 }
+
+h1{
+	font-size: 18pt;
+}
+
+section.thread .userDetails,.threaddetails , section.signature {
+	position : relative;
+	display: inline;
+	float :left ;
+	margin : 0px ;
+	padding : 4px ;
+}
+
+section.threaddetails{
+	width : 75%;
+}
+
+section.userDetails{
+	width : 20%;
+	text-align: center;
+	color: #005566;
+}
+
+section.signature {
+	border-top: 1px dotted gray ;
+	overflow : auto ;
+	width : 98%;
+}
+
+article.signature{
+	text-align: center;
+	font-style: italic;
+	color : gray;
+}
+
+/*End thread CSS*/
 
 /*CSS for the reply form */
 #reply{
@@ -69,9 +124,9 @@ form.psreplyform{
 form.psreplyform *{
 	display : block 
 }
-
 /*end css for controls */
 
+/*CSS for quoting*/
 blockquote{
 	background : #88bbcc ;
 	margin : 5px;
@@ -88,47 +143,4 @@ blockquote p.quotext{
 	color : white ;
 	font-style: italic;
 }	
-
-article.ans{
-	background : #88ff88;
-}
-
-section.thread{
-	border : 1px solid #88ff88;
-	overflow : auto ;
-	padding : 1%;
-	border-radius : 10px ;
-}
-
-h1{
-	font-size: 18pt;
-}
-
-section.thread .userDetails,.threaddetails , section.signature {
-	position : relative;
-	display: inline;
-	float :left ;
-	margin : 0px ;
-	padding : 4px ;
-}
-
-section.threaddetails{
-	width : 75%;
-}
-
-section.userDetails{
-	width : 20%;
-	text-align: center;
-	color: #005566;
-}
-
-section.signature {
-	border: 3px dotted blue ;
-	overflow : auto ;
-	width : 98%;
-}
-
-article.signature{
-	text-align: center;
-	font-style: italic;
-}
+/*end quoting css*/
