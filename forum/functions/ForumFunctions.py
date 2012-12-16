@@ -84,7 +84,6 @@ def make_post(p,posts) :
 			<p class="username">'''+p.poster.key().name()+'''</p>
 			<p class="degree">'''+p.poster.course+'''</p>
 			<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
-			<p class="noofposts">Posts : '''+'o'+'''</p>
 			<p class="replydate">'''+str(p.timestamp.date())+'''</p>
 		</section>
 	''' #the count fo posts is a performance drawback I think
@@ -123,3 +122,25 @@ def parse_quotes(p):
 		res = exp.search(bd)
 		
 	return bd 
+
+def serialize_ajax_info(u , p,r2pid ):
+	resp = 'poster='+str(u.key().name())
+	resp += '&'
+	resp += 'r2pid='+r2pid
+	resp += '&'
+	resp += 'usrkarma='+str(u.karma)
+	resp += '&'
+	resp += 'usrdegree='+u.course
+	resp += '&'
+	resp += 'usrrdate='+str(p.timestamp.date())
+	resp += '&'
+	resp += 'usrsig='+'signature'#u.signature
+	resp += '&'
+	resp += 'usrimg='+u.avatar
+	resp += '&'
+	resp += 'bd='+p.body
+	resp += '&'
+	resp += 'newID='+str(p.key().id())
+
+	return resp
+

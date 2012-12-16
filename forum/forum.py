@@ -239,7 +239,7 @@ class ReplyToThread(webapp2.RequestHandler):
             p = Post(body=bd, thread = thrd, poster = current_user)
             p.put()
 
-            self.response.out.write(p.key().id())
+            self.response.out.write(serialize_ajax_info(current_user,p,''))
         else :
             self.response.out.write('Thread not found')
             logging.error('Thread not found, tid : '+str(tid)+'<')
@@ -251,7 +251,7 @@ class ReplyToPost(webapp2.RequestHandler):
             bd = cgi.escape(self.request.get('bd'))
             p = Post(reply=pst,poster=current_user,body=bd)
             p.put()
-            self.response.out.write(str(p.key().id()))
+            self.response.out.write(serialize_ajax_info(current_user, p,str(pst.key().id())))
         else :
             self.response.out.write('Could not reply')
             logging.error('Couldnt find post, pid : '+pid+'<')
