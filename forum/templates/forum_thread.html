@@ -14,19 +14,31 @@
 		<!-- This includes the sidebar-->
 		{% include "/templates/sidebar.html"%}
 
-		<section id="pagecontent" class="cleared">
-			<article id='thread' tid={{thread.key().id()}}>
-				<h1>{{ thread.subject }}</h1>
-				<p>{{ thread.body }}</p>
-			</article>
-			<section id="reply">
-				<form method="POST" action="/replythread" id="replyform">
-					<input type="hidden" name="tid" value="{{thread.key().id()}}">
-					<textarea name="bd" cols="70" rows="8"></textarea>
-					<input type="submit" value="Reply!">
-				</form>
-			</section>
+		<section id="pagecontent">
+			<section class="thread">
+				<section class="userDetails">
+					<img src="{{user.avatar}}">
+					<p class="username">{{user.key().name()}}</p>
+					<p class="degree"></p>
+					<p class="karma"></p>
+					<p class="noofposts">Posts : {{nop}}</p>
+					<p class="joindate">On {{thread.timestamp.date()}}</p>
+				</section>
+				<section class="threaddetails">
+					<article id='thread' tid={{thread.key().id()}}>
+						<h1>{{ thread.subject }}</h1>
+						<p>{{ thread.body }}</p>
+					</article>
 
+					<section id="reply">
+						<form method="POST" action="/replythread" id="replyform">
+							<input type="hidden" name="tid" value="{{thread.key().id()}}">
+							<textarea name="bd" cols="70" rows="8"></textarea>
+							<input type="submit" value="Reply!">
+						</form>
+					</section>
+				</section>
+			</section>
 			<section id='responses'>
 				{{posts}}		
 			</section>

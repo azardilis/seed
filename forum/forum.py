@@ -169,6 +169,8 @@ class ThreadPage(webapp2.RequestHandler):
             posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()),current_user)
 
             template_params = {
+	    	    'user' : current_user,
+		    'nop': len([p for p in current_user.posts]),
                     'thread': t ,
                     'posts' : posts
             }
