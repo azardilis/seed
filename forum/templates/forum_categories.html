@@ -1,145 +1,64 @@
 <html>
-	<head>
-		<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+<head>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/forum_categories.css" />
+	<script src="js/jq-1.8.3.js"></script>
+	<script src="js/jqui-1.9.2.js"></script>
+	<script type="text/javascript" src="js/forum_categories.js"></script>
+</head>
+<body>
+	
+	<section id="content" class="content"> 
 		
-		<script src="js/jq-1.8.3.js"></script>
-		<script src="js/jqui-1.9.2.js"></script>
-		<script>
-			/*custom acordion :D*/
-			$(document).ready(function(){
-				$('p.handler').click(function(){
-					var e = $(this);
-					var ch = e.attr('id');					
-					$('section.handlercontent').slideUp(); /*slide all contents up*/
-					
-					/*remove box shadows from all handlers*/
-					$('section.container').css({'-moz-box-shadow':'',
-										'-webkit-box-shadow':'',
-										'box-shadow':''});
-					
-					
-					
-					e.parent().css({'-moz-box-shadow':'inset 0px 0px 1px 1px #88ccff',
-										'-webkit-box-shadow':'inset 0px 0px 1px 1px #88ccff',
-										'box-shadow':'inset 0px 0px 1px 1px #88ccff'
-										});
-					
-					/*add to current handler*/
-					
-					$('#cont'+ch).slideToggle(); /*slide the content of this one down*/
-				});
-			});
-		</script>
 
-		<style type="text/css">
-			
-			section.container{
-				padding : 10px ;
-				margin : 0px ;
-				border : 1px solid #88ccff ;
-				border-radius : 5px ;
-			}
-			
-			section.container *{
-				display : inline ; /*make all elements appear on the same line*/
-			}
-			
-			section.container:hover{
-				background:#eeffff;
-			}
-			
-			p.handler{				
-				cursor : pointer ;
-				color : #02527d ;
-				font-size : 20px ;
-			}
-			
-			section.container .more{
-				position : relative ;
-				float : right ;
-			}
-			
-			section.handlercontent{
-				/*this is funny business as well*/
-				margin : 30px ;
-				margin-top : 0px;
-				margin-bottom : 0px;
-				display: none ; /* this will hide the content*/
-			}
-			
-			article.thread{
-				border : 1px solid #829B9B ;
-				padding : 10px;
-				background : #ccdee8;
-			}
-			
-			a{
-				text-decoration : underline ;
-				color : #02527d ;
-			}
-			
-			a:hover {
-				color : #003366 ;
-			}
-			
-			article.thread:hover{
-				background : #B8DBFF;
-			}
-		</style>           	    
-	  </head>
- <body>
-  
- <section id="content" class="content"> 
-   
+		<!-- This includes the sidebar-->
+		{% include "/templates/sidebar.html"%}
 
-	<!-- This includes the sidebar-->
-	{% include "/templates/sidebar.html"%}
+		<section id="pagecontent" class="cleared">
+			
+			<section id="module_info">
+				<h3>CODE - Name</h3>
+				<dl id="module_stats">
+					<dt>People Registered</dt>
+					<dd>95</dd>
+					<dt>Average Mark</dt>
+					<dd>76</dd>
+					<dt>Module Difficulty</dt>
+					<dd>5/10</dd>
+				</dl>
+				<a href="">Rate this module anonymously</a>
+				<dl id="lecturer_ratings">
+					<dt><a href="">Ed Zaluska</a></dt>
+					<dd>9/10</dd>
+					<dt><a href="">Srinandan Long Surname</a></dt>
+					<dd>9/10</dd>
+				</dl>
+			</section>
 
-	<section id="pagecontent" class="cleared">
-		
-		<section id="module_info">
-			<h3>CODE - Name</h3>
-			<dl id="module_stats">
-				<dt>People Registered</dt>
-				<dd>95</dd>
-				<dt>Average Mark</dt>
-				<dd>76</dd>
-				<dt>Module Difficulty</dt>
-				<dd>5/10</dd>
-			</dl>
-			<a href="">Rate this module anonymously</a>
-			<dl id="lecturer_ratings">
-				<dt><a href="">Ed Zaluska</a></dt>
-				<dd>9/10</dd>
-				<dt><a href="">Srinandan Long Surname</a></dt>
-				<dd>9/10</dd>
-			</dl>
-		</section>
-
-		<section id="categories">
-			<section class="category">			
-				{% for c in complete %}				
+			<section id="categories">
+				<section class="category">			
+					{% for c in complete %}				
 					<section class="container">
 						<p class="handler"  id="{{c[0].key().id()}}">{{  c[0].name }}</p>
 						<a href="/threads?cid={{ c[0].key().id()}}" class="more">Show more...</a>
 					</section>
-					 <section class="handlercontent" id="cont{{c[0].key().id()}}">
-					{% for th in c[1] %}
+					<section class="handlercontent" id="cont{{c[0].key().id()}}">
+						{% for th in c[1] %}
 						<!-- after adding all the functionality, make this pretty and display all stats (like ratings and so on) -->
 						<article class="thread">
-							<a href="/showthread?tid={{ th.key().id() }}">
+							<a href="/showthread?tid={{ th.key().id() }}" class="thtitle">
 								<b>{{th.subject}}</b>
 							</a>
-							<p>{{th.body}}</p>
+							<p class="details">Posted by {{th.poster.key().name()}} on {{th.timestamp.date()}}</p>							
+							<p class="thbody">{{th.body[0:50]}}...</p>
+							<p class="rating">Rating : {{th.votes}}</p>
 						</article>
-					{% endfor %}
+						{% endfor %}
 					</section>
-				{% endfor %}
+					{% endfor %}
+				</section>
 			</section>
 		</section>
 	</section>
-	
-	<section class="cleared">	</section>
-</section>
 </body>
 </html>

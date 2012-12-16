@@ -13,6 +13,21 @@ indexes:
 - kind: Post
   properties:
   - name: thread
+  - name: answer
+  - name: timestamp
+    direction: desc
+
+- kind: Post
+  properties:
+  - name: thread
+  - name: answer
+    direction: desc
+  - name: timestamp
+    direction: desc
+
+- kind: Post
+  properties:
+  - name: thread
   - name: timestamp
     direction: desc
 

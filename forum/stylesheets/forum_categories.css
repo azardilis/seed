@@ -1,0 +1,67 @@
+section.container{
+	padding : 10px ;
+	margin : 0px ;
+	border : 1px solid #88ccff ;
+	border-radius : 5px ;
+}
+
+section.container *{
+	display : inline ; /*make all elements appear on the same line*/
+}
+
+section.container:hover{
+	background:#eeffff;
+}
+
+p.handler{				
+	cursor : pointer ;
+	color : #02527d ;
+	font-size : 20px ;
+}
+
+section.container .more{
+	position : relative ;
+	float : right ;
+}
+
+section.handlercontent{
+	/*this is funny business as well*/
+	margin : 30px ;
+	margin-top : 0px;
+	margin-bottom : 0px;
+	display: none ; /* this will hide the content*/
+}
+
+article.thread{
+	border : 1px solid #829B9B ;
+	padding : 10px;
+	background : #ccdee8;
+	overflow: auto ;
+}
+
+a{
+	text-decoration : underline ;
+	color : #02527d ;
+}
+
+a:hover {
+	color : #003366 ;
+}
+
+article.thread:hover{
+	background : #B8DBFF;
+}
+
+a.thtitle,p.thbody,p.details,p.rating{
+	padding : 1%;
+}
+
+a.thtitle, p.thbody{
+	position: relative;
+	float: left;
+}
+
+p.details, p.rating{
+	position: relative ;
+	float : right;
+}

@@ -15,8 +15,8 @@ font-size:16pt;
 margin : 10px;
 }
 div.subs{
-position : relative ;
-float : left ; /* remove this if things should be displayed as a lsit*/
+position:relative;
+float:left;
 width:300px;
 margin:4px;
 border-radius : 8px ;
@@ -53,10 +53,11 @@ position:relative;
 		{% for sub in mod_info%}
 				<div class="subs">
 				<a href="/forum?mod={{sub.sub_key}}"><img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Delete Sub" height="20" width="20"></a> 
-				<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p>
-				<p class="box"><a href="/categories?mid={{sub.sub_name }}">{{ sub.sub_name }}</a></p>
-				{% for rat in sub.mod_lecturers %}
-				<p class="box">{{rat.key().name()}}</p>
+				<b><p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p></b>
+				<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
+				<b><p class="box">Lecturers</p></b>
+				{% for lect in sub.mod_lecturers %}
+				<a href={{lect.home_page}}>{{lect.full_name}}</a>
 				{% endfor %}
 				</div>		
 		{% endfor %}

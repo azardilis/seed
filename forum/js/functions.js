@@ -1,62 +1,85 @@
+/*
+function that splits the serialized string of data that is
+ sent to the server
+ */
+ function returnArray(str){
+ 	var arr = str.split("&");
+ 	for (i in arr){
+ 		arr[i] = arr[i].split("=");
+ 	}
+ 	return arr;
+ }
 
+ /*makes the toolbar for each post*/
+ function makeToolbar(pid){
 
+ }
 
-/*append a post to the body of the thread (at level 1)*/
-function appendPost(arr){
-	var bd = '' ;
-	for (i in arr){
-		if (arr[i][0] === 'bd'){
-			bd = arr[i][1];
-		}
-	}
-	
-	
-	var sE = document.createElement('section');
-	sE.setAttribute('class','post');
+ /*append a post to the body of the thread (at level 1)*/
+ function appendPost(arr,newID){
+ 	var bd = '' ;
+ 	for (i in arr){
+ 		if (arr[i][0] === 'bd'){
+ 			bd = arr[i][1];
+ 		}
+ 	}
 
-	var art = document.createElement('article');
-	
-	var txt = document.createTextNode('You replied : '+bd+' (refresh page for actions).');
-	art.appendChild(txt);
-	sE.appendChild(art);
-	
-	var rSection = document.getElementById('responses');
+ 	var sE = document.createElement('section');
+ 	sE.setAttribute('class','post');
+
+ 	var art = document.createElement('article');
+
+ 	var txt = document.createTextNode(bd+' (refresh page for actions).');
+ 	art.appendChild(txt);
+ 	sE.appendChild(art);
+
+ 	var rSection = document.getElementById('responses');
 	//add node to the beginning of the posts
 	rSection.insertBefore(sE,rSection.childNodes[0]);
 }
 
-/*appends to post*/
-function appendToPost(arr){
+/*appends to post at level n > 1*/
+function appendToPost(arr,newID){
 
 	var bd = '' ;
-	var parent  = 0 ;
+	var reply_to_post  = 0 ;
+	var poster = '';
 	for (i in arr){
 		if (arr[i][0] === 'bd'){
 			bd = arr[i][1];
 		}else if(arr[i][0] === 'r2pid'){
-			parent = arr[i][1] ;
+			reply_to_post = arr[i][1] ;
+		}else if(arr[i][0] === 'poster'){
+			poster = arr[i][1];
 		}
 	}
 	
-	var psts = document.createElement('section');
-	psts.setAttribute('class','posts');
-	
+	var psts = document.getElementById('replies'+reply_to_post);
+
+	if(!psts){
+		psts = document.createElement('section');
+		psts.setAttribute('class','posts');
+		psts.setAttribute('id','replies'+reply_to_post);
+	}
 	var sE = document.createElement('section');
 	sE.setAttribute('class','post');
 
 	var art = document.createElement('article');
-	art.setAttribute('class','art');
-	
-	var txt = document.createTextNode('You replied : '+bd+' (refresh page for actions).');
+	art.setAttribute('poster',poster);
+	art.setAttribute('pid',reply_to_post);
+	art.setAttribute('id','pst'+newID);
+
+	var txt = document.createTextNode(bd+' (refresh page for actions).');
 	art.appendChild(txt);
-	
-	
+
+
 	sE.appendChild(art);
 	psts.appendChild(sE);
-	
-	var appHere = $('article.art#'+parent).parent();
+
+	var appHere = $('#pst'+reply_to_post).parent();
 	appHere.append(psts);
 }
+
 
 $(document).ready(function(){
 	
@@ -66,6 +89,7 @@ $(document).ready(function(){
 		var $form = $(this);
 		var $inputs = $form.find("input, button,textarea") ;
 		serializedData = $form.serialize();
+		console.log(serializedData);
 		$inputs.attr("disabled", "disabled");
 
 		$.ajax(
@@ -75,13 +99,13 @@ $(document).ready(function(){
 			data: serializedData,
 			contentType: 'application/x-www-form-urlencoded',
 			dataType: 'html',
-			success: function(data, textStatus)
+			success: function(data)
 			{
-				appendPost(returnArray(serializedData));
+				appendPost(returnArray(serializedData),data);
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
-				alert('There was an error while replying to thread.');
+				console.log('There was an error while replying to thread.');
 			},
 			complete: function()
 			{
@@ -102,8 +126,8 @@ $(document).ready(function(){
 	$('p.quote').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
-		var poster = $('article.art#'+pid).attr('poster');
-		var qs = "[quote="+poster+"]"+$('article.art#'+pid).html()+"[/quote]";
+		var poster = $('article#pst'+pid).attr('poster');
+		var qs = "[quote="+poster+"]"+$('article#pst'+pid).html()+"[/quote]";
 		$('#rf'+pid+' textarea').html(qs);
 		$('#rf'+pid).slideDown();
 	});
@@ -112,8 +136,9 @@ $(document).ready(function(){
 	$('form.psreplyform').submit(function(event)
 	{
 		var $form = $(this);
-		var $inputs = $form.find("input, button,textarea") ;
-		var serializedData = $form.serialize();			
+		var $inputs = $form.find("input,textarea").not(':submit', ':hidden') ;
+		var serializedData = $form.serialize();	
+		console.log(serializedData);		
 		$inputs.attr("disabled", "disabled");
 		$.ajax(
 		{
@@ -124,7 +149,8 @@ $(document).ready(function(){
 			dataType: 'html',
 			success: function(data, textStatus)
 			{
-				appendToPost(returnArray(serializedData));
+				appendToPost(returnArray(serializedData), data);
+				//$inputs.val('');
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
@@ -133,12 +159,12 @@ $(document).ready(function(){
 			complete: function()
 			{
 				$inputs.removeAttr("disabled");
-				$inputs.html('');
 			}
 		});
 		event.preventDefault();
 	});
 
+	/*AJAX for voting up a post*/
 	$('p.voteup').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
@@ -155,7 +181,7 @@ $(document).ready(function(){
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
-				alert('There was an error while voting.');
+				console.log(textStatus);
 			},
 			complete: function()
 			{
@@ -164,6 +190,7 @@ $(document).ready(function(){
 		});
 	});
 
+	/*AJAX for voting down post*/
 	$('p.votedown').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
@@ -180,7 +207,7 @@ $(document).ready(function(){
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
-				alert('There was an error while voting.');
+				console.log(textStatus);
 			},
 			complete: function()
 			{
@@ -229,14 +256,4 @@ $(document).ready(function(){
 			}
 		});
 	});
-
 });
-
-function returnArray(str){
-	var arr = str.split("&");
-	for (i in arr){
-		arr[i] = arr[i].split("=");
-	}
-	
-	return arr;
-}

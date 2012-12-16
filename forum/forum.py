@@ -2,6 +2,7 @@ import webapp2
 import jinja2
 #imported for debugging reasons
 import logging
+from functions.RetrieveFunctions import *
 import os
 import cgi
 from google.appengine.api import mail
@@ -10,6 +11,7 @@ from functions.ForumFunctions import * # functions to handle posts and shit
 from model.base.User import User
 from model.base.Post import Post
 from model.base.Thread import Thread
+from model.base.Vote import Vote
 from model.base.YearCourseSemester import YearCourseSemester
 from model.base.Lecturer import Lecturer
 from model.base.Rating import Rating
@@ -75,7 +77,7 @@ class MainPage(webapp2.RequestHandler):
 
 class ForumPage(webapp2.RequestHandler):
 	
-	def get(self):
+    	def get(self):
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 	
 		if not sub_to_delete is '':
@@ -85,23 +87,26 @@ class ForumPage(webapp2.RequestHandler):
 			user = userQ.get() #is this really necessary ???
 			
 			subs = 	user.subscriptions
-			self.response.write(subs.get())
 			subs.filter("__key__",Key(sub_to_delete))
 			subs.get().delete()
 			subs=user.subscriptions
-			ratings=[]
-			#for s in subs:
-			#	ratQ=Rating.all()
-			#	ratQ.filter("module",s.module)
-			#	ratings.append(ratQ)	
+			mod_info=[]
+			lecturers=[]
 
-			#for r in ratings:
-			#	for h in r:
-			#		self.response.write(h.lecturer.key().name())
+			for s in subs:
+				ratQ=Rating.all()
+				ratQ.filter("module",s.module)
+				for rat in ratQ:
+					lectQ=Lecturer.all()
+					lectQ.filter("__key__",rat.lecturer.key())
+					lec=lectQ.get()
+					lecturers.append(lec)
+
+				mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
+				lecturers=[]
 		
 			template_params = {
-				'subscriptions' : subs,
-				'ratings':ratings
+				'mod_info':mod_info
 			}
 
         		self.response.out.write(template.render(template_params))
@@ -113,17 +118,26 @@ class ForumPage(webapp2.RequestHandler):
 			user = userQ.get() #is this really necessary ???
 			subs = 	user.subscriptions
 			mod_info=[]
+			lecturers=[]
 			
 			for s in subs:
 				ratQ=Rating.all()
 				ratQ.filter("module",s.module)
-				mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,ratQ))
+				for rat in ratQ:
+					lectQ=Lecturer.all()
+					lectQ.filter("__key__",rat.lecturer.key())
+					lec=lectQ.get()
+					lecturers.append(lec)
+
+				mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
+				lecturers=[]
 		
 			template_params = {
 				'mod_info':mod_info
 			}
 
         		self.response.out.write(template.render(template_params))	
+		
 
 class CategoriesPage(webapp2.RequestHandler):
     def get(self):
@@ -159,7 +173,7 @@ class ThreadPage(webapp2.RequestHandler):
 
             l1p = get_posts(int(cgi.escape(self.request.get('tid'))))
             posts = ''
-            posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()))
+            posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()),current_user)
 
             template_params = {
                     'thread': t ,
@@ -215,9 +229,7 @@ class CreateNewThread(webapp2.RequestHandler):
 
 class ReplyToThread(webapp2.RequestHandler):
     def post(self):
-        tid = int(cgi.escape(self.request.get('tid')))
-        t_k = Key.from_path('Thread',tid)
-        thrd = db.get(t_k)
+	thrd = retrieve_thread(self.request.get('tid'))
 
         if thrd :
             bd = cgi.escape(self.request.get('bd'))
@@ -233,10 +245,7 @@ class ReplyToThread(webapp2.RequestHandler):
 
 class ReplyToPost(webapp2.RequestHandler):
     def post(self):
-        pid = int(cgi.escape(self.request.get('r2pid')))
-        p_k = Key.from_path('Post', pid)
-        pst = db.get(p_k)
-
+        pst =retrieve_post(self.request.get('r2pid')) 
         if pst :
             bd = cgi.escape(self.request.get('bd'))
             p = Post(reply=pst,poster=current_user,body=bd)
@@ -248,33 +257,32 @@ class ReplyToPost(webapp2.RequestHandler):
 
 class VoteUpPost(webapp2.RequestHandler):
     def post(self):
-        pid = int(cgi.escape(self.request.get('pid')))
-        p_k = Key.from_path('Post',pid)
-        pst = db.get(p_k)
+        pst =retrieve_post(self.request.get('pid')) 
 
-        if pst :
+        if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
             pst.votes = pst.votes +1
             pst.put()
+            v = Vote(user=current_user,post=pst,value=1)
+	    v.put()
             self.response.out.write(pst.votes)
         else :
-            self.response.out.write('couldnt get post')
-            logging.error('unable to get post w/ pid '+str(pid)+'<')
+            self.response.out.write('Didn\'t vote up')
+            logging.error('unable to vote up post pid '+str(pid)+'<')
 
-from functions.RetrieveFunctions import *
 
 class VoteDownPost(webapp2.RequestHandler):
     def post(self):
-        #pid = int(cgi.escape(self.request.get('pid')))
-        #p_k = Key.from_path('Post',pid)
-        pst = retrieve_post(self.request.get('pid'))#db.get(p_k)
+        pst = retrieve_post(self.request.get('pid'))
 
-        if pst :
-            pst.votes = pst.votes-1
+        if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
+	    pst.votes = pst.votes-1
             pst.put()
+            v = Vote(user=current_user,post=pst,value=-1)
+	    v.put()
             self.response.out.write(pst.votes)
         else :
-            self.response.out.write('couldnt get post')
-            logging.error('unable to get post w/ pid '+str(pid)+'<')
+            self.response.out.write('Didn\'t vote down')
+            logging.error('unable to vote down pid '+str(pid)+'<')
 
 class ToggleSolution(webapp2.RequestHandler) :
     def post(self):
@@ -389,6 +397,9 @@ def reset_db():
 
     for i in Lecturer.all():
         i.delete()
+    
+    for i in Vote.all():
+    	i.delete()
 
 
 #function to populate the db at the start of the app,
