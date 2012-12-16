@@ -1,44 +1,3 @@
-/*CSS for handling the posts */
-section.post , section.ans{
-	border : 1px dotted #88ccff;
-	border-radius : 5px;
-	padding :  3%;
-	padding-right : 0% ;
-	margin-bottom: 1%;
-}
-
-section.post{
-	background: white;
-	overflow: auto ;
-}
-
-
-section.ans{
-	background : #88ff88;
-}
-
-article.ans{
-	background : #88ff88;
-}
-
-#responses{
-	position :relative;
-	float : left ;
-	width : 100%;
-}
-
- .userDetails,.pstbd{
-	position : relative;
-	display: inline ;
-	float : left ;
-}
-
-section.posts{
-	display: block;
-	width: 75%;
-}
-
-/*end posts css*/
 
 /*CSS for styling the thread*/
 section.thread{
@@ -133,9 +92,55 @@ article.signature{
 }
 /*end reply form*/
 
+
+/*CSS for handling the posts */
+section.post , section.ans{
+	border : 1px dotted #88ccff;
+	border-radius : 5px;
+	padding :  3%;
+	padding-right : 0% ;
+	margin-bottom: 1%;
+}
+
+section.post{
+	background: white;
+	overflow: auto ;
+}
+
+
+section.ans{
+	background : #88ff88;
+}
+
+
+#responses{
+	position :relative;
+	float : left ;
+	width : 100%;
+}
+
+ section.post .userDetails,section.post .pstbd, section.ans .pstbd	{
+	position : relative;
+	display: inline ;
+	float : left ;
+}
+
+section.post .pstbd, section.ans .pstbd{
+	width: 75%;
+	border : 1px solid red;
+}
+
+section.posts{
+	display: block;
+	width: 75%;	`
+}
+/*end posts css*/
+
 /*CSS for the user controls*/
 #controls{
-	position: relative;	
+	position: relative;
+	width : 100%;	
+	float : left ;
 }
 
 section.controls *{

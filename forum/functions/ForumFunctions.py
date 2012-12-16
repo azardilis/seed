@@ -93,9 +93,9 @@ def make_post(p,posts) :
 	pst_bd +='</section>'
 	pst_bd +='''
 		<section class="signature">
-			<article class="signature>
+			<article class="signature">
 				'''+p.poster.signature+'''
-			</signature>
+			</article>
 		</section>
 	'''
 
