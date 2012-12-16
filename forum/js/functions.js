@@ -1,5 +1,4 @@
-/*
-function that splits the serialized string of data that is
+/*function that splits the serialized string of data that is
  sent to the server
  */
  function returnArray(str){
@@ -10,9 +9,75 @@ function that splits the serialized string of data that is
  	return arr;
  }
 
- /*makes the toolbar for each post*/
- function makeToolbar(pid){
+ /*TODO - makes the toolbar for each post*/
+ function makeToolbar(pid, pstrname){
+ 	var controlsSection = document.createElement('section');
+ 	controlsSection.setAttribute('id','controls')
 
+ 	var controlButtons = document.createElement('section');
+ 	controlButtons.setAttribute('class','controlButtons');
+
+ 	var score = document.createElement('p');
+ 	var reply = document.createElement('p');
+ 	var quote = document.createElement('p');
+ 	var vu = document.createElement('p');
+ 	var vd = document.createElement('p');
+ 	var sc = document.createTextNode('0');
+ 	
+ 	score.setAttribute('pid',pid);
+ 	score.setAttribute('class','score');
+ 	reply.setAttribute('pid',pid);
+ 	reply.setAttribute('class','reply');
+ 	quote.setAttribute('class','quote');
+ 	quote.setAttribute('pid',pid);
+ 	vu.setAttribute('pid',pid);
+ 	vu.setAttribute('class','voteup');
+ 	vd.setAttribute('pid',pid);
+ 	vd.setAttribute('class','votedown');
+
+ 	score.appendChild(sc);
+ 	controlButtons.appendChild(score);
+ 	controlButtons.appendChild(reply);
+ 	controlButtons.appendChild(quote);
+ 	controlButtons.appendChild(vu);
+ 	controlButtons.appendChild(vd);
+
+
+
+ 	var rf = document.createElement('form');
+ 	rf.setAttribute('id','rf'+pid);
+ 	rf.setAttribute('class','psreplyform');
+ 	rf.setAttribute('method','POST');
+ 	rf.setAttribute('action','/replypost');
+
+ 	var inpt = document.createElement('input');
+ 	inpt.setAttribute('type','hidden');
+ 	inpt.setAttribute('name','r2pid');
+ 	inpt.setAttribute('value',pid);
+
+ 	var inpt2 = document.createElement('input');
+ 	inpt2.setAttribute('type','hidden');
+ 	inpt2.setAttribute('name','poster');
+ 	inpt2.setAttribute('value',pstrname);
+
+ 	var intxt = document.createElement('textarea');
+ 	intxt.setAttribute('name','bd');
+ 	intxt.setAttribute('rows','5');
+ 	intxt.setAttribute('cols','50');
+
+ 	var insbmt = document.createElement('input');
+ 	insbmt.setAttribute('type','submit');
+ 	insbmt.setAttribute('value','Reply');
+
+ 	rf.appendChild(inpt);
+ 	rf.appendChild(inpt2);
+ 	rf.appendChild(intxt);
+ 	rf.appendChild(insbmt);
+
+ 	controlsSection.appendChild(controlButtons);
+ 	controlsSection.appendChild(rf);
+
+ 	return controlsSection ;
  }
 
  /*append a post to the body of the thread (at level 1)*/
@@ -39,11 +104,14 @@ function that splits the serialized string of data that is
 }
 
 /*appends to post at level n > 1*/
-function appendToPost(arr,newID){
+function appendToPost(arr,usrinfo, newID){
 
 	var bd = '' ;
 	var reply_to_post  = 0 ;
 	var poster = '';
+	var usrimg = '' ;
+	var userdegree ;
+
 	for (i in arr){
 		if (arr[i][0] === 'bd'){
 			bd = arr[i][1];
@@ -63,6 +131,23 @@ function appendToPost(arr,newID){
 	}
 	var sE = document.createElement('section');
 	sE.setAttribute('class','post');
+
+	var usrdtls = document.createElement('section');
+	usrdtls.setAttribute('class','userDetails');
+
+	var uimg = document.createElement('img');
+	uimg.setAttribute('src',usrimg);
+	usrimg.setAttribute('class','pstimg');
+
+	var uname = document.createElement('p');
+	uname.setAttribute('class','username');
+	uname.appendChild(document.createTextNode(poster));
+	var ud = document.createElement('p');
+	ud.setAttribute('class','degree');
+	var uk = document.createElement('p');
+	uk.setAttribute('class','karma');
+	var urd = document.createElement('p');
+	urd.setAttribute('class','replydate');
 
 	var art = document.createElement('article');
 	art.setAttribute('poster',poster);
