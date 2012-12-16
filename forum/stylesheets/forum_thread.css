@@ -93,6 +93,25 @@ article.signature{
 	display : block ;
 }
 
+#replyform input, textarea{
+	padding : 10px;
+	border :1px solid gray;
+	border-radius: 10px;
+	margin : 2px;
+}
+
+#replyform input[type=submit]{
+	font-size: 15pt;	
+	border : 1px solid white;
+	background-color: #eeffff;
+	border : 1px solid gray;	
+}
+
+#replyform input[type=submit]:hover{
+	cursor: pointer;
+	background-color: #B8DBFF; 
+	border : 1px solid	 #003366;
+}
 /*end reply form*/
 
 /*CSS for the user controls*/
