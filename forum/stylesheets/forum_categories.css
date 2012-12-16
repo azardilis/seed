@@ -57,8 +57,7 @@ a.thtitle,p.thbody,p.details,p.rating{
 }
 
 a.thtitle, p.thbody{
-	position: relative;
-	float: left;
+	position : relative;
 }
 
 p.details, p.rating{

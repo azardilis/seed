@@ -137,7 +137,6 @@ class ForumPage(webapp2.RequestHandler):
 			}
 
         		self.response.out.write(template.render(template_params))	
-		
 
 class CategoriesPage(webapp2.RequestHandler):
     def get(self):
@@ -176,6 +175,8 @@ class ThreadPage(webapp2.RequestHandler):
             posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()),current_user)
 
             template_params = {
+	    	    'user' : current_user,
+		    'nop': len([p for p in current_user.posts]),
                     'thread': t ,
                     'posts' : posts
             }
@@ -229,7 +230,7 @@ class CreateNewThread(webapp2.RequestHandler):
 
 class ReplyToThread(webapp2.RequestHandler):
     def post(self):
-	thrd = retrieve_thread(self.request.get('tid'))
+        thrd = retrieve_thread(self.request.get('tid'))
 
         if thrd :
             bd = cgi.escape(self.request.get('bd'))
@@ -245,7 +246,7 @@ class ReplyToThread(webapp2.RequestHandler):
 
 class ReplyToPost(webapp2.RequestHandler):
     def post(self):
-        pst =retrieve_post(self.request.get('r2pid')) 
+        pst =retrieve_post(self.request.get('r2pid'))
         if pst :
             bd = cgi.escape(self.request.get('bd'))
             p = Post(reply=pst,poster=current_user,body=bd)
@@ -257,13 +258,13 @@ class ReplyToPost(webapp2.RequestHandler):
 
 class VoteUpPost(webapp2.RequestHandler):
     def post(self):
-        pst =retrieve_post(self.request.get('pid')) 
+        pst =retrieve_post(self.request.get('pid'))
 
         if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
             pst.votes = pst.votes +1
             pst.put()
             v = Vote(user=current_user,post=pst,value=1)
-	    v.put()
+            v.put()
             self.response.out.write(pst.votes)
         else :
             self.response.out.write('Didn\'t vote up')
@@ -275,10 +276,10 @@ class VoteDownPost(webapp2.RequestHandler):
         pst = retrieve_post(self.request.get('pid'))
 
         if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
-	    pst.votes = pst.votes-1
+            pst.votes = pst.votes-1
             pst.put()
             v = Vote(user=current_user,post=pst,value=-1)
-	    v.put()
+            v.put()
             self.response.out.write(pst.votes)
         else :
             self.response.out.write('Didn\'t vote down')
@@ -397,9 +398,9 @@ def reset_db():
 
     for i in Lecturer.all():
         i.delete()
-    
+
     for i in Vote.all():
-    	i.delete()
+        i.delete()
 
 
 #function to populate the db at the start of the app,

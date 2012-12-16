@@ -15,7 +15,6 @@ section.ans{
 }
 
 #thread{
-	border : 1px solid #88ff88		;
 	padding : 10px ;
 	margin : 5px ;
 	overflow : auto;
@@ -83,4 +82,32 @@ hr{
 
 article.ans{
 	background : #88ff88;
+}
+
+section.thread{
+	border : 1px solid #88ff88;
+	overflow : auto ;
+	padding : 1%;
+	border-radius : 10px ;
+}
+
+h1{
+	font-size: 18pt;
+}
+
+section.thread section{
+	display: inline;
+	margin : 0px ;
+	padding : 4px ;
+}
+section.threaddetails{
+	position: relative;
+	float: left;
+	width : 75%;
+}
+
+section.userDetails{
+	width : 20%;
+	position: relative;
+	float: left;
 }
