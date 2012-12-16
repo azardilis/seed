@@ -42,8 +42,8 @@ def make_toolbar(p,posts,lvl,userstat,uname):
 				<p class="score" pid="'''+pid+'''">'''+str(p.votes)+'''</p>
 				<p class="reply" pid="'''+pid+'''">Reply</p>
 				<p class="quote" pid="'''+pid+'''">Quote</p>
-				<p class="voteup" pid="'''+pid+'''" >Vote-Up</p>
-				<p class="votedown" pid="'''+pid+'''" >Vote-Down</p>
+				<p class="vote" url="/vup" pid="'''+pid+'''" >Vote-Up</p>
+				<p class="vote" url="/vdown" pid="'''+pid+'''" >Vote-Down</p>
 		'''
 	if lvl == 1 and userstat:
 		html +=' <p class="ans" pid="'+pid+'" >Answer?</p> '

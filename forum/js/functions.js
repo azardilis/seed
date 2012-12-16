@@ -33,10 +33,12 @@
  	quote.setAttribute('pid',pid);
  	quote.appendChild(document.createTextNode('Quote'));
  	vu.setAttribute('pid',pid);
- 	vu.setAttribute('class','voteup');
+ 	vu.setAttribute('class','vote');
+ 	vu.setAttribute('url','/vup');
  	vu.appendChild(document.createTextNode('Vote-Up'));
  	vd.setAttribute('pid',pid);
- 	vd.setAttribute('class','votedown');
+ 	vd.setAttribute('class','vote');
+ 	vd.setAttribute('url','/vdown');
  	vd.appendChild(document.createTextNode('Vote-Down'));
 
  	controlButtons.appendChild(score);
@@ -287,40 +289,15 @@ $(document).ready(function(){
 		event.preventDefault();
 	});
 
-	/*AJAX for voting up a post*/
-	$('p.voteup').click(function(){
+	/*AJAX for voting up/down a post*/
+	$('p.vote').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
+		var voteurl = e.attr('url');
 		var dt = 'pid='+pid
 		$.ajax(
 		{
-			url:'/vup' ,
-			type:'POST',
-			data : dt ,
-			contentType : 'application/x-www-form-urlencoded',
-			dataType : 'html',
-			success:function(data,textStatus){
-				e.siblings('p.score').html(data);
-			},
-			error: function(xmlhttp, textStatus, errorThrown)
-			{
-				console.log(textStatus);
-			},
-			complete: function()
-			{
-				console.log('request should have completed');
-			}
-		});
-	});
-
-	/*AJAX for voting down post*/
-	$('p.votedown').click(function(){
-		var e = $(this);
-		var pid = e.attr('pid');
-		var dt = 'pid='+pid
-		$.ajax(
-		{
-			url:'/vdown' ,
+			url: voteurl ,
 			type:'POST',
 			data : dt ,
 			contentType : 'application/x-www-form-urlencoded',
