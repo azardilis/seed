@@ -85,7 +85,7 @@ def make_post(p,posts) :
 			<p class="degree">'''+p.poster.course+'''</p>
 			<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
 			<p class="noofposts">Posts : '''+'o'+'''</p>
-			<p class="joindate">On '''+str(p.timestamp.date())+'''</p>
+			<p class="replydate">'''+str(p.timestamp.date())+'''</p>
 		</section>
 	''' #the count fo posts is a performance drawback I think
 	pst_bd = '<section class="pstbd">'

@@ -5,7 +5,7 @@ section.thread{
 	margin : 5px ;
 	overflow : auto;
 
-	border : 1px solid #88ff88;
+	border : 1px solid #99dd88;
 	overflow : auto ;
 	padding : 1%;
 	border-radius : 10px ;
@@ -115,7 +115,7 @@ section.post{
 }
 
 section.ans{
-	background : #88ff88;
+	background : #ccffcc;
 }
 
 .userDetails,.pstbd	{
@@ -130,6 +130,8 @@ section.ans{
 
 img{
 	border-radius : 10px;
+	width : 80px;
+	height : 80px ;
 }
 
 section.posts{
