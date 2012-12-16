@@ -94,45 +94,55 @@ article.signature{
 
 
 /*CSS for handling the posts */
-section.post , section.ans{
-	border : 1px dotted #88ccff;
-	border-radius : 5px;
-	padding :  3%;
-	padding-right : 0% ;
-	margin-bottom: 1%;
-}
-
-section.post{
-	background: white;
-	overflow: auto ;
-}
-
-
-section.ans{
-	background : #88ff88;
-}
-
-
 #responses{
 	position :relative;
 	float : left ;
 	width : 100%;
 }
 
- section.post .userDetails,section.post .pstbd, section.ans .pstbd	{
+section.post , section.ans{
+	margin : 0%;
+	border : 1px dotted #88ccff;
+	border-radius : 5px;
+	padding :  1%;
+	padding-right : 0% ;
+	margin-bottom: 1%;
+	overflow: auto;
+}
+
+section.post{
+	background: white;
+}
+
+section.ans{
+	background : #88ff88;
+}
+
+.userDetails,.pstbd	{
 	position : relative;
 	display: inline ;
 	float : left ;
 }
 
-section.post .pstbd, section.ans .pstbd{
+.pstbd{
 	width: 75%;
-	border : 1px solid red;
+}
+
+img{
+	border-radius : 10px;
 }
 
 section.posts{
-	display: block;
-	width: 75%;	`
+	width : 95%;
+	margin : 0% ;
+	padding : 0%;
+	padding-right : 0% ;
+	margin-top : 2%;
+	margin-bottom: 1%;
+	margin-left: 5%;
+	position : relative;
+	float : left ;
+	overflow : auto ;
 }
 /*end posts css*/
 
@@ -143,18 +153,18 @@ section.posts{
 	float : left ;
 }
 
-section.controls *{
+section.controlButtons *{
 	display : inline;
 	color : #005566;
 	font-size : 9pt;
 }
 
-section.controls p:hover{
+section.controlButtons p:hover{
 	cursor : pointer ;
 	text-decoration : underline;
 }
 
-section.controls p.score {
+section.controlButtons p.score {
 	text-decoration : none ;
 	cursor : default ;
 	font-size : 13pt ;
