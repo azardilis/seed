@@ -169,8 +169,8 @@ class ThreadPage(webapp2.RequestHandler):
             posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()),current_user)
 
             template_params = {
-	    	    'user' : current_user,
-		    'nop': len([p for p in current_user.posts]),
+	    	    'user' : t.poster,
+		    'nop': len([p for p in t.poster.posts]),
                     'thread': t ,
                     'posts' : posts
             }
@@ -399,7 +399,7 @@ def populate_db():
     reset_db()
 
     ###### POPULATE ######
-    current_user = User(key_name='az2g10', full_name='argyris', password='1234', course='cs', year=3)
+    current_user = User(key_name='az2g10', full_name='argyris', password='1234', course='cs', year=3,avatar="resources/img/dio.jpg", signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='cs',year=3)

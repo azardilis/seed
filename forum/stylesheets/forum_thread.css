@@ -20,6 +20,14 @@ section.ans{
 	overflow : auto;
 }
 
+/*CSS for the reply form */
+#reply{
+	position: relative ;
+	float : left ;
+	display : block;
+	margin-top: 10px ;
+	margin-bottom: 10px ;
+}
 
 #replyform{
 	padding :  2%;
@@ -30,6 +38,9 @@ section.ans{
 	display : block ;
 }
 
+/*end reply form*/
+
+/*CSS for the user controls*/
 #controls{
 	position: relative;	
 }
@@ -59,6 +70,8 @@ form.psreplyform *{
 	display : block 
 }
 
+/*end css for controls */
+
 blockquote{
 	background : #88bbcc ;
 	margin : 5px;
@@ -74,11 +87,7 @@ blockquote p.details{
 blockquote p.quotext{
 	color : white ;
 	font-style: italic;
-}
-
-hr{
-	color : #66aaaa;
-}
+}	
 
 article.ans{
 	background : #88ff88;
@@ -95,19 +104,31 @@ h1{
 	font-size: 18pt;
 }
 
-section.thread section{
+section.thread .userDetails,.threaddetails , section.signature {
+	position : relative;
 	display: inline;
+	float :left ;
 	margin : 0px ;
 	padding : 4px ;
 }
+
 section.threaddetails{
-	position: relative;
-	float: left;
 	width : 75%;
 }
 
 section.userDetails{
 	width : 20%;
-	position: relative;
-	float: left;
+	text-align: center;
+	color: #005566;
+}
+
+section.signature {
+	border: 3px dotted blue ;
+	overflow : auto ;
+	width : 98%;
+}
+
+article.signature{
+	text-align: center;
+	font-style: italic;
 }

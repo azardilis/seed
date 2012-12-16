@@ -13,7 +13,7 @@ class User(db.Model):
 	#consider reference to yearCourseSemester instead
 		
 	full_name = db.StringProperty(required=True)
-	avatar = db.LinkProperty()
+	avatar = db.StringProperty()
 	signature = db.StringProperty()
 	karma = db.IntegerProperty(default=0)
 	home_page  = db.LinkProperty()

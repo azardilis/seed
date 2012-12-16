@@ -18,7 +18,7 @@
 			<section class="thread">
 				<section class="userDetails">
 					<img src="{{user.avatar}}">
-					<p class="username">{{user.key().name()}}</p>
+					<b><p class="username">{{user.key().name()}}</p></b>
 					<p class="degree"></p>
 					<p class="karma"></p>
 					<p class="noofposts">Posts : {{nop}}</p>
@@ -29,16 +29,20 @@
 						<h1>{{ thread.subject }}</h1>
 						<p>{{ thread.body }}</p>
 					</article>
-
-					<section id="reply">
+				</section>
+				<section class="signature">
+					<article class="signature">
+						{{user.signature}}
+					</article>
+				</section>
+			</section>
+			<section id="reply">
 						<form method="POST" action="/replythread" id="replyform">
 							<input type="hidden" name="tid" value="{{thread.key().id()}}">
 							<textarea name="bd" cols="70" rows="8"></textarea>
 							<input type="submit" value="Reply!">
 						</form>
 					</section>
-				</section>
-			</section>
 			<section id='responses'>
 				{{posts}}		
 			</section>
