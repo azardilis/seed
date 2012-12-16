@@ -106,13 +106,11 @@ class ForumPage(webapp2.RequestHandler):
         	self.response.out.write(template.render(template_params))	
 
 class CategoriesPage(webapp2.RequestHandler):
-    def get(self):
-        mcode = cgi.escape(self.request.get('mid'))
-        if not mcode is '' :
+    def get(self) : 
+    	mcode = self.request.get('mid')
+	if not mcode is '' :
             template = jinja_environment.get_template('templates/forum_categories.html')
-            q = Module.all()
-            q.filter('__key__ =',Key.from_path('Module',mcode))
-            module = q.get()
+	    module = retrieve_module_name(mcode)
 
             categs = module.categories
             complete = list()
@@ -129,8 +127,8 @@ class CategoriesPage(webapp2.RequestHandler):
 
             self.response.out.write(template.render(template_values))
 
-        else : print 'mcode empty'
-
+        else :
+		logging.error('module code was empty ')
 class ThreadPage(webapp2.RequestHandler):
     def get(self):
         t =retrieve_thread(self.request.get('tid'))
