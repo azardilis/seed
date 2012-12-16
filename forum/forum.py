@@ -76,61 +76,67 @@ class MainPage(webapp2.RequestHandler):
             self.redirect("/")
 
 class ForumPage(webapp2.RequestHandler):
-    def get(self):
-        sub_to_delete=cgi.escape(self.request.get('mod'))
+	
+    	def get(self):
+		sub_to_delete=cgi.escape(self.request.get('mod'))
+	
+		if not sub_to_delete is '':
+			template = jinja_environment.get_template('templates/forum_subscriptions.html')
+			userQ = User.all()
+			userQ.filter('__key__ =',current_user.key())
+			user = userQ.get() #is this really necessary ???
+			
+			subs = 	user.subscriptions
+			subs.filter("__key__",Key(sub_to_delete))
+			subs.get().delete()
+			subs=user.subscriptions
+			mod_info=[]
+			lecturers=[]
 
-        if not sub_to_delete is '':
-            template = jinja_environment.get_template('templates/forum_subscriptions.html')
-            userQ = User.all()
-            userQ.filter('__key__ =',current_user.key())
-            user = userQ.get() #is this really necessary ???
+			for s in subs:
+				ratQ=Rating.all()
+				ratQ.filter("module",s.module)
+				for rat in ratQ:
+					lectQ=Lecturer.all()
+					lectQ.filter("__key__",rat.lecturer.key())
+					lec=lectQ.get()
+					lecturers.append(lec)
 
-            subs =  user.subscriptions
-            self.response.write(subs.get())
-            subs.filter("__key__",Key(sub_to_delete))
-            subs.get().delete()
-            subs=user.subscriptions
-#                       subs=user.subscriptions
-            ratings=[]
-            #for s in subs:
-            #       ratQ=Rating.all()
-            #       ratQ.filter("module",s.module)
-            #       ratings.append(ratQ)
+				mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
+				lecturers=[]
+		
+			template_params = {
+				'mod_info':mod_info
+			}
 
-            #for r in ratings:
-            #       for h in r:
-            #               self.response.write(h.lecturer.key().name())
+        		self.response.out.write(template.render(template_params))
+		
+		else:
+			template = jinja_environment.get_template('templates/forum_subscriptions.html')
+			userQ = User.all()
+			userQ.filter('__key__ =',current_user.key())
+			user = userQ.get() #is this really necessary ???
+			subs = 	user.subscriptions
+			mod_info=[]
+			lecturers=[]
+			
+			for s in subs:
+				ratQ=Rating.all()
+				ratQ.filter("module",s.module)
+				for rat in ratQ:
+					lectQ=Lecturer.all()
+					lectQ.filter("__key__",rat.lecturer.key())
+					lec=lectQ.get()
+					lecturers.append(lec)
 
-            template_params = {
-                    'subscriptions' : subs,
-                    'ratings':ratings
-            }
+				mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
+				lecturers=[]
+		
+			template_params = {
+				'mod_info':mod_info
+			}
 
-            self.response.out.write(template.render(template_params))
-
-        else:
-            template = jinja_environment.get_template('templates/forum_subscriptions.html')
-            userQ = User.all()
-            userQ.filter('__key__ =',current_user.key())
-            user = userQ.get() #is this really necessary ???
-            subs =  user.subscriptions
-            ratings=[]
-            for s in subs:
-                ratQ=Rating.all()
-                ratQ.filter("module",s.module)
-                ratings.append(ratQ)
-
-#                       for r in ratings:
-#                               for h in r:
-#                                       self.response.write(h.lecturer.key().name())
-
-            template_params = {
-                    'subscriptions' : subs,
-                    'ratings':ratings
-            }
-
-            self.response.out.write(template.render(template_params))
-
+        		self.response.out.write(template.render(template_params))	
 
 class CategoriesPage(webapp2.RequestHandler):
     def get(self):
@@ -350,6 +356,13 @@ class EmailSent(webapp2.RequestHandler):
                        subject=subject,
                        body=message)
         self.response.out.write(template.render({}))
+
+class ModuleInfo:
+	def __init__(self,sub_key,sub_code,sub_name,mod_lecturers):
+		self.sub_key=sub_key
+		self.sub_code=sub_code
+		self.sub_name=sub_name
+		self.mod_lecturers=mod_lecturers
 
 
 def reset_db():
