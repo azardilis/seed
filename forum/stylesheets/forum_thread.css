@@ -9,7 +9,9 @@ section.post , section.ans{
 
 section.post{
 	background: white;
+	overflow: auto ;
 }
+
 
 section.ans{
 	background : #88ff88;
@@ -23,6 +25,17 @@ article.ans{
 	position :relative;
 	float : left ;
 	width : 100%;
+}
+
+ .userDetails,.pstbd{
+	position : relative;
+	display: inline ;
+	float : left ;
+}
+
+section.posts{
+	display: block;
+	width: 75%;
 }
 
 /*end posts css*/
@@ -61,6 +74,10 @@ section.userDetails{
 	color: #005566;
 }
 
+p.username{
+	font-weight: bold;
+}
+
 section.signature {
 	border-top: 1px dotted gray ;
 	overflow : auto ;
@@ -72,6 +89,8 @@ article.signature{
 	font-style: italic;
 	color : gray;
 }
+
+
 
 /*End thread CSS*/
 
@@ -119,18 +138,18 @@ article.signature{
 	position: relative;	
 }
 
-span.controls *{
+section.controls *{
 	display : inline;
 	color : #005566;
 	font-size : 9pt;
 }
 
-span.controls p:hover{
+section.controls p:hover{
 	cursor : pointer ;
 	text-decoration : underline;
 }
 
-span.controls p.score {
+section.controls p.score {
 	text-decoration : none ;
 	cursor : default ;
 	font-size : 13pt ;

@@ -38,7 +38,7 @@ def make_toolbar(p,posts,lvl,userstat,uname):
 
 	html =''' 
 		<section id="controls">
-			<span class="controls">
+			<section class="controls">
 				<p class="score" pid="'''+pid+'''">'''+str(p.votes)+'''</p>
 				<p class="reply" pid="'''+pid+'''">Reply</p>
 				<p class="quote" pid="'''+pid+'''">Quote</p>
@@ -46,11 +46,9 @@ def make_toolbar(p,posts,lvl,userstat,uname):
 				<p class="votedown" pid="'''+pid+'''" >Vote-Down</p>
 		'''
 	if lvl == 1 and userstat:
-		html +=''' 
-				<p class="ans" pid="'''+pid+'''" >Answer?</p>
-		'''
+		html +=' <p class="ans" pid="'+pid+'" >Answer?</p> '
 	html += '''
-			</span>
+			</section>
 			<form id="rf'''+pid+'''" class="psreplyform" method="post" action="/replypost">
 				<input type="hidden" value="'''+pid+'''" name="r2pid">
 				<input type="hidden" name="poster" value="'''+uname+'''">
@@ -71,7 +69,7 @@ def close_article(posts):
 	return posts
 
 def make_section(pid,posts):
-	posts +='<section class="posts" id=replies"'+pid+'" >'	
+	posts +='<section class="posts" id="replies'+pid+'" >'	
 	return posts
 
 def close_section(posts) :
@@ -80,7 +78,28 @@ def close_section(posts) :
 
 #make show all the deatils here)
 def make_post(p,posts) :
-	posts += '<article poster="'+ p.poster.key().name()+'" pid="'+str(p.key().id())+'" id="pst'+str(p.key().id())+'">'+parse_quotes(nl2br(p.body))+'</article>'
+	html = '''
+		<section class="userDetails">
+			<img src="'''+p.poster.avatar+'''" class="pstimg" >
+			<p class="username">'''+p.poster.key().name()+'''</p>
+			<p class="degree">'''+p.poster.course+'''</p>
+			<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
+			<p class="noofposts">Posts : '''+'o'+'''</p>
+			<p class="joindate">On '''+str(p.timestamp.date())+'''</p>
+		</section>
+	''' #the count fo posts is a performance drawback I think
+	pst_bd = '<section class="pstbd">'
+	pst_bd += '<article poster="'+ p.poster.key().name()+'" pid="'+str(p.key().id())+'" id="pst'+str(p.key().id())+'">'+parse_quotes(nl2br(p.body))+'</article>'
+	pst_bd +='</section>'
+	pst_bd +='''
+		<section class="signature">
+			<article class="signature>
+				'''+p.poster.signature+'''
+			</signature>
+		</section>
+	'''
+
+	posts += html+pst_bd
 	return posts
 	
 #this is buggy as hell !
