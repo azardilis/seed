@@ -3,21 +3,7 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
-
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('img.dir').click(function(){
-			scroll($(this).attr('dir'));
-		});
-
-		$('ul#modulebar').css('width',$('ul#modulebar').children().length * 404);
-
-	});
-
-	function scroll(dir){
-			$('#modulenav').scrollTo(dir+'=150px',200,{queue:true, axis:'x'});
-	}
-	</script>
+	<script type="text/javascript" src="js/modulebar_functions.js"></script>
 </head>
 <body>
 

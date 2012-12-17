@@ -75,7 +75,6 @@ body{
 	position : relative ;
 	float : left;
 	overflow : hidden;
-	
 	border-radius : 10px;
 	margin-bottom : 3% ;
 }
@@ -92,7 +91,7 @@ ul#modulebar{
 	text-align: center;
 	width : 390px;	
 	display : inline ;
-	background : green;
+	background : #007275;
 	position : relative;
 	float : left ;
 	opacity : 0.75;
@@ -100,6 +99,10 @@ ul#modulebar{
 
 #modulebar li:hover {
 	opacity : 1;
+}
+
+#modulebar li:hover a {
+	color : white;
 }
 
 #modulebar li a{
