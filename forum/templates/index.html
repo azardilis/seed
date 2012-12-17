@@ -1,39 +1,54 @@
 <html>
-   <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-  </head>
-  <body>
-  
- <section id="content" class="content"> 
-    <!--{% include "/templates/test.html" %} -->
-    <section id="header">
-		<p>Welcome to the site, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
-		<p id="modules_tag"> Your modules: </p>
-		<img src="/stylesheets/resources/larrow.png" alt="larrow" >	    
-		<ul id="modulebar" class="modulebar">
-	    	{% for sub in subscriptions %}
-			<li>
-			<a href="{{sub.module.ecs_page}}">{{sub.module.title}}</a> <span class="separator"> | </span>
-			</li>
-		{% endfor %}
-		</ul>
-		<img src="/stylesheets/resources/rarrow.png" alt="rarrow" >
+<head>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
+	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('img.dir').click(function(){
+			scroll($(this).attr('dir'));
+		});
+
+		$('ul#modulebar').css('width',$('ul#modulebar').children().length * 404);
+
+	});
+
+	function scroll(dir){
+			$('#modulenav').scrollTo(dir+'=150px',200,{queue:true, axis:'x'});
+	}
+	</script>
+</head>
+<body>
+
+	<section id="content" class="content"> 
+		<!--{% include "/templates/test.html" %} -->
+		<section id="header">
+			<p>Welcome to the site, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
+			<p id="modules_tag"> Your modules: </p>
+
+			<img src="/stylesheets/resources/larrow.png" dir="-" class="dir" alt="larrow" >	    
+			<nav id='modulenav'>
+				<ul id='modulebar'>
+					{% for sub in subscriptions %}
+					<li>
+						<a href="{{sub.module.ecs_page}}">{{sub.module.title}}</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</nav>
+			<img src="/stylesheets/resources/rarrow.png" dir="+" class="dir" alt="rarrow" >	    
+
+
+
+		<!-- This includes the sidebar-->
+		{% include "/templates/sidebar.html"%}
+
+		<section id="pagecontent" class="cleared">
+			<!-- Add whatever content you want here-->
+
+		</section>
+		<section class="cleared">	</section>
 	</section>
-
-	<!-- This includes the sidebar-->
-	{% include "/templates/sidebar.html"%}
-
-<section id="pagecontent" class="cleared">
-
-<!-- Add whatever content you want here-->
-<h1>@ OIKO </h1>
-<h2>edit your stuff in template forum_subscriptions!</h2>
-<h2>Thank you,</h2>
-<h2>love,</h2>
-<h2>Dio.</h2>
-
-</section>
-<section class="cleared">	</section>
-</section>
-  </body>
+</body>
 </html>

@@ -208,7 +208,7 @@ function makePostSection(arr){
 	return [reply_to_post,postsec];
 }
 
-
+/*Event listeners*/
 $(document).ready(function(){
 	
 	/*This is AJAX for replying to a THREAD*/
@@ -241,7 +241,6 @@ $(document).ready(function(){
 		});
 		event.preventDefault();
 	});
-
 
 	/*This is AJAX for replying to a POST*/
 	$(document).delegate('form.psreplyform','submit',function(event)
@@ -290,8 +289,6 @@ $(document).ready(function(){
 		$('#rf'+pid).slideDown();
 	});
 
-	
-
 	/*AJAX for voting up/down a post*/
 	$(document).delegate('p.vote','click',function(){
 		var e = $(this);
@@ -314,7 +311,7 @@ $(document).ready(function(){
 			},
 			complete: function()
 			{
-				console.log('request should have completed');
+				console.log('request completed');
 			}
 		});
 	});

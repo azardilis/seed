@@ -1,39 +1,39 @@
 <html>
-     <head>
-       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-      
-       
-  </head>
-  <body>
-  
-	<div id=content width= "500">
+<head>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+</head>
+<body>
+
+	<div id="content" width= "500">
 		<!-- This includes the sidebar-->
 		{% include "/templates/sidebar.html"%}
-		<div id=profile_header>
-			<img src={{user.avatar}} width="180" height="180">
-			<div id=col1>
-				<p id=name>{{user.full_name}}</p>
-				<p class=course>{{user.course}} {{user.year}}</p>
-				<br>
-				<br>
-				<h2 class=figures>{{user.karma}}</h2><h2 class=desc>Karma Points</h2>
+		<section id="pagecontent" class="cleared">
+			<!-- Add whatever content you want here-->
+			<div id="profile_header">
+				<img src="{{user.avatar}}" width="180" height="180">
+				<div id="col1">
+					<p id="name">{{user.full_name}}</p>
+					<p class="course">{{user.course}} {{user.year}}</p>
+					<br>
+					<br>
+					<h2 class="figures">{{user.karma}}</h2><h2 class="desc">Karma Points</h2>
+				</div>
+				<div id="col2">
+					<br>
+					<h2 class="figures">90</h2><h2 class="desc">Created Topics</h2>
+					<br>
+					<br>
+					<br>
+					<br>
+					<h2 class="figures">11101</h2><h2 class="desc">Comments Posted</h2> 
+				</div>				
 			</div>
-			<div id=col2>
-				<br>
-				<h2 class=figures>90</h2><h2 class=desc>Created Topics</h2>
-				<br>
-				<br>
-				<br>
-				<br>
-				<h2 class=figures>11101</h2><h2 class=desc>Comments Posted</h2> 
-			</div>
-							
+			<br>
+			<p><b>Modules you are subscribed to</b></p>
+			{% for sub in subscriptions %}
+			<div><p>{{sub.module.title}}</p></div>
+			{% endfor %}
 		</div>
-		<br>
-		<p><b>Modules you are subscribed to</b></p>
-		{% for sub in subscriptions %}
-		<div><p>{{sub.module.title}}</p></div>
-		{% endfor %}
-	</div> 
-  </body>
+	</section> 
+</body>
 </html>
