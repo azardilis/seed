@@ -212,7 +212,7 @@ function makePostSection(arr){
 $(document).ready(function(){
 	
 	/*This is AJAX for replying to a THREAD*/
-	$("#replyform").submit(function(event)
+	$(document).delegate('#replyform','submit',function(event)
 	{
 		var $form = $(this);
 		var $inputs = $form.find("input, button,textarea") ;
@@ -242,25 +242,9 @@ $(document).ready(function(){
 		event.preventDefault();
 	});
 
-	/*This toggles the reply box on for replying to a POST*/
-	$('p.reply').click(function(){
-		var e = $(this);
-		var pid = e.attr('pid');
-		$('#rf'+pid).slideDown();
-	});
-
-	/*This toggles the reply box on for replying to a POST and inputs the quote*/		
-	$('p.quote').click(function(){
-		var e = $(this);
-		var pid = e.attr('pid');
-		var poster = $('article#pst'+pid).attr('poster');
-		var qs = "[quote="+poster+"]"+$('article#pst'+pid).html()+"[/quote]";
-		$('#rf'+pid+' textarea').html(qs);
-		$('#rf'+pid).slideDown();
-	});
 
 	/*This is AJAX for replying to a POST*/
-	$('form.psreplyform').submit(function(event)
+	$(document).delegate('form.psreplyform','submit',function(event)
 	{
 		var $form = $(this);
 		var $inputs = $form.find("input,textarea").not(':submit', ':hidden') ;
@@ -289,8 +273,27 @@ $(document).ready(function(){
 		event.preventDefault();
 	});
 
+	/*This toggles the reply box on for replying to a POST*/
+	$(document).delegate('p.reply','click',function(){
+		var e = $(this);
+		var pid = e.attr('pid');
+		$('#rf'+pid).slideDown();
+	});
+
+	/*This toggles the reply box on for replying to a POST and inputs the quote*/		
+	$(document).delegate('p.quote','click',function(){
+		var e = $(this);
+		var pid = e.attr('pid');
+		var poster = $('article#pst'+pid).attr('poster');
+		var qs = "[quote="+poster+"]"+$('article#pst'+pid).html()+"[/quote]";
+		$('#rf'+pid+' textarea').html(qs);
+		$('#rf'+pid).slideDown();
+	});
+
+	
+
 	/*AJAX for voting up/down a post*/
-	$('p.vote').click(function(){
+	$(document).delegate('p.vote','click',function(){
 		var e = $(this);
 		var pid = e.attr('pid');
 		var voteurl = e.attr('url');

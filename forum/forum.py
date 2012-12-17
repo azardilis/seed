@@ -235,7 +235,7 @@ class VoteUpPost(webapp2.RequestHandler):
             self.response.out.write(pst.votes)
         else :
             self.response.out.write('Didn\'t vote up')
-            logging.error('unable to vote up post pid '+str(pid)+'<')
+            logging.error('unable to vote up post pid '+self.request.get('pid')+'<')
 
 
 class VoteDownPost(webapp2.RequestHandler):
@@ -250,7 +250,7 @@ class VoteDownPost(webapp2.RequestHandler):
             self.response.out.write(pst.votes)
         else :
             self.response.out.write('Didn\'t vote down')
-            logging.error('unable to vote down pid '+str(pid)+'<')
+            logging.error('unable to vote down pid '+self.request.get('pid')+'<')
 
 class ToggleSolution(webapp2.RequestHandler) :
     def post(self):
