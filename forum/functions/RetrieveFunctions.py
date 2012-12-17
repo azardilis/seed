@@ -17,6 +17,12 @@ def retrieve_thread(tid):
 	t = db.get(t_k)
 	return t
 
+def retrieve_module_name(mname):
+	mid = cgi.escape(mname)
+	m_k = Key.from_path('Module',mid)
+	m = db.get(m_k)
+	return m
+
 def retrieve_category(cid):
 	cid = int(cgi.escape(cid))
 	c_k = Key.from_path('Category', cid)

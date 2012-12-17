@@ -1,65 +1,62 @@
 <html>
-     <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+<head>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	
-<style type="text/css">
+	<style type="text/css">
 	
-p.box{
-text-align:center;
-font-size:12pt;
-}
-h1{
-color:#1E90FF;
-text-align:left;
-font-size:16pt;
-margin : 10px;
-}
-div.subs{
-position : relative ;
-float : left ; /* remove this if things should be displayed as a lsit*/
-width:300px;
-margin:4px;
-border-radius : 8px ;
+	p.box{
+		text-align:center;
+		font-size:12pt;
+	}
 
-height:100px;
-padding:10px;
-border:5px solid black;
-border-style:inset;
-}
+	h1{
+		color:#1E90FF;
+		text-align:left;
+		font-size:16pt;
+		margin : 10px;
+	}
 
-div.break{
-width:300px;
-height:100px;
-padding:0px;
-border solid black;
-}
-div img.pos{
-position:relative;
-}
+	div.subs{
+		position:relative;
+		float:left;
+		width:300px;
+		margin:4px;
+		border-radius : 8px ;
+		height:100px;
+		padding:10px;
+		border:5px solid black;
+		border-style:inset;
+		}
 
-</style>           
-    
-  </head>
- <body>
-  
- <section id="content" class="content"> 
-   
+	div img.pos{
+		position:relative;
+	}
 
-	<!-- This includes the sidebar-->
-	{% include "/templates/sidebar.html"%}
+	</style>           
 
-	<section id="pagecontent" class="cleared">
-		<h1>Your subscriptions </h1>
-		{% for sub in subscriptions%}
-				<div class="subs">
-				<a href="/forum?mod={{sub.key()}}"><img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Smiley face" height="20" width="20"></a> 
-				<p class="box"><a href="/categories?mid={{sub.module.key().name() }}">{{ sub.module.key().name().upper() }}</a></p>
-				<p class="box"><a href="/categories?mid={{sub.module.key().name() }}">{{ sub.module.title }}</a></p>
-				</div>		
-		{% endfor %}
-	</section>
-	
-	<section class="cleared">	</section>
-	
-</body>
-</html>
+</head>
+<body>
+
+	<section id="content" class="content"> 
+
+
+		<!-- This includes the sidebar-->
+		{% include "/templates/sidebar.html"%}
+
+		<section id="pagecontent" class="cleared">
+			<h1>Your subscriptions </h1>
+			{% for sub in mod_info%}
+			<div class="subs">
+				<a href="/forum?mod={{sub.sub_key}}"><img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Delete Sub" height="20" width="20"></a> 
+				<b><p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p></b>
+				<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
+				<b><p class="box">Lecturers</p></b>
+				{% for lect in sub.mod_lecturers %}
+				<a href={{lect.home_page}}>{{lect.full_name}}</a>
+				{% endfor %}
+			</div>		
+			{% endfor %}
+		</section>
+
+	</body>
+	</html>

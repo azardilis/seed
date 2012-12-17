@@ -76,70 +76,43 @@ class MainPage(webapp2.RequestHandler):
             self.redirect("/")
 
 class ForumPage(webapp2.RequestHandler):
-    def get(self):
-        sub_to_delete=cgi.escape(self.request.get('mod'))
+	
+    	def get(self):
+		sub_to_delete=cgi.escape(self.request.get('mod'))
+		template = jinja_environment.get_template('templates/forum_subscriptions.html')
+		subs = 	current_user.subscriptions
+		
+		if not sub_to_delete is '':
+			subs.filter("__key__",Key(sub_to_delete))
+			subs.get().delete()
+			subs = 	current_user.subscriptions
+		
+		mod_info=[]
+		lecturers=[]
+	
 
-        if not sub_to_delete is '':
-            template = jinja_environment.get_template('templates/forum_subscriptions.html')
-            userQ = User.all()
-            userQ.filter('__key__ =',current_user.key())
-            user = userQ.get() #is this really necessary ???
+		for s in subs:
+			ratQ=Rating.all()
+			ratQ.filter("module",s.module)
+			for rat in ratQ:
+				lectQ=Lecturer.all()
+				lectQ.filter("__key__",rat.lecturer.key())
+				lec=lectQ.get()
+				lecturers.append(lec)
+			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
+			lecturers=[]
 
-            subs =  user.subscriptions
-            self.response.write(subs.get())
-            subs.filter("__key__",Key(sub_to_delete))
-            subs.get().delete()
-            subs=user.subscriptions
-#                       subs=user.subscriptions
-            ratings=[]
-            #for s in subs:
-            #       ratQ=Rating.all()
-            #       ratQ.filter("module",s.module)
-            #       ratings.append(ratQ)
-
-            #for r in ratings:
-            #       for h in r:
-            #               self.response.write(h.lecturer.key().name())
-
-            template_params = {
-                    'subscriptions' : subs,
-                    'ratings':ratings
-            }
-
-            self.response.out.write(template.render(template_params))
-
-        else:
-            template = jinja_environment.get_template('templates/forum_subscriptions.html')
-            userQ = User.all()
-            userQ.filter('__key__ =',current_user.key())
-            user = userQ.get() #is this really necessary ???
-            subs =  user.subscriptions
-            ratings=[]
-            for s in subs:
-                ratQ=Rating.all()
-                ratQ.filter("module",s.module)
-                ratings.append(ratQ)
-
-#                       for r in ratings:
-#                               for h in r:
-#                                       self.response.write(h.lecturer.key().name())
-
-            template_params = {
-                    'subscriptions' : subs,
-                    'ratings':ratings
-            }
-
-            self.response.out.write(template.render(template_params))
-
+		template_params = {
+			'mod_info':mod_info
+		}
+        	self.response.out.write(template.render(template_params))	
 
 class CategoriesPage(webapp2.RequestHandler):
-    def get(self):
-        mcode = cgi.escape(self.request.get('mid'))
-        if not mcode is '' :
+    def get(self) : 
+    	mcode = self.request.get('mid')
+	if not mcode is '' :
             template = jinja_environment.get_template('templates/forum_categories.html')
-            q = Module.all()
-            q.filter('__key__ =',Key.from_path('Module',mcode))
-            module = q.get()
+	    module = retrieve_module_name(mcode)
 
             categs = module.categories
             complete = list()
@@ -159,8 +132,8 @@ class CategoriesPage(webapp2.RequestHandler):
 
             self.response.out.write(template.render(template_values))
 
-        else : print 'mcode empty'
-
+        else :
+		logging.error('module code was empty ')
 class ThreadPage(webapp2.RequestHandler):
     def get(self):
         t =retrieve_thread(self.request.get('tid'))
@@ -172,6 +145,8 @@ class ThreadPage(webapp2.RequestHandler):
             posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()),current_user)
 
             template_params = {
+	    	    'user' : t.poster,
+		    'nop': len([p for p in t.poster.posts]),
                     'thread': t ,
                     'posts' : posts
             }
@@ -234,7 +209,7 @@ class ReplyToThread(webapp2.RequestHandler):
             p = Post(body=bd, thread = thrd, poster = current_user)
             p.put()
 
-            self.response.out.write(p.key().id())
+            self.response.out.write(serialize_ajax_info(current_user,p,''))
         else :
             self.response.out.write('Thread not found')
             logging.error('Thread not found, tid : '+str(tid)+'<')
@@ -246,7 +221,7 @@ class ReplyToPost(webapp2.RequestHandler):
             bd = cgi.escape(self.request.get('bd'))
             p = Post(reply=pst,poster=current_user,body=bd)
             p.put()
-            self.response.out.write(str(p.key().id()))
+            self.response.out.write(serialize_ajax_info(current_user, p,str(pst.key().id())))
         else :
             self.response.out.write('Could not reply')
             logging.error('Couldnt find post, pid : '+pid+'<')
@@ -263,7 +238,7 @@ class VoteUpPost(webapp2.RequestHandler):
             self.response.out.write(pst.votes)
         else :
             self.response.out.write('Didn\'t vote up')
-            logging.error('unable to vote up post pid '+str(pid)+'<')
+            logging.error('unable to vote up post pid '+self.request.get('pid')+'<')
 
 
 class VoteDownPost(webapp2.RequestHandler):
@@ -278,7 +253,7 @@ class VoteDownPost(webapp2.RequestHandler):
             self.response.out.write(pst.votes)
         else :
             self.response.out.write('Didn\'t vote down')
-            logging.error('unable to vote down pid '+str(pid)+'<')
+            logging.error('unable to vote down pid '+self.request.get('pid')+'<')
 
 class ToggleSolution(webapp2.RequestHandler) :
     def post(self):
@@ -352,6 +327,13 @@ class EmailSent(webapp2.RequestHandler):
                        body=message)
         self.response.out.write(template.render({}))
 
+class ModuleInfo:
+	def __init__(self,sub_key,sub_code,sub_name,mod_lecturers):
+		self.sub_key=sub_key
+		self.sub_code=sub_code
+		self.sub_name=sub_name
+		self.mod_lecturers=mod_lecturers
+
 
 def reset_db():
     for user in User.all():
@@ -400,7 +382,7 @@ def populate_db():
     reset_db()
 
     ###### POPULATE ######
-    current_user = User(key_name='az2g10', full_name='argyris', password='1234', course='cs', year=3)
+    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='BSc Computer Science', year=3,avatar="resources/img/dio.jpg", signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='cs',year=3)

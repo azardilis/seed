@@ -9,7 +9,8 @@ handlers:
   static_dir: stylesheets
 - url: /js
   static_dir: js
-
+- url: /resources
+  static_dir: resources
 - url: /.*
   script: forum.app
 

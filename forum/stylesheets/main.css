@@ -18,45 +18,54 @@ body{
 /* CSS for Profile Page Header*/
 #profile_header{
 	background-color: white;
-	width: 750px;
+	width: 850px;
 	height: 200px;
 	margin: 0 0 0 20px; /* top right bottom left */
 	padding: 0;
+	
 }
 #profile_header img{
 	 float: left;
 } 
 #profile_header #col1{
-	 margin: 50 0 0 10px;
-	 width: 230px;
-	 height: 100px;
+	 margin: 10 0 0 10px;
+	 width: 240px;
+	 height: 170px;
 	 float: left;
-	 background-color: green;
+	 
 }
 
 #profile_header #col2{
-	 margin: 85 0 0 0px;
-	 width: 280px;
-	 height: 100px;
+	 margin: 20 0 0 0px;
+	 width: 260px;
+	 height: 160px;
 	 float: right;
 	 padding: 0;
-	 background-color: red;
+	 
 }
 #profile_header .figures{
-	font-size: 35px;
+	font-size: 55px;
 	float:left;
-	font-family: Frutiger;
+	
 
+}
+#profile_header #col1 #name{
+	font-size: 30px;
+	width: 20px;
 }
 #profile_header .course{
-	font-size: 25px;
+	font-size: 20px;
 	float:left;
-	font-family: Frutiger;
+	
 
 }
-#profile_header #col2 .desc{
-	 margin: 0 0 0 10px;
+#profile_header .desc{
+	 margin: 5 0 0 10px;
+	 float:left;
+	 font-size: 15px;
+	 width:15px;
 }
+
 /*----------------------------------*/
 #sidebar a:active ,#sidebar a:visited ,#sidebar  a:link ,#sidebar a:hover{
 	text-decoration: none ;	

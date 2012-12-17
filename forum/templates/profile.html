@@ -5,19 +5,27 @@
        
   </head>
   <body>
-	<div id=content>
+  
+	<div id=content width= "500">
+		<!-- This includes the sidebar-->
+		{% include "/templates/sidebar.html"%}
 		<div id=profile_header>
-			<img src={{user.avatar}} width="200" height="200">
+			<img src={{user.avatar}} width="180" height="180">
 			<div id=col1>
-				<h1>{{user.full_name}}</h1>
+				<p id=name>{{user.full_name}}</p>
 				<p class=course>{{user.course}} {{user.year}}</p>
 				<br>
-				<p class=figures>{{user.karma}}</p><h2 class=desc>karma points</h2>
+				<br>
+				<h2 class=figures>{{user.karma}}</h2><h2 class=desc>Karma Points</h2>
 			</div>
 			<div id=col2>
-				<h2 class=figures>90</h2><h2 class=desc>topic</h2>
-				<br>  
-				<h2 class=figures>11101</h2><h2 class=desc>Comments</h2> 
+				<br>
+				<h2 class=figures>90</h2><h2 class=desc>Created Topics</h2>
+				<br>
+				<br>
+				<br>
+				<br>
+				<h2 class=figures>11101</h2><h2 class=desc>Comments Posted</h2> 
 			</div>
 							
 		</div>
