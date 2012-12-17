@@ -67,3 +67,61 @@ p.details, p.rating{
 	position: relative ;
 	float : right;
 }
+
+#module_info h3 {
+	padding-bottom : 20px;
+}
+
+#module_stats li {
+	/*float : left;
+	text-align:right;
+	max-width : 60px*/
+	display : inline;
+}
+
+#module_stats li.value{
+	font-size : 3em;
+	font-weight : bold;
+}
+
+#module_stats li.descr{
+	max-width : 30px;
+	padding-right : 20px;
+}
+
+#lecturer_ratings li{
+	display:inline;
+}
+
+#lecturer_ratings li ul.lecturer li{
+	display:block;
+}
+
+#module_stats div{
+	display:inline-block;
+}
+
+#module_stats div.value{
+	font-size:3em;
+	font-weight : bold;
+}
+
+#module_stats div.descr{
+	width : 90px;
+	padding-right : 20px;
+}
+
+#lecturer_ratings dl{
+	display:inline-block;
+	padding-right : 20px;
+	text-align: right
+}
+
+#lecturer_ratings dt{
+	font-size:1.5em;
+}
+
+#lecturer_ratings dd{
+	font-size:1.2em;
+	
+}
