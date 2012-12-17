@@ -81,14 +81,16 @@ class ForumPage(webapp2.RequestHandler):
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 		template = jinja_environment.get_template('templates/forum_subscriptions.html')
 		subs = 	current_user.subscriptions
-
+		
 		if not sub_to_delete is '':
 			subs.filter("__key__",Key(sub_to_delete))
 			subs.get().delete()
-
+			subs = 	current_user.subscriptions
+		
 		mod_info=[]
 		lecturers=[]
 	
+
 		for s in subs:
 			ratQ=Rating.all()
 			ratQ.filter("module",s.module)
