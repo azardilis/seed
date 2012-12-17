@@ -143,15 +143,18 @@ class CategoriesPage(webapp2.RequestHandler):
 
             categs = module.categories
             complete = list()
+            ratings = module.lecturers
+            #subscribed = module.subscribed_users
 
             for c in categs :
                 ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10
                 l = [c,ct]
                 complete.append(l)
 
-
             template_values= {
-                    'complete' : complete
+                    'complete' : complete,
+                    'ratings' : ratings,
+                    #'subscribed' : subscribed
             }
 
             self.response.out.write(template.render(template_values))
@@ -494,6 +497,7 @@ def populate_db():
 
     #both ejz
     Rating(lecturer=ejz,module=comp3001).put()
+    Rating(lecturer=msn,module=comp3001).put()
     Rating(lecturer=ejz,module=info3005).put()
     #both comp3016
     Rating(lecturer=nmg,module=comp3016).put()

@@ -17,7 +17,8 @@
 		<section id="pagecontent" class="cleared">
 			
 			<section id="module_info">
-				<h3>CODE - Name</h3>
+				<h3>COMP2006 - Human-Computer Interaction</h3>
+				<!-- 
 				<dl id="module_stats">
 					<dt>People Registered</dt>
 					<dd>95</dd>
@@ -26,13 +27,43 @@
 					<dt>Module Difficulty</dt>
 					<dd>5/10</dd>
 				</dl>
-				<a href="">Rate this module anonymously</a>
+				-->
+				<!-- 
+				<ul type=none id="module_stats">
+					<li class="value">95</li>
+					<li class="descr">People Registered</li>
+					<li class="value">76</li>
+					<li class="descr">Average Mark</li>
+					<li class="value">5/10</li>
+					<li class="descr">Average Difficlity</li>
+				</li>
+				-->
+				<section id="module_stats">
+					<div class="value">{{subscribed}}</div>
+					<div class="descr">People Registered</div>
+					<div class="value">95</div>
+					<div class="descr">Average Mark</div>
+					<div class="value">5/10</div>
+					<div class="descr">Average Difficlity</div>
+				</section>
+<!--
+				<button type="button" onclick="alert('hi')">Rate anonymously</button>
 				<dl id="lecturer_ratings">
 					<dt><a href="">Ed Zaluska</a></dt>
 					<dd>9/10</dd>
 					<dt><a href="">Srinandan Long Surname</a></dt>
 					<dd>9/10</dd>
 				</dl>
+-->
+				<section id="lecturer_ratings">
+					{% for rating in ratings %}
+					<dl class="lecturer">
+						<dt><a href={{rating.lecturer.home_page}}>{{rating.lecturer.full_name}}</a></dt>
+						<dd>Rating: {{rating.totalSum/rating.totalVotes if totalVotes}}</dd>
+					</dl>
+					{% endfor %}
+				</section>
+						
 			</section>
 
 			<section id="categories">
