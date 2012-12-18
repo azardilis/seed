@@ -1,9 +1,22 @@
 <html>
-  <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-  </head>
-	<body>
-	  All the modules for your course!
+     <head>
+       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+       <script type="text/javascript" src="js/jq-1.8.3.js"></script>
+       <script type="text/javascript">                                         
+	 $(document).ready(function() {
+         alert("Hello, world");
+	 });
+       </script>
+     </head>
+     <body>
+       <section id="content" class="content"> 
+	 <!--{% include "/templates/test.html" %} -->
+ 
+	<!-- This includes the sidebar-->
+	{% include "/templates/sidebar.html"%}
+
+	<section id="pagecontent" class="cleared">
+	  	  All the modules for your course!
 	  <p> Year 1 </p>
 	  
 	  <p> Semester 1 </p>
@@ -73,6 +86,20 @@
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
-	  
-	 </body>
+	  <!-- Add whatever content you want here-->
+
+	</section>
+	<section class="cleared">	</section>
+       </section>
+     
+     </body>
 </html>
+
+
+
+
+
+
+
+
+
