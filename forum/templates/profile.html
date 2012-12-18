@@ -1,13 +1,16 @@
 <html>
 <head>
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/profile.css" />
+	
 </head>
 <body>
 
-	<div id="content" width= "500">
-		<!-- This includes the sidebar-->
-		{% include "/templates/sidebar.html"%}
-		<section id="pagecontent" class="cleared">
+		<div id="content" width= "500">
+	<section id="pagecontent" class="cleared">
+
+			<!-- This includes the sidebar-->
+			{% include "/templates/sidebar.html"%}
 			<!-- Add whatever content you want here-->
 			<div id="profile_header">
 				<img src="{{user.avatar}}" width="180" height="180">
@@ -33,7 +36,8 @@
 			{% for sub in subscriptions %}
 			<div><p>{{sub.module.title}}</p></div>
 			{% endfor %}
-		</div>
 	</section> 
+		</div>
+
 </body>
 </html>

@@ -17,57 +17,6 @@ body{
 }
 /*-----*/
 
-
-
-/*CSS for the modulebar*/
-#modulenav{
-	width : 80%;
-	display : inline ;
-	position : relative ;
-	float : left;
-	overflow : hidden;
-	border-radius : 10px;
-	margin-bottom : 3% ;
-}
-
-ul#modulebar{
-	position : relative;
-	float : left ;
-}
-
-#modulebar li{
-	margin-left : 2px;
-	margin-right  : 2px;
-	padding : 5px ;	
-	text-align: center;
-	width : 390px;	
-	display : inline ;
-	background : #007275;
-	position : relative;
-	float : left ;
-	opacity : 0.75;
-}
-
-#modulebar li:hover {
-	opacity : 1;
-}
-
-#modulebar li:hover a {
-	color : white;
-}
-
-#modulebar li a{
-	font-size : 13pt;
-	font-weight: normal;
-	text-decoration: none;
-}
-
-img.dir,#modules_tag{
-	position :relative;
-	float: left;
-}
-/*----*/
-
 /*CSS for the sidebar*/
 #sidebar{
 	width : 150px;	
