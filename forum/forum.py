@@ -37,7 +37,71 @@ def getYCS(year, course, semester):
     ycs_list.filter('semester =', semester)
     ycs = ycs_list.get()
     return ycs.modules
+	
+###############
+#ADMIN SECTION#
+###############	
 
+#Main administration page
+class AdminPage(webapp2.RequestHandler):
+    def get(self):
+        #passing variables to template
+        global current_user
+        if 'current_user' in globals() and current_user.user_type=='moderator':
+			
+            template_values = {
+				'current_user':current_user
+			}
+            template = jinja_environment.get_template('templates/admin.html')
+            self.response.out.write(template.render(template_values))
+        else:
+            self.redirect("/")
+			
+			
+#Modules administration page
+class AdminModules(webapp2.RequestHandler):
+    def get(self):
+        #passing variables to template
+		global current_user
+		firsthalf=[]
+		secondhalf=[]
+		if 'current_user' in globals() and current_user.user_type=='moderator':
+				modules=Module.all().run()
+				count=Module.all().count()
+				i=0
+				for module in modules:
+					if i<count/2:
+						firsthalf.append(module)
+					else:
+						secondhalf.append(module)
+					i=i+1
+				template_values = {
+					'current_user':current_user,
+					'firsthalf':firsthalf,
+					'secondhalf':secondhalf
+				}
+				template = jinja_environment.get_template('templates/admin-modules.html')
+				self.response.out.write(template.render(template_values))
+		else:
+				self.redirect("/")
+				
+				
+#Users administration page
+class AdminUsers(webapp2.RequestHandler):
+    def get(self):
+        #passing variables to template
+		global current_user
+		if 'current_user' in globals() and current_user.user_type=='moderator':
+				template_values = {
+					'current_user':current_user
+				}
+				template = jinja_environment.get_template('templates/admin-users.html')
+				self.response.out.write(template.render(template_values))
+		else:
+				self.redirect("/")
+
+
+				
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(webapp2.RequestHandler):
     def get(self):
@@ -382,7 +446,7 @@ def populate_db():
     reset_db()
 
     ###### POPULATE ######
-    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='BSc Computer Science', year=3,avatar="resources/img/dio.jpg", signature="L33T 5UP4|-| H4X0|2")
+    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='BSc Computer Science', year=3,avatar="resources/img/dio.jpg", user_type='moderator',signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='cs',year=3)
@@ -551,5 +615,8 @@ app = webapp2.WSGIApplication([
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
                                    ('/something',EmailSent),
-                                   ('/profile',ProfilePage)
+                                   ('/profile',ProfilePage),
+								   ('/admin',AdminPage),
+								   ('/admin-modules',AdminModules),
+								   ('/admin-users',AdminUsers)
                                 ], debug=True)
