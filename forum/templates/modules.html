@@ -1,10 +1,12 @@
 <html>
      <head>
+       <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-       <script type="text/javascript" src="js/jq-1.8.3.js"></script>
        <script type="text/javascript">                                         
 	 $(document).ready(function() {
-         alert("Hello, world");
+         $("#accordion").accordion();
 	 });
        </script>
      </head>
@@ -16,9 +18,11 @@
 	{% include "/templates/sidebar.html"%}
 
 	<section id="pagecontent" class="cleared">
-	  	  All the modules for your course!
-	  <p> Year 1 </p>
-	  
+	 All the modules for your course!
+
+	<div id="accordion">	  
+	  <h3><a href="#"> Year 1 </a></h3>
+	  <div>
 	  <p> Semester 1 </p>
 	  {% if y1s1 %}
 	    <ul>
@@ -38,9 +42,9 @@
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
-
-	  <p> Year 2 </p>
-	  
+	  </div>
+	  <h3> <a href="#">Year 2 </a></h3>
+	  <div>
 	  <p> Semester 1 </p>
 	  {% if y2s1 %}
 	  <ul>
@@ -62,9 +66,9 @@
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
-
-	  <p> Year 3 </p>
-	  
+	  </div>
+	  <h3> <a href="#">Year 3 </a></h3>
+	  <div>
 	  <p> Semester 1 </p>
 	  {% if y3s1 %}
 	  <ul>
@@ -86,6 +90,8 @@
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
+	  </div>
+	  </div>
 	  <!-- Add whatever content you want here-->
 
 	</section>
