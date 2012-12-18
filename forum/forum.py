@@ -333,7 +333,25 @@ class ModuleInfo:
 		self.sub_code=sub_code
 		self.sub_name=sub_name
 		self.mod_lecturers=mod_lecturers
-
+		
+class ModulesPage(webapp2.RequestHandler):
+    def get(self):
+	course = "compsci"
+	y1s1 = getYCS(1, course, 1)
+	y1s2 = getYCS(1, course, 2)
+	y2s1 = getYCS(2, course, 1)
+	y2s2 = getYCS(2, course, 2)
+	y3s1 = getYCS(3, course, 1)
+	y3s2 = getYCS(3, course, 2)
+	template_values = {'y1s1' : y1s1,
+			   'y1s2' : y1s2,
+			   'y2s1' : y2s1,
+			   'y2s2' : y2s2,
+			   'y3s1' : y3s1,
+			   'y3s2' : y3s2
+			   }
+	template = jinja_environment.get_template('templates/modules.html')
+	self.response.out.write(template.render(template_values))
 
 def reset_db():
     for user in User.all():
@@ -551,5 +569,6 @@ app = webapp2.WSGIApplication([
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
                                    ('/something',EmailSent),
-                                   ('/profile',ProfilePage)
+                                   ('/profile',ProfilePage),
+				   ('/modules',ModulesPage)
                                 ], debug=True)
