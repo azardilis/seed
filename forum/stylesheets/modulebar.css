@@ -1,0 +1,66 @@
+
+/*CSS for the modulebar*/
+#modulenav{
+	width : 80%;
+	display : inline ;
+	position : relative ;
+	float : left;
+	overflow : hidden;
+	border-radius : 10px;
+	margin-bottom : 3% ;
+}
+
+ul#modulebar{
+	position : relative;
+	float : left ;
+}
+
+#modulebar li{
+	margin-left : 2px;
+	margin-right  : 2px;
+	padding : 5px ;	
+	text-align: center;
+	border-radius: 3px ;
+	width : 390px;	
+	display : inline ;
+	background : #007275;
+	position : relative;
+	float : left ;
+	opacity : 0.85;
+	transition-property: opacity;
+	transition-duration: 0.5s;
+	transition-timing-function: ease-out;
+	/* Firefox 4 */
+	-moz-transition-property:opacity;
+	-moz-transition-duration:0.51s;
+	-moz-transition-timing-function:ease-out;
+	/* Safari and Chrome */
+	-webkit-transition-property:opacity;
+	-webkit-transition-duration:0.5s;
+	-webkit-transition-timing-function:ease-out;
+	/* Opera */
+	-o-transition-property:opacity;
+	-o-transition-duration:0.5s;
+	-o-transition-timing-function:ease-out;
+}
+
+#modulebar li:hover {
+	opacity : 1;
+}
+
+#modulebar li:hover a {
+	color : white;
+}
+
+#modulebar li a{
+	font-size : 13pt;
+	font-weight: normal;
+	text-decoration: none;
+	color : #FBE4C7;
+}
+
+img.dir,#modules_tag{
+	position :relative;
+	float: left;
+}
+/*----*/
