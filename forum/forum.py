@@ -117,7 +117,6 @@ class CategoriesPage(webapp2.RequestHandler):
             categs = module.categories
             complete = list()
             ratings = module.lecturers
-            #subscribed = module.subscribed_users
 
             for c in categs :
                 ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10
@@ -127,7 +126,8 @@ class CategoriesPage(webapp2.RequestHandler):
             template_values= {
                     'complete' : complete,
                     'ratings' : ratings,
-                    #'subscribed' : subscribed
+                    'subscribed' : module.student_count,
+                    'sum_marks' : module.sum_marks
             }
 
             self.response.out.write(template.render(template_values))
@@ -435,6 +435,10 @@ def populate_db():
     sub1.put()
     sub2.put()
     sub3.put()
+    comp3001.student_count = 1
+    info3005.student_count = 1
+    comp3016.student_count = 1
+    ##### TODO: when done formally, increament counter for each subsribtion
 
     assesCwk3001 = Assessment(title='perl assignment',
                         dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'),
@@ -451,6 +455,7 @@ def populate_db():
 
     grade1 = Grade(student=current_user, assessment=assesCwk3001, mark=100)
     grade1.put()
+    ##### TODO: when done formally, update sum_marks for each entry
 
     ejz = Lecturer(key_name='ejz', full_name='Ed J Zaluska', home_page='http://google.com')
     ejz.put()
