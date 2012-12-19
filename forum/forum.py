@@ -37,71 +37,7 @@ def getYCS(year, course, semester):
     ycs_list.filter('semester =', semester)
     ycs = ycs_list.get()
     return ycs.modules
-	
-###############
-#ADMIN SECTION#
-###############	
 
-#Main administration page
-class AdminPage(webapp2.RequestHandler):
-    def get(self):
-        #passing variables to template
-        global current_user
-        if 'current_user' in globals() and current_user.user_type=='moderator':
-			
-            template_values = {
-				'current_user':current_user
-			}
-            template = jinja_environment.get_template('templates/admin.html')
-            self.response.out.write(template.render(template_values))
-        else:
-            self.redirect("/")
-			
-			
-#Modules administration page
-class AdminModules(webapp2.RequestHandler):
-    def get(self):
-        #passing variables to template
-		global current_user
-		firsthalf=[]
-		secondhalf=[]
-		if 'current_user' in globals() and current_user.user_type=='moderator':
-				modules=Module.all().run()
-				count=Module.all().count()
-				i=0
-				for module in modules:
-					if i<count/2:
-						firsthalf.append(module)
-					else:
-						secondhalf.append(module)
-					i=i+1
-				template_values = {
-					'current_user':current_user,
-					'firsthalf':firsthalf,
-					'secondhalf':secondhalf
-				}
-				template = jinja_environment.get_template('templates/admin-modules.html')
-				self.response.out.write(template.render(template_values))
-		else:
-				self.redirect("/")
-				
-				
-#Users administration page
-class AdminUsers(webapp2.RequestHandler):
-    def get(self):
-        #passing variables to template
-		global current_user
-		if 'current_user' in globals() and current_user.user_type=='moderator':
-				template_values = {
-					'current_user':current_user
-				}
-				template = jinja_environment.get_template('templates/admin-users.html')
-				self.response.out.write(template.render(template_values))
-		else:
-				self.redirect("/")
-
-
-				
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(webapp2.RequestHandler):
     def get(self):
@@ -180,7 +116,6 @@ class CategoriesPage(webapp2.RequestHandler):
 
             categs = module.categories
             complete = list()
-            ratings = module.lecturers
 
             for c in categs :
                 ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10
@@ -189,9 +124,10 @@ class CategoriesPage(webapp2.RequestHandler):
 
             template_values= {
                     'complete' : complete,
-                    'ratings' : ratings,
+                    'ratings' : module.lecturers,
                     'subscribed' : module.student_count,
-                    'sum_marks' : module.sum_marks
+                    'assessments' : module.assessments,
+                    'module' : module
             }
 
             self.response.out.write(template.render(template_values))
@@ -397,25 +333,7 @@ class ModuleInfo:
 		self.sub_code=sub_code
 		self.sub_name=sub_name
 		self.mod_lecturers=mod_lecturers
-		
-class ModulesPage(webapp2.RequestHandler):
-    def get(self):
-	course = "compsci"
-	y1s1 = getYCS(1, course, 1)
-	y1s2 = getYCS(1, course, 2)
-	y2s1 = getYCS(2, course, 1)
-	y2s2 = getYCS(2, course, 2)
-	y3s1 = getYCS(3, course, 1)
-	y3s2 = getYCS(3, course, 2)
-	template_values = {'y1s1' : y1s1,
-			   'y1s2' : y1s2,
-			   'y2s1' : y2s1,
-			   'y2s2' : y2s2,
-			   'y3s1' : y3s1,
-			   'y3s2' : y3s2
-			   }
-	template = jinja_environment.get_template('templates/modules.html')
-	self.response.out.write(template.render(template_values))
+
 
 def reset_db():
     for user in User.all():
@@ -464,7 +382,7 @@ def populate_db():
     reset_db()
 
     ###### POPULATE ######
-    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='BSc Computer Science', year=3,avatar="resources/img/dio.jpg", user_type='moderator',signature="L33T 5UP4|-| H4X0|2")
+    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='BSc Computer Science', year=3,avatar="resources/img/dio.jpg", signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='cs',year=3)
@@ -483,30 +401,30 @@ def populate_db():
     compsci32 = YearCourseSemester(year=int(3), semester=int(2), course='compsci')
     compsci32.put()
 
-    comp3001 = Module(key_name='comp3001', title='Scripting Languages',
+    comp3001 = Module(key_name='COMP3001', title='Scripting Languages',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/",
                   yearCourseSemester=compsci31)
     comp3001.put()
-    comp3033 = Module(key_name='comp3033', title='Computational Biology',
+    comp3033 = Module(key_name='COMP3033', title='Computational Biology',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3033/",
                   yearCourseSemester=compsci31)
     comp3033.put()
-    comp3032 = Module(key_name='comp3032', title='Intelligent Algorithms',
+    comp3032 = Module(key_name='COMP3032', title='Intelligent Algorithms',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3032/",
                   yearCourseSemester=compsci31)
     comp3032.put()
-    comp3016 = Module(key_name='comp3016', title='Hypertext and Web Technologies',
+    comp3016 = Module(key_name='COMP3016', title='Hypertext and Web Technologies',
                   ecs_page='http://www.google.com',
                   yearCourseSemester=compsci31)
     comp3016.put()
-    comp3020 = Module(key_name='comp3020', title='Individual Project',
+    comp3020 = Module(key_name='COMP3020', title='Individual Project',
                   ecs_page='http://www.google.com',
                   yearCourseSemester=compsci31)
-    comp1314 = Module(key_name='comp1314', title='Introduction to Everything',
+    comp1314 = Module(key_name='COMP1314', title='Introduction to Everything',
                   ecs_page='http://goo.gl/S0e62',
                   yearCourseSemester=compsci11)
     comp1314.put()
-    info3005 = Module(key_name='info3005', title='Security & Information Technology',
+    info3005 = Module(key_name='INFO3005', title='Security & Information Technology',
                   ecs_page='http://www.google.com',
                   yearCourseSemester=compsci31)
     info3005.put()
@@ -520,9 +438,14 @@ def populate_db():
     comp3001.student_count = 1
     info3005.student_count = 1
     comp3016.student_count = 1
+    comp3001.put()
+    info3005.put()
+    comp3016.put()
+    # notice: must put() modules again
     ##### TODO: when done formally, increament counter for each subsribtion
+    #### also do NOT remove subscribed students when year ends (needed for templates/forum_categories.html)
 
-    assesCwk3001 = Assessment(title='perl assignment',
+    assesCwk3001 = Assessment(title='Perl Coursework',
                         dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'),
                         specLink=db.Link("http://www.google.com/"),
                         handin=db.Link("http://www.google.com/"),
@@ -537,6 +460,9 @@ def populate_db():
 
     grade1 = Grade(student=current_user, assessment=assesCwk3001, mark=100)
     grade1.put()
+    assesCwk3001.sum_marks = 100
+    assesCwk3001.count_marks=1
+    assesCwk3001.put() # notice: must put again
     ##### TODO: when done formally, update sum_marks for each entry
 
     ejz = Lecturer(key_name='ejz', full_name='Ed J Zaluska', home_page='http://google.com')
@@ -638,9 +564,5 @@ app = webapp2.WSGIApplication([
                                    ('/notes', NotesPage),
                                    ('/contact',ContactPage),
                                    ('/something',EmailSent),
-                                   ('/profile',ProfilePage),
-								   ('/admin',AdminPage),
-								   ('/admin-modules',AdminModules),
-								   ('/admin-users',AdminUsers),
-								   ('/modules',ModulesPage)
+                                   ('/profile',ProfilePage)
                                 ], debug=True)

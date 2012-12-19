@@ -17,15 +17,15 @@
 		<section id="pagecontent" class="cleared">
 			
 			<section id="module_info">
-				<h3>COMP2006 - Human-Computer Interaction</h3>
+				<h3>{{module.key().name() + ' - ' + module.title}}</h3>
 				<section id="module_stats">
+
 					<!-- TODO: more complete description when hover over-->
 					<div class="value">{{subscribed}}</div>
 					<div class="descr">Students Registered</div>
-					<div class="value">{{sum_marks/subscribed if subscribed!=0 else 0}}</div>
-					<div class="descr">Last year</div>
+	
 					<div class="value">5/10</div>
-					<div class="descr">Average Difficlity</div>
+					<div class="descr">Average Difficulity</div>
 				</section>
 				<section id="lecturer_ratings">
 					{% for rating in ratings %}
@@ -34,6 +34,13 @@
 						<dd>Rating: {{rating.totalSum/rating.totalVotes if totalVotes}}</dd>
 					</dl>
 					{% endfor %}
+				</section>
+				<section id="assessment_stats">
+					{% for assessment in assessments: %}
+                                        {% if assessment.count_marks != 0: %}
+					<a href={{assessment.specLink}}>{{assessment.title}}</a> Average mark: {{assessment.sum_marks/assessment.count_marks}}
+                                        {% endif %}
+                                        {% endfor %}
 				</section>
 						
 			</section>
