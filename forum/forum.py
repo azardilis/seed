@@ -169,7 +169,7 @@ class AdminModules(webapp2.RequestHandler):
 			#proper error message should be displayed (some javascript or something)
 			self.redirect("/")
 		
-#Users administration page
+#Existing user accounts administration page
 class AdminUsers(webapp2.RequestHandler):
     def get(self):
         #passing variables to template
@@ -179,6 +179,20 @@ class AdminUsers(webapp2.RequestHandler):
 					'current_user':current_user
 				}
 				template = jinja_environment.get_template('templates/admin-users.html')
+				self.response.out.write(template.render(template_values))
+		else:
+				self.redirect("/")
+
+#Admin user creation page
+class AdminUserCreation(webapp2.RequestHandler):
+    def get(self):
+        #passing variables to template
+		global current_user
+		if 'current_user' in globals() and current_user.user_type=='moderator':
+				template_values = {
+					'current_user':current_user
+				}
+				template = jinja_environment.get_template('templates/admin-user-creation.html')
 				self.response.out.write(template.render(template_values))
 		else:
 				self.redirect("/")
@@ -712,6 +726,7 @@ app = webapp2.WSGIApplication([
                                    ('/admin',AdminPage),
 								   ('/admin-modules',AdminModules),
 								   ('/admin-users',AdminUsers),
-								   ('/profile',ProfilePage)
+								   ('/profile',ProfilePage),
+								   ('/admin-user-creation',AdminUserCreation)
 								   
                                 ], debug=True)
