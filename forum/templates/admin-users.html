@@ -11,28 +11,17 @@
 	<section id="content" class="content"> 
 		<!--{% include "/templates/test.html" %} -->
 		<section id="header">
-			<p>Welcome to the site, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
-			<p id="modules_tag"> Your modules: </p>
-
-			<img src="/stylesheets/resources/larrow.png" dir="-" class="dir" alt="larrow" >	    
-			<nav id='modulenav'>
-				<ul id='modulebar'>
-					{% for sub in subscriptions %}
-					<li>
-						<a href="{{sub.module.ecs_page}}">{{sub.module.title}}</a>
-					</li>
-					{% endfor %}
-				</ul>
-			</nav>
-			<img src="/stylesheets/resources/rarrow.png" dir="+" class="dir" alt="rarrow" >	    
+			<p>You are a god, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
+			    
 
 
 
 		<!-- This includes the sidebar-->
-		{% include "/templates/sidebar.html"%}
+		{% include "/templates/admin-sidebar.html"%}
 
 		<section id="pagecontent" class="cleared">
 			<!-- Add whatever content you want here-->
+			This is admin-users content
 
 		</section>
 		<section class="cleared">	</section>

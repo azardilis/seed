@@ -18,7 +18,7 @@ def get_children(plist , posts, lvl,usrstat,user):
 		cls = 'post'
 		if p.answer :
 			cls = 'ans'
-		posts = make_article(posts,cls)
+		posts = make_article(posts,cls,p)
 		posts = make_post(p,posts)
 		posts = make_toolbar(p,posts,lvl,usrstat,user.key().name())
 
@@ -60,8 +60,9 @@ def make_toolbar(p,posts,lvl,userstat,uname):
 	
 	return posts+html
 
-def make_article(posts,cls):
-	posts += '<section class="'+cls+'">'
+def make_article(posts,cls,p):
+	pid = str(p.key().id())
+	posts += '<section class="'+cls+'" pid="'+pid+'" id="pstsec'+pid+'">'
 	return posts 
 
 def close_article(posts):

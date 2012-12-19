@@ -1,11 +1,28 @@
 <html>
-  <head>
-    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-  </head>
-	<body>
-	  All the modules for your course!
-	  <p> Year 1 </p>
-	  
+     <head>
+       <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+       <script type="text/javascript">                                         
+	 $(document).ready(function() {
+         $("#accordion").accordion();
+	 });
+       </script>
+     </head>
+     <body>
+       <section id="content" class="content"> 
+	 <!--{% include "/templates/test.html" %} -->
+ 
+	<!-- This includes the sidebar-->
+	{% include "/templates/sidebar.html"%}
+
+	<section id="pagecontent" class="cleared">
+	 All the modules for your course!
+
+	<div id="accordion">	  
+	  <h3><a href="#"> Year 1 </a></h3>
+	  <div>
 	  <p> Semester 1 </p>
 	  {% if y1s1 %}
 	    <ul>
@@ -25,9 +42,9 @@
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
-
-	  <p> Year 2 </p>
-	  
+	  </div>
+	  <h3> <a href="#">Year 2 </a></h3>
+	  <div>
 	  <p> Semester 1 </p>
 	  {% if y2s1 %}
 	  <ul>
@@ -49,9 +66,9 @@
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
-
-	  <p> Year 3 </p>
-	  
+	  </div>
+	  <h3> <a href="#">Year 3 </a></h3>
+	  <div>
 	  <p> Semester 1 </p>
 	  {% if y3s1 %}
 	  <ul>
@@ -73,6 +90,22 @@
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
-	  
-	 </body>
+	  </div>
+	  </div>
+	  <!-- Add whatever content you want here-->
+
+	</section>
+	<section class="cleared">	</section>
+       </section>
+     
+     </body>
 </html>
+
+
+
+
+
+
+
+
+

@@ -1,7 +1,7 @@
 /*function that splits the serialized string of data that is
  sent to the server
  */
- function returnArray(str){
+function returnArray(str){
  	var arr = str.split("&");
  	for (i in arr){
  		arr[i] = arr[i].split("=");
@@ -10,7 +10,7 @@
  }
 
  /*TODO - makes the toolbar for each post*/
- function makeToolbar(pid, pstrname){
+function makeToolbar(pid, pstrname){
  	var controlsSection = document.createElement('section');
  	controlsSection.setAttribute('id','controls')
 
@@ -87,9 +87,9 @@
  function appendPost(arr){
  	
  	elems = makePostSection(arr);
- 	var rSection = document.getElementById('responses');
+ 	var threadRepliesSection = document.getElementById('responses');
 	//add node to the beginning of the posts
-	rSection.insertBefore(elems[1],rSection.childNodes[0]);
+	threadRepliesSection.insertBefore(elems[1],threadRepliesSection.childNodes[0]);
 }
 
 /*appends to post at level n > 1*/
@@ -107,7 +107,7 @@ function appendToPost(arr){
 
 	replies.appendChild(elems[1]); //the post section
 
-	var appHere = $('#pst'+reply_to_post).parent();
+	var appHere = $('#pstsec'+reply_to_post);
 	appHere.append(replies);
 }
 
@@ -208,7 +208,7 @@ function makePostSection(arr){
 	return [reply_to_post,postsec];
 }
 
-
+/*Event listeners*/
 $(document).ready(function(){
 	
 	/*This is AJAX for replying to a THREAD*/
@@ -218,7 +218,6 @@ $(document).ready(function(){
 		var $inputs = $form.find("input, button,textarea") ;
 		serializedData = $form.serialize();
 		$inputs.attr("disabled", "disabled");
-
 		$.ajax(
 		{
 			url: "/replythread",
@@ -237,14 +236,14 @@ $(document).ready(function(){
 			complete: function()
 			{
 				$inputs.removeAttr("disabled");
+				console.log('Replying to thread completed');
 			}
 		});
 		event.preventDefault();
 	});
 
-
 	/*This is AJAX for replying to a POST*/
-	$(document).delegate('form.psreplyform','submit',function(event)
+	$(document).delegate('.psreplyform','submit',function(event)
 	{
 		var $form = $(this);
 		var $inputs = $form.find("input,textarea").not(':submit', ':hidden') ;
@@ -268,6 +267,7 @@ $(document).ready(function(){
 			complete: function()
 			{
 				$inputs.removeAttr("disabled");
+				console.log('Replying to post completed');
 			}
 		});
 		event.preventDefault();
@@ -289,8 +289,6 @@ $(document).ready(function(){
 		$('#rf'+pid+' textarea').html(qs);
 		$('#rf'+pid).slideDown();
 	});
-
-	
 
 	/*AJAX for voting up/down a post*/
 	$(document).delegate('p.vote','click',function(){
@@ -314,7 +312,7 @@ $(document).ready(function(){
 			},
 			complete: function()
 			{
-				console.log('request should have completed');
+				console.log('request completed');
 			}
 		});
 	});
