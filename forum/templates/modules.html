@@ -4,11 +4,27 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
        <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-       <script type="text/javascript">                                         
+       <script type="text/javascript">
 	 $(document).ready(function() {
-         $("#accordion").accordion();
+           $("#accordion").accordion();
 	 });
        </script>
+       <style type="text/css">
+	 #mods
+	 {
+	    margin-top:10px;
+	    margin-bottom:10px;
+	    margin-right:0px;
+	    margin-left:50px;
+	    list-style-type: square;
+	    font-size:10.5pt;
+	 }
+	 p
+	 {
+	   font-size:13pt;
+	 }
+
+       </style>
      </head>
      <body>
        <section id="content" class="content"> 
@@ -25,20 +41,20 @@
 	  <div>
 	  <p> Semester 1 </p>
 	  {% if y1s1 %}
-	    <ul>
+	    <ul id="mods">
 	      {% for module in y1s1 %}
-	      <li> Module:{{module.title}} </li>
+	      <li> <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]</li>
 	      {% endfor %}
 	    </ul>
 	  {% endif %}
 	  
 	  <p> Semester 2 </p>
 	  {% if y1s2 %}
-	  <ul>
+	  <ul id="mods">
 	    {% for module in y1s2 %}
 	    <li>
-	      Module:{{module.title}} 
-	      </li>
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
+	     </li>
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
@@ -47,10 +63,10 @@
 	  <div>
 	  <p> Semester 1 </p>
 	  {% if y2s1 %}
-	  <ul>
+	  <ul id="mods">
 	    {% for module in y2s1 %}
 	    <li>
-	      Module:{{module.title}} 
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
 	    </li>
 	    {% endfor %}
 	  </ul>
@@ -58,11 +74,11 @@
 
 	  <p> Semester 2 </p>
 	  {% if y2s2 %}
-	  <ul>
+	  <ul id="mods">
 	    {% for module in y2s2 %}
 	    <li>
-	      Module:{{module.title}} 
-	      </li>
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
+	    </li>
 	    {% endfor %}
 	  </ul>
 	  {% endif %}
@@ -71,10 +87,10 @@
 	  <div>
 	  <p> Semester 1 </p>
 	  {% if y3s1 %}
-	  <ul>
+	  <ul id="mods">
 	    {% for module in y3s1 %}
 	    <li>
-	      Module:{{module.title}} 
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
 	    </li>
 	    {% endfor %}
 	  </ul>
@@ -82,11 +98,11 @@
 
 	  <p> Semester 2 </p>
 	  {% if y3s2 %}
-	  <ul>
+	  <ul id="mods">
 	    {% for module in y3s2 %}
 	    <li>
-	      Module:{{module.title}} 
-	      </li>
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
+	    </li>
 	    {% endfor %}
 	  </ul>
 	  {% endif %}

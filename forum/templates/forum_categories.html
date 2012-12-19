@@ -18,43 +18,15 @@
 			
 			<section id="module_info">
 				<h3>COMP2006 - Human-Computer Interaction</h3>
-				<!-- 
-				<dl id="module_stats">
-					<dt>People Registered</dt>
-					<dd>95</dd>
-					<dt>Average Mark</dt>
-					<dd>76</dd>
-					<dt>Module Difficulty</dt>
-					<dd>5/10</dd>
-				</dl>
-				-->
-				<!-- 
-				<ul type=none id="module_stats">
-					<li class="value">95</li>
-					<li class="descr">People Registered</li>
-					<li class="value">76</li>
-					<li class="descr">Average Mark</li>
-					<li class="value">5/10</li>
-					<li class="descr">Average Difficlity</li>
-				</li>
-				-->
 				<section id="module_stats">
+					<!-- TODO: more complete description when hover over-->
 					<div class="value">{{subscribed}}</div>
-					<div class="descr">People Registered</div>
-					<div class="value">95</div>
-					<div class="descr">Average Mark</div>
+					<div class="descr">Students Registered</div>
+					<div class="value">{{sum_marks/subscribed if subscribed!=0 else 0}}</div>
+					<div class="descr">Last year</div>
 					<div class="value">5/10</div>
 					<div class="descr">Average Difficlity</div>
 				</section>
-<!--
-				<button type="button" onclick="alert('hi')">Rate anonymously</button>
-				<dl id="lecturer_ratings">
-					<dt><a href="">Ed Zaluska</a></dt>
-					<dd>9/10</dd>
-					<dt><a href="">Srinandan Long Surname</a></dt>
-					<dd>9/10</dd>
-				</dl>
--->
 				<section id="lecturer_ratings">
 					{% for rating in ratings %}
 					<dl class="lecturer">
