@@ -1,0 +1,30 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/admin-section.css" />
+	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
+	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+	<script type="text/javascript" src="js/modulebar_functions.js"></script>
+	<meta http-equiv="Refresh" content="2; url=/admin-modules">
+</head>
+<body>
+
+	<section id="content" class="content"> 
+		<!--{% include "/templates/test.html" %} -->
+		<section id="header">
+			<p>You are a god, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
+			    
+
+
+
+		<!-- This includes the sidebar-->
+		{% include "/templates/admin-sidebar.html"%}
+
+		<section id="pagecontent" class="cleared">
+			<!-- Add whatever content you want here-->
+			<div class="success">{{message}}</div>
+		</section>
+		<section class="cleared">	</section>
+	</section>
+</body>
+</html>

@@ -2,10 +2,19 @@
 section.admin-container{
 	width:340px;
 	float:left;
-	padding : 10px ;
-	margin : 0px ;
+	padding : 8px ;
+	margin-bottom : 2px ;
 	border : 1px solid #88ccff ;
+	
 	border-radius : 5px ;
+}
+#plus{
+	width:24px;
+	float: right;
+}
+#_new_module{
+float:left;
+width:267px;
 }
 
 
@@ -13,11 +22,21 @@ section.admin-container{
 section.admin-container:hover{
 	background:#eeffff;
 }
+section.admin-container-new{
+	width:340px;
+	float:left;
+	padding : 8px ;
+	margin-bottom : 2px ;
+	border : 1px solid #88ccff ;
+	
+	border-radius : 5px ;
+	background-color:C6FFBF;
+}
 
 p.admin-handler{				
 	cursor : pointer ;
 	color : #02527d ;
-	font-size : 20px ;
+	font-size : 17px ;
 }
 
 
@@ -51,3 +70,40 @@ a:hover {
 }
 
 /*End accordion CSS*/
+#apply_button{
+	padding:3px;
+	color:green;
+}
+#remove_module_button{
+	color:red;
+	font-size:85%;
+	margin-top:10px;
+	padding:3px;
+}
+input, select{
+	margin-bottom:7px;
+
+}
+
+/*success and error message css*/
+
+ .success,  .error {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+
+.success {
+	
+    color: #4F8A10;
+    background-color: #DFF2BF;
+    background-image:url('success.png');
+}
+
+.error {
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('error.png');
+}

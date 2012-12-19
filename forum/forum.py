@@ -29,6 +29,17 @@ jinja_environment = jinja2.Environment(
 
 global current_user
 
+def cloneEntity(e, **extra_args):
+
+	klass = e.__class__
+	props = dict((k, v.__get__(e, klass)) for k, v in klass.properties().iteritems())
+	props.update(extra_args)
+	return klass(**props)
+	
+def getYcsFromCode(code):
+	course=code.split('-')[1]
+	year=code.split('-')[2]
+	semester=code.split('-')[3]
 
 def getYCS(year, course, semester):
     ycs_list = YearCourseSemester.all()
@@ -57,7 +68,6 @@ class AdminPage(webapp2.RequestHandler):
         else:
             self.redirect("/")
 			
-			
 #Modules administration page
 class AdminModules(webapp2.RequestHandler):
     def get(self):
@@ -65,27 +75,104 @@ class AdminModules(webapp2.RequestHandler):
 		global current_user
 		firsthalf=[]
 		secondhalf=[]
+		allYcsArray=[]
 		if 'current_user' in globals() and current_user.user_type=='moderator':
 				modules=Module.all().run()
+				allYcs=YearCourseSemester.all().run()
 				count=Module.all().count()
-				i=0
-				for module in modules:
-					if i<count/2:
-						firsthalf.append(module)
-					else:
-						secondhalf.append(module)
-					i=i+1
+				#splitting the modules array in half to be able to display it nicely on two columns in the template
+				i=1
+				if count%2 is 0:
+					for module in modules:
+						if i<=count/2:
+							firsthalf.append(module)
+						else:
+							secondhalf.append(module)
+						i=i+1
+				else:
+					for module in modules:
+						if i<=count/2+1:
+							firsthalf.append(module)
+						else:
+							secondhalf.append(module)
+						i=i+1
+				#copying allYcs into an array to be able to use it properly in the template
+				for ycs in allYcs:
+					allYcsArray.append(ycs)
 				template_values = {
 					'current_user':current_user,
 					'firsthalf':firsthalf,
-					'secondhalf':secondhalf
+					'secondhalf':secondhalf,
+					'allYcs':allYcsArray
 				}
 				template = jinja_environment.get_template('templates/admin-modules.html')
 				self.response.out.write(template.render(template_values))
 		else:
 				self.redirect("/")
+    def post(self):
+		global current_user
+		if 'current_user' in globals() and current_user.user_type=='moderator':
+			is_delete = self.request.POST.get('remove_module_button', None)
+			is_apply = self.request.POST.get('apply_button', None)
+			is_add = self.request.POST.get('add_button', None)
+			if is_apply:
+				#get the module object from the datastore
+				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
+				if cgi.escape(self.request.get('module_title')) is not None:
+					moduleObject.title=cgi.escape(self.request.get('module_title'))
+				if cgi.escape(self.request.get('module_code')) is not None:
+					moduleObject.ecs_page=cgi.escape(self.request.get('module_page'))
+				if cgi.escape(self.request.get('ycs')) is not None:
+					ycs=cgi.escape(self.request.get('ycs'))
+					#get the course, year and semester out of the value that comes in
+					course=ycs.split('-')[0]
+					year=ycs.split('-')[1]
+					semester=ycs.split('-')[2]
+					#get all YCS values and then filter to get only the right one
+					ycs_list = YearCourseSemester.all()
+					ycs_list.filter('year =', int(year))
+					ycs_list.filter('course =', course)
+					ycs_list.filter('semester =', int(semester))
+					ycs=ycs_list.get()
+					moduleObject.yearCourseSemester=ycs
+				moduleObject.put()
+			if is_delete:
+				#get the module object from the datastore
+				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
+				moduleObject.delete()
+			if is_add:
+				if cgi.escape(self.request.get('ycs')) is not None and cgi.escape(self.request.get('module_code')) is not None and cgi.escape(self.request.get('module_title')) is not None:
+					ycs=cgi.escape(self.request.get('ycs'))
+					#get the course, year and semester out of the value that comes in
+					course=ycs.split('-')[0]
+					year=ycs.split('-')[1]
+					semester=ycs.split('-')[2]
+					#get all YCS values and then filter to get only the right one
+					ycs_list = YearCourseSemester.all()
+					ycs_list.filter('year =', int(year))
+					ycs_list.filter('course =', course)
+					ycs_list.filter('semester =', int(semester))
+					ycs=ycs_list.get()
+					
+					moduleObject=Module(key_name=cgi.escape(self.request.get('module_code')),
+										title=cgi.escape(self.request.get('module_title')),
+										ecs_page=cgi.escape(self.request.get('module_page')), 
+										yearCourseSemester=ycs
+										)
 				
+				moduleObject.put()
+			template_values = {
+						'current_user':current_user,
+						'message':"The changes have been successfully submited to the datastore"
+					}
+			template = jinja_environment.get_template('templates/message-page.html')
+			self.response.out.write(template.render(template_values))
 				
+			
+		else:
+			#proper error message should be displayed (some javascript or something)
+			self.redirect("/")
+		
 #Users administration page
 class AdminUsers(webapp2.RequestHandler):
     def get(self):
@@ -470,19 +557,20 @@ def populate_db():
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='cs',year=3)
     user.put()
 
-    compsci11 = YearCourseSemester(year=int(1), semester=int(1), course='compsci')
+    compsci11 = YearCourseSemester(year=int(1), semester=int(1), course="compsci",prettyName="Computer Science Year 1, Semester 1")
     compsci11.put()
-    compsci12 = YearCourseSemester(year=int(1), semester=int(2), course='compsci')
+    compsci12 = YearCourseSemester(year=int(1), semester=int(2), course="compsci",prettyName="Computer Science Year 1, Semester 2")
     compsci12.put()
-    compsci21 = YearCourseSemester(year=int(2), semester=int(1), course='compsci')
+    compsci21 = YearCourseSemester(year=int(2), semester=int(1), course="compsci",prettyName="Computer Science Year 2, Semester 1")
     compsci21.put()
-    compsci22 = YearCourseSemester(year=int(2), semester=int(2), course='compsci')
+    compsci22 = YearCourseSemester(year=int(2), semester=int(2), course="compsci",prettyName="Computer Science Year 2, Semester 2")
     compsci22.put()
-    compsci31 = YearCourseSemester(year=int(3), semester=int(1), course='compsci')
+    compsci31 = YearCourseSemester(year=int(3), semester=int(1), course="compsci",prettyName="Computer Science Year 3, Semester 1")
     compsci31.put()
-    compsci32 = YearCourseSemester(year=int(3), semester=int(2), course='compsci')
+    compsci32 = YearCourseSemester(year=int(3), semester=int(2), course="compsci",prettyName="Computer Science Year 3, Semester 2")
     compsci32.put()
-
+	
+	
     comp3001 = Module(key_name='comp3001', title='Scripting Languages',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/",
                   yearCourseSemester=compsci31)
