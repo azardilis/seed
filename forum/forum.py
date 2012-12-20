@@ -30,6 +30,15 @@ jinja_environment = jinja2.Environment(
 
 global current_user
 
+class rss_item:
+    def __init__(self, title, link, description, category, pub_date):
+        self.title = title
+        self.link = link
+        self.description = description
+	self.category = category
+        self.pub_date = pub_date	
+	
+	
 def cloneEntity(e, **extra_args):
 
 	klass = e.__class__
@@ -514,30 +523,27 @@ class ModulesPage(webapp2.RequestHandler):
 	
 class RssPage(webapp2.RequestHandler):
     def get(self):
-        current_user = User.all().get()
         subs = current_user.subscriptions
         subs.filter('receive_notifications =', True)
         modules = [sub.module for sub in subs]
-        mod1 = modules[0]
-        categs = mod1.categories
-        threads = categs[1].threads
-        rss =PyRSS2Gen.RSS2(title=current_user.full_name+"'s subscriptions",
-			    link="http://www.google.com",
-			    description="News from your subscribed modules",
-			    pubDate=datetime(2003, 9, 6, 21, 31))
+        name = current_user.full_name
+	date = datetime.now()
+        items =  []
         for mod in modules:
             for cat in mod.categories:
                 for thread in cat.threads:
-                    rss_item = PyRSS2Gen.RSSItem(title=thread.subject,
-					         link="http://localhost:9999/showthread?tid=910",
-					         categories=(mod.key().name(),),
-					         pubDate="")
-		    rss.items.append(rss_item)
-	rss.write_xml(open("test.xml"))
-	self.response.out.write("")
-		
-						
-		
+                    item = rss_item(title=thread.subject,
+				    link="http://localhost:9999/showthread?tid=910",
+				    description=mod.key().name(),
+				    category=cat.name,
+				    pub_date=datetime.now())
+		    items.append(item)
+	template_values = {'name':name,
+			   'items':items,
+			   'date':date}
+	template = jinja_environment.get_template('templates/news.rss')
+	self.response.headers['Content-Type'] = 'application/rss+xml'
+        self.response.out.write(template.render(template_values))
 			    
 	    
 def reset_db():
@@ -775,6 +781,6 @@ app = webapp2.WSGIApplication([
 								   ('/admin-users',AdminUsers),
 								   ('/profile',ProfilePage),
 								   ('/admin-user-creation',AdminUserCreation),
-				   ('/rssfeed', RssPage)
+				   ('/news.rss', RssPage)
 								   
                                 ], debug=True)
