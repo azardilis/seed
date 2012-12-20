@@ -23,6 +23,7 @@ from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from itertools import izip
 from datetime import datetime
+import PyRSS2Gen
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -494,23 +495,51 @@ class ModuleInfo:
 		self.mod_lecturers=mod_lecturers
 class ModulesPage(webapp2.RequestHandler):
     def get(self):
-	course = "compsci"
-	y1s1 = getYCS(1, course, 1)
-	y1s2 = getYCS(1, course, 2)
-	y2s1 = getYCS(2, course, 1)
-	y2s2 = getYCS(2, course, 2)
-	y3s1 = getYCS(3, course, 1)
-	y3s2 = getYCS(3, course, 2)
-	template_values = {'y1s1' : y1s1,
-			   'y1s2' : y1s2,
-			   'y2s1' : y2s1,
-			   'y2s2' : y2s2,
-			   'y3s1' : y3s1,
-			   'y3s2' : y3s2
+        course = "compsci"
+        y1s1 = getYCS(1, course, 1)
+        y1s2 = getYCS(1, course, 2)
+        y2s1 = getYCS(2, course, 1)
+        y2s2 = getYCS(2, course, 2)
+        y3s1 = getYCS(3, course, 1)
+        y3s2 = getYCS(3, course, 2)
+        template_values = {'y1s1' : y1s1,
+           		   'y1s2' : y1s2,
+         		   'y2s1' : y2s1,
+         		   'y2s2' : y2s2,
+        		   'y3s1' : y3s1,
+        		   'y3s2' : y3s2
 			   }
-	template = jinja_environment.get_template('templates/modules.html')
-	self.response.out.write(template.render(template_values))
-
+        template = jinja_environment.get_template('templates/modules.html')
+        self.response.out.write(template.render(template_values))
+	
+class RssPage(webapp2.RequestHandler):
+    def get(self):
+        current_user = User.all().get()
+        subs = current_user.subscriptions
+        subs.filter('receive_notifications =', True)
+        modules = [sub.module for sub in subs]
+        mod1 = modules[0]
+        categs = mod1.categories
+        threads = categs[1].threads
+        rss =PyRSS2Gen.RSS2(title=current_user.full_name+"'s subscriptions",
+			    link="http://www.google.com",
+			    description="News from your subscribed modules",
+			    pubDate=datetime(2003, 9, 6, 21, 31))
+        for mod in modules:
+            for cat in mod.categories:
+                for thread in cat.threads:
+                    rss_item = PyRSS2Gen.RSSItem(title=thread.subject,
+					         link="http://localhost:9999/showthread?tid=910",
+					         categories=(mod.key().name(),),
+					         pubDate="")
+		    rss.items.append(rss_item)
+	rss.write_xml(open("test.xml"))
+	self.response.out.write("")
+		
+						
+		
+			    
+	    
 def reset_db():
     for user in User.all():
         user.delete()
@@ -745,6 +774,7 @@ app = webapp2.WSGIApplication([
 								   ('/admin-modules',AdminModules),
 								   ('/admin-users',AdminUsers),
 								   ('/profile',ProfilePage),
-								   ('/admin-user-creation',AdminUserCreation)
+								   ('/admin-user-creation',AdminUserCreation),
+				   ('/rssfeed', RssPage)
 								   
                                 ], debug=True)
