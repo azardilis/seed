@@ -38,12 +38,12 @@
 
 	<div id="accordion">	  
 	  <h3><a href="#"> Year 1 </a></h3>
-	  <div>
+	  <div id="year1">
 	  <p> Semester 1 </p>
 	  {% if y1s1 %}
 	    <ul id="mods">
 	      {% for module in y1s1 %}
-	      <li> <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]</li>
+	      <li> <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]</li>
 	      {% endfor %}
 	    </ul>
 	  {% endif %}
@@ -53,7 +53,7 @@
 	  <ul id="mods">
 	    {% for module in y1s2 %}
 	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]
 	     </li>
 	    {% endfor %}
 	  </ul>
@@ -66,7 +66,7 @@
 	  <ul id="mods">
 	    {% for module in y2s1 %}
 	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]
 	    </li>
 	    {% endfor %}
 	  </ul>
@@ -77,7 +77,7 @@
 	  <ul id="mods">
 	    {% for module in y2s2 %}
 	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]
 	    </li>
 	    {% endfor %}
 	  </ul>
@@ -90,7 +90,7 @@
 	  <ul id="mods">
 	    {% for module in y3s1 %}
 	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
+	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]
 	    </li>
 	    {% endfor %}
 	  </ul>
@@ -101,7 +101,7 @@
 	  <ul id="mods">
 	    {% for module in y3s2 %}
 	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">Homepage</a>]
+	      <b>{{module.key().name()}}</b>: {{module.title}}[<a href="{{module.ecs_page}}">ECS page</a>]
 	    </li>
 	    {% endfor %}
 	  </ul>
