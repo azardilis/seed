@@ -29,20 +29,18 @@
 			</div>
 			<div id="horizontal-menu-search">
 				<form name="search" action="/admin-users">
-					<label for="search_box">Filter usernames:</label>
-					<input type="text" name="search_box" id="search_box"  size=50>
-					<input type="submit" name="filter_button" id="filter_button" value="Filter" >
+					<label for="filter-username">Filter usernames:</label>
+					<input type="text" name="filter-username" value="" id="filter"  size=50>
+					<input type="submit" name="filter-button" id="filter-button" value="Filter" >
 				</form>
 			</div>
 		</div>
 		<section id="pagecontent" class="cleared">
-			<!-- Add whatever content you want here-->
-			
-			
-			List of users that the moderator can click on to edit one of them + Search box, to get to the desired user more easily
-			
-
+			{%for user in users%}
+			<div class="user"><a href="">{{user.full_name}} ({{user.key().name()}})</a></div>
+			{%endfor%}
 		</section>
+		<div style="margin:10px;float:left">{{message}}</div>
 		<section class="cleared">	</section>
 	</section>
 </body>

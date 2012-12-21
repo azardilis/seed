@@ -184,9 +184,23 @@ class AdminUsers(webapp2.RequestHandler):
     def get(self):
         #passing variables to template
 		global current_user
+		message=""
 		if 'current_user' in globals() and current_user.user_type=='moderator':
+				users=User.all()
+				users.run()
+				
+				if self.request.get('filter-username') is not "":
+					if User.get_by_key_name(self.request.get('filter-username')) is not None:
+						filter=self.request.get('filter-username')
+						users=[User.get_by_key_name(filter)]
+					else:
+						message="There are no users with that username, please try again!"
+						users=[]
+				
 				template_values = {
-					'current_user':current_user
+					'current_user':current_user,
+					'users':users,
+					'message':message
 				}
 				template = jinja_environment.get_template('templates/admin-users.html')
 				self.response.out.write(template.render(template_values))

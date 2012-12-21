@@ -146,3 +146,7 @@ input, select{
 	width:350px;
 	float:left;
 }
+.user{
+	float:left;
+	margin: 3px 10px 3px 10px;
+}
