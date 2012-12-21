@@ -142,3 +142,7 @@ input, select{
 	border-radius : 5px ;
 	border : 1px ;
 }
+#admin-user-creation-form{
+	width:350px;
+	float:left;
+}

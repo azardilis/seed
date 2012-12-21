@@ -160,9 +160,9 @@ class AdminModules(webapp2.RequestHandler):
 					ycs_list.filter('semester =', int(semester))
 					ycs=ycs_list.get()
 					
-					moduleObject=Module(key_name=cgi.escape(self.request.get('module_code')),
-										title=cgi.escape(self.request.get('module_title')),
-										ecs_page=cgi.escape(self.request.get('module_page')), 
+					moduleObject=Module(key_name=self.request.get('module_code'),
+										title=self.request.get('module_title'),
+										ecs_page=self.request.get('module_page'), 
 										yearCourseSemester=ycs
 										)
 				
@@ -195,7 +195,7 @@ class AdminUsers(webapp2.RequestHandler):
 
 #Admin user creation page
 class AdminUserCreation(webapp2.RequestHandler):
-    def get(self):
+	def get(self):
         #passing variables to template
 		global current_user
 		if 'current_user' in globals() and current_user.user_type=='moderator':
@@ -203,6 +203,37 @@ class AdminUserCreation(webapp2.RequestHandler):
 					'current_user':current_user
 				}
 				template = jinja_environment.get_template('templates/admin-user-creation.html')
+				self.response.out.write(template.render(template_values))
+		else:
+				self.redirect("/")
+	def post(self):
+		#passing variables to template
+		global current_user
+		if 'current_user' in globals() and current_user.user_type=='moderator':
+				new_user_fullname=self.request.get('user-fullname')
+				new_user_ecsid=self.request.get('user-username')
+				new_user_email=self.request.get('user-email')
+				new_user_password=self.request.get('user-password')
+				new_user_course=self.request.get('user-course')
+				new_user_year=self.request.get('user-year')
+				new_user_type=self.request.get('user-type')
+				
+				new_user=User(	password=new_user_password,
+								key_name=new_user_ecsid,
+								user_type=new_user_type,
+								course=new_user_course,
+								year=int(new_user_year),
+								full_name=new_user_fullname,
+								alternative_email=new_user_email
+								)
+				new_user.put()
+				
+				
+				template_values = {
+						'current_user':current_user,
+						'message':"'new_user_fullname' has been added to the user list."
+					}
+				template = jinja_environment.get_template('templates/message-page.html')
 				self.response.out.write(template.render(template_values))
 		else:
 				self.redirect("/")

@@ -30,7 +30,47 @@
 		</div>
 		<section id="pagecontent" class="cleared">
 			<!-- Add whatever content you want here-->
-			New user form will be here
+			<form method="post" action="/admin-user-creation" id="admin-user-creation-form">
+				
+				<label for="user-fullname">Full name:</label>
+				<input type="text" name="user-fullname" id="user-fullname" size=50>
+				
+				<label for="user-username">ECS Username:</label>
+				<input type="text" name="user-username" id="user-username" size=50>
+				
+				<label for="user-email">Alternate E-mail address:</label>
+				<input type="text" name="user-email" id="user-email" size=50>
+				
+				<label for="user-password">Password:</label>
+				<input type="password" name="user-password" id="user-password" size=50>
+				
+				<label for="user-course">Course:</label>
+				<select name="user-course">
+					<option value="compsci">Computer Science</option>
+					<option value="elec">Electronics</option>
+				</select>
+				
+				<label for="user-year">Year:</label>
+				<select name="user-year">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4 or Master's</option>
+				</select>
+				
+				
+				<label for="user-type">User clearance:</label>
+				<select name="user-type" >
+					<option value="normal">Normal user</option>
+					<option value="moderator">Moderator</option>
+				</select>
+				<p>
+				<input type="submit" name="apply_button" id="apply_button" value="Add user" >
+				
+				
+				
+				
+			</form>
 
 		</section>
 		<section class="cleared">	</section>
