@@ -671,8 +671,9 @@ def populate_db():
 
     grade1 = Grade(student=current_user, assessment=assesCwk3001, mark=100)
     grade1.put()
-    assesCwk3001.sum_marks = 100
-    assesCwk3001.count_marks=1
+    assesCwk3001.sum_marks = comp3001.sum_marks = 100
+    assesCwk3001.count_marks += 1
+    comp3001.count_marks += 1
     assesCwk3001.put() # notice: must put again
     ##### TODO: when done formally, update sum_marks for each entry
 

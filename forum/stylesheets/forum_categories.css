@@ -89,14 +89,6 @@ p.details, p.rating{
 	padding-right : 20px;
 }
 
-#lecturer_ratings li{
-	display:inline;
-}
-
-#lecturer_ratings li ul.lecturer li{
-	display:block;
-}
-
 #module_stats div{
 	display:inline-block;
 }
@@ -111,17 +103,34 @@ p.details, p.rating{
 	padding-right : 20px;
 }
 
-#lecturer_ratings dl{
+dl{
 	display:inline-block;
 	padding-right : 20px;
 	text-align: right
 }
-
-#lecturer_ratings dt{
+dt{
 	font-size:1.5em;
 }
-
-#lecturer_ratings dd{
-	font-size:1.2em;
-	
+dd{
+	font-size:1em;
 }
+
+.bar{
+	float:left;
+}
+.bar5{
+	background-color: #88B131;
+}
+.bar4{
+	background-color: #A4CC02;
+}
+.bar3{
+	background-color: #FFCF02;
+}
+.bar2{
+	background-color: #FF9F02;
+}
+.bar1{
+	background-color: #FF6F31;
+}
+

@@ -8,4 +8,8 @@ class Assessment(db.Model) :
 	handin = db.LinkProperty()
 	sum_marks = db.IntegerProperty(default=0)
 	count_marks = db.IntegerProperty(default=0)
+	sum_difficulty = db.IntegerProperty(default=0)
+	count_difficulty = db.IntegerProperty(default=0)
+	sum_interest = db.IntegerProperty(default=0)
+	count_interest = db.IntegerProperty(default=0)
 	module = db.ReferenceProperty(Module.Module, collection_name='assessments', required=True)
