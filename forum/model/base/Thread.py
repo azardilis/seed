@@ -7,6 +7,7 @@ class Thread(db.Model) :
 	tags = db.ListProperty(str, required=True)
 	subject = db.StringProperty(required=True,)
         body = db.StringProperty(required=True,multiline=True)
-        votes = db.IntegerProperty(default=0)
+	answered = db.BooleanProperty(default=False)
+        answers = db.IntegerProperty(default=0)
         poster = db.ReferenceProperty(User.User, collection_name='threads', required=True)
         timestamp = db.DateTimeProperty(auto_now_add=True) 

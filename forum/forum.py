@@ -263,17 +263,28 @@ class ToggleSolution(webapp2.RequestHandler) :
             if str(thrd.poster.key()) == str(current_user.key())  and (pst.key() in [p.key() for p in thrd.posts]):
 
                 for ps in thrd.posts: #reset all current answers
-                    if not (ps.key() is pst.key()) :
+                    if not (str(ps.key()) is str(pst.key())) :
                         ps.answer = False
                         ps.put()
 
                 pst.answer = not pst.answer
                 pst.put()
+
+		if pst.answer :
+			thrd.answered  = True
+			if not thrd.subject[:8] == '[SOLVED]':
+				thrd.subject = '[SOLVED]'+thrd.subject
+		else :
+			thrd.answered = False
+			if thrd.subject[:8] == '[SOLVED]' :
+				thrd.subject = thrd.subject[8:]
+		thrd.put()
+
                 self.response.out.write('ok')
                 logging.info('toggled state')
             else :
                 self.response.out.write('Failing checks')
-                logging.error('curr_user_k :'+str(current_user.key())+', poster_k:'+str(thrd.poster.key())+', post in thrd.posts = '+(pst.key() in [p.key() for p in thrd.posts]) )
+                logging.error('curr_user_k :'+str(current_user.key())+', poster_k:'+str(thrd.poster.key())+', post in thrd.posts = '+str((pst.key() in [p.key() for p in thrd.posts])) )
         else :
             logging.error('Unable to find thread or post')
 
