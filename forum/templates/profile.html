@@ -1,16 +1,17 @@
 <html>
 <head>
+	
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/profile.css" />
-	
+	     
+
 </head>
 <body>
-
-		<div id="content" width= "500">
-	<section id="pagecontent" class="cleared">
-
-			<!-- This includes the sidebar-->
-			{% include "/templates/sidebar.html"%}
+ 
+	<div id="content" width= "500">
+		<!-- This includes the sidebar-->
+		{% include "/templates/sidebar.html"%}
+		<section id="pagecontent" class="cleared">
 			<!-- Add whatever content you want here-->
 			<div id="profile_header">
 				<img src="{{user.avatar}}" width="180" height="180">
@@ -32,12 +33,32 @@
 				</div>				
 			</div>
 			<br>
-			<p><b>Modules you are subscribed to</b></p>
-			{% for sub in subscriptions %}
-			<div><p>{{sub.module.title}}</p></div>
+		</section> 	
+			
+		<section id="pagecontent" class="cleared">
+			<h1><p><b>Modules you are subscribed to</b></p></h1>
+			{% for sub in mod_info%}
+			<div class="subs" width = "300">
+				<a href="/forum?mod={{sub.sub_key}}"><img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Delete Sub" height="20" width="20"></a> 
+				<b><p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p></b>
+				<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
+				<b><p class="box">Lecturers</p></b>
+				{% for lect in sub.mod_lecturers %}
+				<a href={{lect.home_page}}>{{lect.full_name}}</a>
+				{% endfor %}
+			</div>
+			
 			{% endfor %}
-	</section> 
-		</div>
-
+			<div class="subs" width = "300">
+				
+				<b><p class="box">Add a Module</p></b>
+				<a href="newsubscription">
+					<img id="plus"  src="/stylesheets/resources/plus.png" alt="Add image" height="100" width="100">
+				</a>
+			</div>
+			<a href="/news.rss">RSS</a>
+		</section>
+	</div>
+		
 </body>
 </html>

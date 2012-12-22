@@ -449,19 +449,48 @@ class ToggleSolution(webapp2.RequestHandler) :
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
     def get(self):
-        template = jinja_environment.get_template('templates/profile.html')
-        user_key = current_user.key()
-        userQ=User.all()
-        userQ=userQ.filter('__key__ = ' ,user_key)
-        user = userQ.get()
+    	
+    #    template = jinja_environment.get_template('templates/profile.html')
+     #   user_key = current_user.key()
+      #  userQ=User.all()
+       # userQ=userQ.filter('__key__ = ' ,user_key)
+        #user = userQ.get()
 
-        subsQ = Subscription.all()
-        subsQ=subsQ.filter('subscribed_user',user.key())
-        template_values={
-                        'user':user,
-                        'subscriptions':subsQ
-                        }
-        self.response.out.write(template.render(template_values))
+        #subsQ = Subscription.all()
+        #subsQ=subsQ.filter('subscribed_user',user.key())
+        #template_values={
+         #               'user':user,
+          #              'subscriptions':subsQ
+           #             }
+        #self.response.out.write(template.render(template_values))
+    
+		template = jinja_environment.get_template('templates/profile.html')
+		subs = 	current_user.subscriptions
+		user_key = current_user.key()
+		userQ=User.all()
+		userQ=userQ.filter('__key__ = ' ,user_key)
+		user = userQ.get()
+		mod_info=[]
+		lecturers=[]
+		
+		for s in subs:
+			ratQ=Rating.all()
+			ratQ.filter("module",s.module)
+			for rat in ratQ:
+				lectQ=Lecturer.all()
+				lectQ.filter("__key__",rat.lecturer.key())
+				lec=lectQ.get()
+				lecturers.append(lec)
+			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
+			lecturers=[]
+			
+		template_params = {
+			'user':user,
+			'mod_info':mod_info
+			
+		}
+		self.response.out.write(template.render(template_params))
+
 
 class AboutPage(webapp2.RequestHandler):
     def get(self):
