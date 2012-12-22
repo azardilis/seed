@@ -18,50 +18,48 @@
 			
 			<section id="module_info">
 				<h3>{{module.key().name() + ' - ' + module.title}}</h3>
-				<section id="module_stats">
 
+				<section id="module_stats">
 					<!-- TODO: more complete description when hover over-->
 					<div class="value">{{subscribed}}</div>
 					<div class="descr">Students Registered</div>
 					{% if module.count_marks %}
-					<div class="value">{{module.sum_marks/module.count_marks}}</div>
+					<div class="value">{{"{0:.0f}".format(module.sum_marks/module.count_marks | int)}}</div>
 					<div class="descr">Average Mark</div>
 					{% endif %}
-					{% if module.count_marks %}
-					<div class="value">{{module.sum_difficulty/module.count_difficulty}}/5</div>
+					{% if module.count_difficulty %}
+					<div class="value">{{"{0:.1f}".format(module.sum_difficulty/module.count_difficulty)}}/5</div>
 					<div class="descr">Overall Difficulity</div>
 					{% endif %}
-					{% if module.count_marks %}
-					<div class="value">{{module.sum_interest/module.count_interest}}</div>
+					{% if module.count_interest %}
+					<div class="value">{{"{0:.1f}".format(module.sum_interest/module.count_interest)}}/5</div>
 					<div class="descr">Interest Score</div>
 					{% endif %}
 				</section>
-				<section id="lecturer_ratings">
+				<section class="ratings">
 					{% for rating in ratings %}
-					<dl class="lecturer">
+					<dl>
 						<dt><a href={{rating.lecturer.home_page}}>{{rating.lecturer.full_name}}</a></dt>
-						{% if rating.totalVotes : %}
-						<dd>Rating: {{rating.totalSum/rating.totalVotes}}</dd>
+						{% if rating.count : %}
+						<dd>Rating: {{"{0:.1f}".format(rating.sum/rating.count)}}/5</dd>
 						{% endif %}
 					</dl>
 					{% endfor %}
 				</section>
-
-				<section id="lecturer_ratings">
-					<dl class="lecturer">
+				<section class="ratings">
 					{% for assessment in assessments: %}
-                                        {% if assessment.count_marks != 0: %}
+					<dl>
 						<dt><a href={{assessment.specLink}}>{{assessment.title}}</a></dt>
 						{% if assessment.count_marks: %}
-						<dd>Avg. Mark: {{assessment.sum_marks/assessment.count_marks}}
+						<dd>Avg. Mark: {{"{0:.0f}".format(assessment.sum_marks/assessment.count_marks)}}
 						{% endif %}
 						{% if assessment.count_difficulty: %}
-						<dd>Difficulty: {{assessment.sum_difficulty/assessment.count_difficulty}}
+						<dd>Rated Difficulty: {{"{0:.1f}".format(assessment.sum_difficulty/assessment.count_difficulty)}}
 						{% endif %}
 						{% if assessment.count_interest: %}
-						<dd>Interest Score: {{assessment.sum_interest/assessment.count_interest}}
+						<dd>Interest Score: {{"{0:.1f}".format(assessment.sum_interest/assessment.count_interest)}}
 						{% endif %}
-                                        {% endif %}
+					</dl>
                                         {% endfor %}
 				</section>
 						

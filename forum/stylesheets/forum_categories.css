@@ -1,7 +1,6 @@
 /*CSS for styling the accordion*/
 section.container{
 	padding : 10px ;
-	margin : 0px ;
 	border : 1px solid #88ccff ;
 	border-radius : 5px ;
 }
@@ -68,6 +67,10 @@ p.details, p.rating{
 	float : right;
 }
 
+section.category {
+	margin-top : 20px ;
+}
+
 #module_info h3 {
 	padding-bottom : 20px;
 }
@@ -103,15 +106,15 @@ p.details, p.rating{
 	padding-right : 20px;
 }
 
-dl{
+section.ratings dl{
 	display:inline-block;
 	padding-right : 20px;
-	text-align: right
+	text-align: right;
 }
-dt{
+section.ratings dt{
 	font-size:1.5em;
 }
-dd{
+section.ratings dd{
 	font-size:1em;
 }
 

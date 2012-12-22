@@ -24,8 +24,12 @@
 				<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
 				<b><p class="box">Lecturers</p></b>
 				{% for lect in sub.mod_lecturers %}
-				<u><font color="#02527d"><a href={{lect.home_page}}>{{lect.full_name}}</a></u>
+					<u><font color="#02527d"><a href={{lect.home_page}}>{{lect.full_name}}</a></u>
 				{% endfor %}
+				<!--{% if sub.mod_assessments %}
+				 It doesn't actually check if the date has passed yet. Still to implement this functionality
+				<div class="assessment">This module has assignments still to be submitted!</div>
+				{% endif %}-->
 			</div>
 			
 			{% endfor %}
