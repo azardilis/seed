@@ -133,7 +133,17 @@ def populate_db():
     #grade1 = Grade(student=current_user, assessment=assesCwk3001, mark=100)
     #grade1.put()
     put_mark(current_user, cwk1_3001, 83)
-    put_mark(user, cwk2_3001, 40)
+    put_difficulty(current_user, cwk1_3001, 3)
+    put_interest(current_user, cwk1_3001, 3)
+    put_mark(user, cwk1_3001, 56)
+    put_difficulty(user, cwk1_3001, 2)
+    put_interest(user, cwk1_3001, 2)
+    put_mark(current_user, cwk2_3001, 40)
+    put_difficulty(current_user, cwk2_3001, 4)
+    put_interest(current_user, cwk2_3001, 4)
+    put_mark(user, cwk2_3001, 65)
+    put_difficulty(user, cwk2_3001, 5)
+    put_interest(user, cwk2_3001, 5)
 
     ejz = Lecturer(key_name='ejz', full_name='Ed J Zaluska', home_page='http://google.com')
     ejz.put()
@@ -217,11 +227,27 @@ def subscribe(user, module):
 
 def put_mark(user, assessment, mark):
  	assessment.sum_marks += mark
-	assessment.module.sum_marks += mark
 	assessment.count_marks += 1
+	assessment.put()
+	assessment.module.sum_marks += mark
 	assessment.module.count_marks += 1
 	assessment.module.put()
+
+def put_difficulty(user, assessment, difficulty_outof5):
+ 	assessment.sum_difficulty += difficulty_outof5
+	assessment.count_difficulty += 1
 	assessment.put()
+	assessment.module.sum_difficulty += difficulty_outof5
+	assessment.module.count_difficulty += 1
+	assessment.module.put()
+
+def put_interest(user, assessment, interest_outof5):
+ 	assessment.sum_interest += interest_outof5
+	assessment.count_interest += 1
+	assessment.put()
+	assessment.module.sum_interest += interest_outof5
+	assessment.module.count_interest += 1
+	assessment.module.put()
 
 def rate_lecturer(lecturer, module, rating_outof5):
 	rating = Rating(lecturer=lecturer,module=module)
