@@ -290,7 +290,7 @@ class MainPage(webapp2.RequestHandler):
             self.redirect("/")
 
 class ForumPage(webapp2.RequestHandler):
-	
+	#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     	def get(self):
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 		template = jinja_environment.get_template('templates/forum_subscriptions.html')
@@ -313,7 +313,12 @@ class ForumPage(webapp2.RequestHandler):
 				lectQ.filter("__key__",rat.lecturer.key())
 				lec=lectQ.get()
 				lecturers.append(lec)
-			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
+			if s.module.assessments.count()>0:
+				assessments_flag=1
+			else:
+				assessments_flag=0
+			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
+			
 			lecturers=[]
 
 		template_params = {
@@ -322,6 +327,7 @@ class ForumPage(webapp2.RequestHandler):
         	self.response.out.write(template.render(template_params))	
 
 class CategoriesPage(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self) : 
     	mcode = self.request.get('mid')
 	if not mcode is '' :
@@ -349,6 +355,7 @@ class CategoriesPage(webapp2.RequestHandler):
         else :
 		logging.error('module code was empty ')
 class ThreadPage(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         t =retrieve_thread(self.request.get('tid'))
         if t :
@@ -369,6 +376,7 @@ class ThreadPage(webapp2.RequestHandler):
             self.response.out.write('Unable to find thread '+str(self.request.get('ti'))+'<')
 
 class ViewAllThreadsPage(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         category = retrieve_category(self.request.get('cid'))
 
@@ -385,6 +393,7 @@ class ViewAllThreadsPage(webapp2.RequestHandler):
             self.response.out.write('Couldn\'t get category')
 
 class NewThread(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         cid = cgi.escape(self.request.get('catid'))
         template = jinja_environment.get_template('templates/newthread.html')
@@ -397,6 +406,7 @@ class NewThread(webapp2.RequestHandler):
         else : logging.error('newthread : empty cid >'+str(cid)+'<')
 
 class CreateNewThread(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         bd = cgi.escape(self.request.get('body'))
         sbj = cgi.escape(self.request.get('subject'))
@@ -413,6 +423,7 @@ class CreateNewThread(webapp2.RequestHandler):
             self.response.out.write('category not found')
 
 class ReplyToThread(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         thrd = retrieve_thread(self.request.get('tid'))
 
@@ -429,6 +440,7 @@ class ReplyToThread(webapp2.RequestHandler):
             logging.error('Thread not found, tid : '+str(tid)+'<')
 
 class ReplyToPost(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         pst =retrieve_post(self.request.get('r2pid'))
         if pst :
@@ -441,6 +453,7 @@ class ReplyToPost(webapp2.RequestHandler):
             logging.error('Couldnt find post, pid : '+pid+'<')
 
 class VoteUpPost(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         pst =retrieve_post(self.request.get('pid'))
 
@@ -456,6 +469,7 @@ class VoteUpPost(webapp2.RequestHandler):
 
 
 class VoteDownPost(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         pst = retrieve_post(self.request.get('pid'))
 
@@ -470,6 +484,7 @@ class VoteDownPost(webapp2.RequestHandler):
             logging.error('unable to vote down pid '+self.request.get('pid')+'<')
 
 class ToggleSolution(webapp2.RequestHandler) :
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         thrd = retrieve_thread(self.request.get('tid'))
         pst = retrieve_post(self.request.get('pid'))
@@ -493,6 +508,7 @@ class ToggleSolution(webapp2.RequestHandler) :
 
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/profile.html')
         user_key = current_user.key()
@@ -509,11 +525,13 @@ class ProfilePage(webapp2.RequestHandler):
         self.response.out.write(template.render(template_values))
 
 class AboutPage(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/about.html')
         self.response.out.write(template.render({}))
 
 class NotesPage(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/notes.html')
         self.response.out.write(template.render({}))
@@ -530,6 +548,7 @@ class ContactPage(webapp2.RequestHandler):
         self.response.out.write(template.render(template_values))
 
 class EmailSent(webapp2.RequestHandler):
+#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         self.request.get('subject')
         template = jinja_environment.get_template('templates/something.html')
@@ -542,11 +561,12 @@ class EmailSent(webapp2.RequestHandler):
         self.response.out.write(template.render({}))
 
 class ModuleInfo:
-	def __init__(self,sub_key,sub_code,sub_name,mod_lecturers):
+	def __init__(self,sub_key,sub_code,sub_name,mod_lecturers,mod_assessments):
 		self.sub_key=sub_key
 		self.sub_code=sub_code
 		self.sub_name=sub_name
 		self.mod_lecturers=mod_lecturers
+		self.mod_assessments=mod_assessments
 class ModulesPage(webapp2.RequestHandler):
     def get(self):
         course = "compsci"
