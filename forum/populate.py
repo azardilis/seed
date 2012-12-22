@@ -170,9 +170,9 @@ def populate_db():
     nmg = Lecturer(key_name='nmg', full_name='Nicholas Gibbins', home_page='http://google.com')
     nmg.put()
 
-    rate_lecturer(ejz, comp3001, 2)
-    rate_lecturer(msn, comp3001, 3)
-    rate_lecturer(ejz, info3005, 3)
+    rate_lecturer(ejz, comp3001, 2, 1)
+    rate_lecturer(msn, comp3001, 3, 4)
+    rate_lecturer(ejz, info3005, 3, 2)
 
     ###### FORUM #######
     categGeneral3001 = Category(name='General Discussion', description='blah blah', module=comp3001)
@@ -249,9 +249,11 @@ def put_interest(user, assessment, interest_outof5):
 	assessment.module.count_interest += 1
 	assessment.module.put()
 
-def rate_lecturer(lecturer, module, rating_outof5):
+def rate_lecturer(lecturer, module, teaching_outof5, overall_outof5):
 	rating = Rating(lecturer=lecturer,module=module)
-	rating.sum += rating_outof5
-	rating.count += 1
+	rating.teach_sum += teaching_outof5
+	rating.teach_count += 1
+	rating.overall_sum += overall_outof5
+	rating.overall_count += 1
 	rating.put()
 

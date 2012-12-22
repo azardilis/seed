@@ -37,107 +37,34 @@
 					{% endif %}
 				</section>
 				<section class="ratings">
-					{% for rating in ratings %}
-					<dl>
-						<dt><a href={{rating.lecturer.home_page}}>{{rating.lecturer.full_name}}</a></dt>
-						{% if rating.count : %}
-						<dd>Rating: {{"{0:.1f}".format(rating.sum/rating.count)}}/5</dd>
-						{% endif %}
-					</dl>
-					{% endfor %}
-				</section>
-				<section class="ratings">
 					{% for assessment in assessments: %}
 					<dl>
 						<dt><a href={{assessment.specLink}}>{{assessment.title}}</a></dt>
 						{% if assessment.count_marks: %}
-						<dd>Avg. Mark: {{"{0:.0f}".format(assessment.sum_marks/assessment.count_marks)}}
+						<dd>Average Mark: {{"{0:.0f}".format(assessment.sum_marks/assessment.count_marks)}}</dd>
 						{% endif %}
 						{% if assessment.count_difficulty: %}
-						<dd>Rated Difficulty: {{"{0:.1f}".format(assessment.sum_difficulty/assessment.count_difficulty)}}
+						<dd>Difficulty: {{"{0:.1f}".format(assessment.sum_difficulty/assessment.count_difficulty)}} /5</dd>
 						{% endif %}
 						{% if assessment.count_interest: %}
-						<dd>Interest Score: {{"{0:.1f}".format(assessment.sum_interest/assessment.count_interest)}}
+						<dd>Interesting: {{"{0:.1f}".format(assessment.sum_interest/assessment.count_interest)}} /5</dd>
 						{% endif %}
 					</dl>
                                         {% endfor %}
 				</section>
-						
-<!--
-				<section id=asdf>
-				<div>
-    <div class="histogram-table goog-inline-block" data-csstoken="user-reviews">
-      <table>
-        <tbody>
-          <tr>
-            <td class="histogram-msg top-row">5 star</td>
-
-            <td class="top-row bar-cell"><span class="bar bar5" style=
-            "width:50px">&nbsp;</span>&nbsp;<span>60</span></td>
-          </tr>
-
-          <tr>
-            <td class="middle-row histogram-msg">4 star</td>
-
-            <td class="middle-row bar-cell"><span class="bar bar4" style=
-            "width:24px">&nbsp;</span>&nbsp;<span>29</span></td>
-          </tr>
-
-          <tr>
-            <td class="middle-row histogram-msg">3 star</td>
-
-            <td class="middle-row bar-cell"><span class="bar bar3" style=
-            "width:11px">&nbsp;</span>&nbsp;<span>13</span></td>
-          </tr>
-
-          <tr>
-            <td class="middle-row histogram-msg">2 star</td>
-
-            <td class="middle-row bar-cell"><span class="bar bar2" style=
-            "width:14px">&nbsp;</span>&nbsp;<span>17</span></td>
-          </tr>
-
-          <tr>
-            <td class="bottom-row histogram-msg">1 star</td>
-
-            <td class="bottom-row bar-cell"><span class="bar bar1" style=
-            "width:4px">&nbsp;</span>&nbsp;<span>5</span></td>
-          </tr>
-          </tbody>
-      </table>
-    </div>
-
-    <div class="average-rating average-rating-panel goog-inline-block">
-      <div class="average-rating-title">
-        Average rating
-      </div>
-
-      <div class="average-rating-value">
-        4.1
-      </div>
-
-      <div class="average-rating-stars">
-        <div class="ratings goog-inline-block" title="Rating: 4.1 stars (Above average)">
-          <div class="goog-inline-block star SPRITE_star_on_dark"></div>
-
-          <div class="goog-inline-block star SPRITE_star_on_dark"></div>
-
-          <div class="goog-inline-block star SPRITE_star_on_dark"></div>
-
-          <div class="goog-inline-block star SPRITE_star_on_dark"></div>
-
-          <div class="goog-inline-block star SPRITE_star_off_dark"></div>
-        </div>
-      </div>
-
-      <div class="votes">
-        271
-      </div>
-    </div>
-  </div>
+				<section class="ratings">
+					{% for rating in ratings %}
+					<dl>
+						<dt><a href={{rating.lecturer.home_page}}>{{rating.lecturer.full_name}}</a></dt>
+						{% if rating.teach_count : %}
+						<dd>Teaching: {{"{0:.1f}".format(rating.teach_sum/rating.teach_count)}} /5</dd>
+						{% endif %}
+						{% if rating.overall_count : %}
+						<dd>Overall: {{"{0:.1f}".format(rating.overall_sum/rating.overall_count)}} /5</dd>
+						{% endif %}
+					</dl>
+					{% endfor %}
 				</section>
--->
-				
 			</section>
 
 			<section id="categories">
