@@ -5,5 +5,5 @@ import Module
 class Rating(db.Model) : 
 	lecturer = db.ReferenceProperty(Lecturer.Lecturer, collection_name='modules',required=True)
 	module = db.ReferenceProperty(Module.Module, collection_name='lecturers',required=True)
-	totalSum = db.IntegerProperty(default=0)
-	totalVotes = db.IntegerProperty(default=0)
+	sum = db.IntegerProperty(default=0)
+	count = db.IntegerProperty(default=0)
