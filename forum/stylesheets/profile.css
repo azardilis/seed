@@ -11,7 +11,14 @@
 #profile_header img{ 
 	float: left;
 }
-
+#pagecontent{
+	position : relative;
+	float:left;	
+	display : block ;
+	margin : 10px;
+	padding : 5px;
+	width : 80% ;
+}
 #profile_header #col1{
 	margin: 10 0 0 10px;
 	width: 240px;
@@ -49,3 +56,38 @@
 	width:15px;
 }
 /*----------------------------------*/
+p.box{
+		text-align:center;
+		font-size:12pt;
+	}
+
+	h1{
+		color:#1E90FF;
+		text-align:left;
+		font-size:16pt;
+		margin : 10px;
+	}
+
+	div.subs{
+		position:relative;
+		float:left;
+		width:300px;
+		margin:4px;
+		border-radius : 8px ;
+		height:100px;
+		padding:10px;
+		border:5px solid black;
+		border-style:inset;
+		}
+
+	div img.pos{
+		position:relative;
+		
+	}
+	div #plus{
+				
+		display: block;
+		margin-left: auto;
+		margin-right: auto;
+		
+	}

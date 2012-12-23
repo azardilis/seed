@@ -1,7 +1,6 @@
 /*CSS for styling the accordion*/
 section.container{
 	padding : 10px ;
-	margin : 0px ;
 	border : 1px solid #88ccff ;
 	border-radius : 5px ;
 }
@@ -68,6 +67,10 @@ p.details, p.rating{
 	float : right;
 }
 
+section.category {
+	margin-top : 20px ;
+}
+
 #module_info h3 {
 	padding-bottom : 20px;
 }
@@ -89,14 +92,6 @@ p.details, p.rating{
 	padding-right : 20px;
 }
 
-#lecturer_ratings li{
-	display:inline;
-}
-
-#lecturer_ratings li ul.lecturer li{
-	display:block;
-}
-
 #module_stats div{
 	display:inline-block;
 }
@@ -111,17 +106,34 @@ p.details, p.rating{
 	padding-right : 20px;
 }
 
-#lecturer_ratings dl{
+section.ratings dl{
 	display:inline-block;
 	padding-right : 20px;
-	text-align: right
+	text-align: right;
 }
-
-#lecturer_ratings dt{
+section.ratings dt{
 	font-size:1.5em;
 }
-
-#lecturer_ratings dd{
-	font-size:1.2em;
-	
+section.ratings dd{
+	font-size:1em;
 }
+
+.bar{
+	float:left;
+}
+.bar5{
+	background-color: #88B131;
+}
+.bar4{
+	background-color: #A4CC02;
+}
+.bar3{
+	background-color: #FFCF02;
+}
+.bar2{
+	background-color: #FF9F02;
+}
+.bar1{
+	background-color: #FF6F31;
+}
+
