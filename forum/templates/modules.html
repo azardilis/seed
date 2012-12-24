@@ -21,7 +21,7 @@
 					{% if y1s1 %}
 					<ul class="mods">
 						{% for module in y1s1 %}
-						<li> <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
+						<li> <b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
@@ -31,7 +31,7 @@
 					<ul class="mods">
 						{% for module in y1s2 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -48,7 +48,7 @@
 					<ul class="mods">
 						{% for module in y2s1 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -59,7 +59,7 @@
 					<ul class="mods">
 						{% for module in y2s2 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -75,7 +75,7 @@
 					<ul class="mods">
 						{% for module in y3s1 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -86,7 +86,7 @@
 					<ul class="mods">
 						{% for module in y3s2 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}}[<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a>[<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
