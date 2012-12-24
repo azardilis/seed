@@ -283,6 +283,7 @@ class MainPage(webapp2.RequestHandler):
         global subscribed_modules
         if 'current_user' in globals():
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+            subscribed_modules = homepage_subs
 
             modules = [sub.module for sub in homepage_subs]
             recent_threads = []
