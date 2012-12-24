@@ -47,10 +47,8 @@ section.container:hover{
 	background:#eeffff;
 }
 
-#pagetitle{
-	margin: 10px ;
+h1.pagetitle{
+	margin: 15px ;
+	margin-left : 0px;
 	padding : 2px;
-	color : #02527d;
-	font-size :18pt;
-	font-weight: lighter;
 }
