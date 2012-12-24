@@ -1,0 +1,11 @@
+<img src="/stylesheets/resources/larrow.png" dir="-" class="dir" alt="larrow" >	    
+			<nav id='modulenav'>
+				<ul id='modulebar'>
+					{% for sub in subscriptions %}
+					<li>
+						<a href="{{sub.module.ecs_page}}">{{sub.module.title}}</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</nav>
+<img src="/stylesheets/resources/rarrow.png" dir="+" class="dir" alt="rarrow" >	   

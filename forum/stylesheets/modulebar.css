@@ -1,7 +1,7 @@
 
 /*CSS for the modulebar*/
 #modulenav{
-	width : 80%;
+	width : 93%;
 	display : inline ;
 	position : relative ;
 	float : left;
@@ -16,8 +16,8 @@ ul#modulebar{
 }
 
 #modulebar li{
-	margin-left : 2px;
-	margin-right  : 2px;
+	margin-left : 1px;
+	margin-right  : 1px;
 	padding : 5px ;	
 	text-align: center;
 	border-radius: 3px ;
@@ -62,5 +62,10 @@ ul#modulebar{
 img.dir,#modules_tag{
 	position :relative;
 	float: left;
+}
+
+img.dir{
+	width : 32px;
+	height : 32px;
 }
 /*----*/

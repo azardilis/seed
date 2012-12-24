@@ -280,8 +280,10 @@ class MainPage(webapp2.RequestHandler):
         #to be displayed in the homepage
 
         global current_user
+        global subscribed_modules
         if 'current_user' in globals():
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+            subscribed_modules = homepage_subs
             template_values = {
                        'current_user':current_user,
                        'subscriptions':homepage_subs
@@ -324,7 +326,8 @@ class ForumPage(webapp2.RequestHandler):
 			lecturers=[]
 
 		template_params = {
-			'mod_info':mod_info
+			'mod_info':mod_info,
+            'subscriptions':subscribed_modules
 		}
         	self.response.out.write(template.render(template_params))	
 
@@ -349,7 +352,8 @@ class CategoriesPage(webapp2.RequestHandler):
                     'ratings' : module.lecturers,
                     'subscribed' : module.student_count,
                     'assessments' : module.assessments,
-                    'module' : module
+                    'module' : module,
+                    'subscriptions':subscribed_modules
             }
 
             self.response.out.write(template.render(template_values))
@@ -371,7 +375,8 @@ class ThreadPage(webapp2.RequestHandler):
 	    	    'user' : t.poster,
 		    'nop': len([p for p in t.poster.posts]),
                     'thread': t ,
-                    'posts' : posts
+                    'posts' : posts,
+                    'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
         else :
@@ -386,7 +391,8 @@ class ViewAllThreadsPage(webapp2.RequestHandler):
             threads = category.threads.order('-timestamp')
             template_vars = {
                     'category' : category,
-                    'threads':threads
+                    'threads':threads,
+                    'subscriptions':subscribed_modules
             }
             template = jinja_environment.get_template('templates/forum_category_all.html')
             self.response.out.write(template.render(template_vars))
@@ -402,7 +408,8 @@ class NewThread(webapp2.RequestHandler):
 
         if cid :
             template_params = {
-                    'cid' : cid
+                    'cid' : cid,
+                    'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
         else : logging.error('newthread : empty cid >'+str(cid)+'<')
@@ -563,8 +570,8 @@ class ProfilePage(webapp2.RequestHandler):
 			
 		template_params = {
 			'user':user,
-			'mod_info':mod_info
-			
+			'mod_info':mod_info,
+             'subscriptions':subscribed_modules
 		}
 		self.response.out.write(template.render(template_params))
 
@@ -573,13 +580,20 @@ class AboutPage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/about.html')
-        self.response.out.write(template.render({}))
+        parms = {
+             'subscriptions':subscribed_modules
+        }
+        self.response.out.write(template.render(parms))
 
 class NotesPage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/notes.html')
-        self.response.out.write(template.render({}))
+
+        parms = {
+             'subscriptions':subscribed_modules
+        }
+        self.response.out.write(template.render(parms))
 
 class ContactPage(webapp2.RequestHandler):
     def get(self):
@@ -588,7 +602,8 @@ class ContactPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/contact.html')
         template_values = {
                            subject:'subject',
-                           message:'message'
+                           message:'message',
+                           'subscriptions':subscribed_modules
                            }
         self.response.out.write(template.render(template_values))
 
