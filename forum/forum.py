@@ -282,10 +282,21 @@ class MainPage(webapp2.RequestHandler):
         global current_user
         if 'current_user' in globals():
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-            template_values = {
-                       'current_user':current_user,
-                       'subscriptions':homepage_subs
-                            }
+            modules = [sub.module for sub in homepage_subs]
+            recent_threads = []
+            for mod in modules:
+                categs = mod.categories
+                for cat in categs:
+                    threads = cat.threads
+                    threads = threads.order('-timestamp').fetch(2)
+                    for thread in threads:
+                        recent_threads.append(thread) 
+                        
+                template_values = {
+                    'current_user':current_user,
+                    'subscriptions':homepage_subs,
+                    'threads':recent_threads
+                    }
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
         else:
@@ -614,6 +625,10 @@ class ModuleInfo:
 		self.mod_assessments=mod_assessments
 class ModulesPage(webapp2.RequestHandler):
     def get(self):
+        if 'current_user' in globals():
+            homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+        else:
+            self.redirect('/')
         course = "compsci"
         y1s1 = getYCS(1, course, 1)
         y1s2 = getYCS(1, course, 2)
@@ -626,7 +641,9 @@ class ModulesPage(webapp2.RequestHandler):
          		   'y2s1' : y2s1,
          		   'y2s2' : y2s2,
         		   'y3s1' : y3s1,
-        		   'y3s2' : y3s2
+        		   'y3s2' : y3s2,
+                           'subscriptions':homepage_subs,
+                           'current_user':current_user
 			   }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_values))
