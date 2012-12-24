@@ -426,8 +426,7 @@ class CreateNewThread(webapp2.RequestHandler):
         if cat :
             t = Thread(category = cat,poster=current_user, tags=tgs.split(','),subject=sbj,body =bd )
             t.put()
-            self.redirect('/showthread?tid='+str(t.key().id()))
-
+            self.response.out.write(t.key().id())
         else :
             self.response.out.write('category not found')
 
@@ -627,6 +626,7 @@ class ModuleInfo:
 		self.sub_name=sub_name
 		self.mod_lecturers=mod_lecturers
 		self.mod_assessments=mod_assessments
+
 class ModulesPage(webapp2.RequestHandler):
     def get(self):
         course = "compsci"
@@ -641,7 +641,8 @@ class ModulesPage(webapp2.RequestHandler):
          		   'y2s1' : y2s1,
          		   'y2s2' : y2s2,
         		   'y3s1' : y3s1,
-        		   'y3s2' : y3s2
+        		   'y3s2' : y3s2,
+                   'subscriptions':subscribed_modules
 			   }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_values))
