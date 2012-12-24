@@ -283,11 +283,22 @@ class MainPage(webapp2.RequestHandler):
         global subscribed_modules
         if 'current_user' in globals():
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-            subscribed_modules = homepage_subs
-            template_values = {
-                       'current_user':current_user,
-                       'subscriptions':homepage_subs
-                            }
+
+            modules = [sub.module for sub in homepage_subs]
+            recent_threads = []
+            for mod in modules:
+                categs = mod.categories
+                for cat in categs:
+                    threads = cat.threads
+                    threads = threads.order('-timestamp').fetch(2)
+                    for thread in threads:
+                        recent_threads.append(thread) 
+                        
+                template_values = {
+                    'current_user':current_user,
+                    'subscriptions':homepage_subs,
+                    'threads':recent_threads
+                    }
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
         else:
@@ -532,21 +543,6 @@ class ToggleSolution(webapp2.RequestHandler) :
 class ProfilePage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
-    	
-    #    template = jinja_environment.get_template('templates/profile.html')
-     #   user_key = current_user.key()
-      #  userQ=User.all()
-       # userQ=userQ.filter('__key__ = ' ,user_key)
-        #user = userQ.get()
-
-        #subsQ = Subscription.all()
-        #subsQ=subsQ.filter('subscribed_user',user.key())
-        #template_values={
-         #               'user':user,
-          #              'subscriptions':subsQ
-           #             }
-        #self.response.out.write(template.render(template_values))
-    
 		template = jinja_environment.get_template('templates/profile.html')
 		subs = 	current_user.subscriptions
 		user_key = current_user.key()
@@ -629,6 +625,11 @@ class ModuleInfo:
 
 class ModulesPage(webapp2.RequestHandler):
     def get(self):
+        if 'current_user' in globals():
+            homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+        else:
+            self.redirect('/')
+        
         course = "compsci"
         y1s1 = getYCS(1, course, 1)
         y1s2 = getYCS(1, course, 2)

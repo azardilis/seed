@@ -2,10 +2,11 @@
 <head>
 	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modules.css" /> <!-- page-specific styles -->
 	<script type="text/javascript" src="/js/modules.js"></script> <!-- js for this page -->
 
-	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
 </head>
@@ -25,7 +26,7 @@
 					{% if y1s1 %}
 					<ul class="mods">
 						{% for module in y1s1 %}
-						<li> <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
+						<li> <b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
@@ -35,7 +36,7 @@
 					<ul class="mods">
 						{% for module in y1s2 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -52,7 +53,7 @@
 					<ul class="mods">
 						{% for module in y2s1 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -63,7 +64,7 @@
 					<ul class="mods">
 						{% for module in y2s2 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -79,7 +80,7 @@
 					<ul class="mods">
 						{% for module in y3s1 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -90,7 +91,7 @@
 					<ul class="mods">
 						{% for module in y3s2 %}
 						<li>
-							<b>{{module.key().name()}}</b>: {{module.title}}[<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a>[<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
 						</li>
 						{% endfor %}
 					</ul>
@@ -101,12 +102,3 @@
 	</section>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
