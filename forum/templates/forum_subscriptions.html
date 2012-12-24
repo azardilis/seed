@@ -3,7 +3,6 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/forum_subs.css" />
 	<script src="js/jq-1.8.3.js"></script>
-	<script src="js/jqui-1.9.2.js"></script>
 	<script type="text/javascript" src="js/forum_subs.js"></script>
 </head>
 <body>
@@ -17,15 +16,15 @@
 		<section id="pagecontent" class="cleared">
 			<h1>Your subscriptions </h1>
 			<div id="allsubs">
-			{% for sub in mod_info%}
-			<div id="{{sub.sub_code}}"class="subs">
-				<a href="javascript:update_subs('{{sub.sub_key}}','{{sub.sub_code}}')"><img class="pos" src="/resources/img/unsub.png" alt="Delete Sub" height="20" width="20"></a> 
-				<b><p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p></b>
-				<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
-				<b><p class="box">Lecturers</p></b>
-				{% for lect in sub.mod_lecturers %}
-					<u><font color="#02527d"><a href={{lect.home_page}}>{{lect.full_name}}</a></u>
-				{% endfor %}
+				{% for sub in mod_info%}
+				<div id="{{sub.sub_code}}" class="subs">
+					<a href="javascript:update_subs('{{sub.sub_key}}','{{sub.sub_code}}')"><img class="pos" src="/resources/img/unsub.png" alt="Delete Sub" height="20" width="20"></a> 
+					<b><p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p></b>
+					<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
+					<b><p class="box">Lecturers</p></b>
+					{% for lect in sub.mod_lecturers %}
+					<u><font color="#02527d"><a href={{lect.home_page}}>{{lect.full_name}}</a></font></u>
+					{% endfor %}
 				<!--{% if sub.mod_assessments %}
 				 It doesn't actually check if the date has passed yet. Still to implement this functionality
 				<div class="assessment">This module has assignments still to be submitted!</div>
@@ -33,10 +32,9 @@
 			</div>
 			
 			{% endfor %}
-			</div>
+		</div>
 		<a href="/news.rss">RSS</a>
-		</section>
-		
-
-	</body>
-	</html>
+	</section>
+</section>
+</body>
+</html>

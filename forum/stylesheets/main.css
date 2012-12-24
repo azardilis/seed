@@ -13,6 +13,12 @@ span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, 
 /*making links not underlined*/
 a:visited, a:active, a {
 	text-decoration: none;
+	color : black;
+}
+
+a:hover{
+	text-decoration: underline;
+	color : #007275;
 }
 
 body{

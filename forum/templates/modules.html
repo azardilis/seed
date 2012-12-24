@@ -1,120 +1,103 @@
 <html>
-     <head>
-       <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
-       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-       <script type="text/javascript">
-	 $(document).ready(function() {
-           $("#accordion").accordion();
-	 });
-       </script>
-       <style type="text/css">
-	 #mods
-	 {
-	    margin-top:10px;
-	    margin-bottom:10px;
-	    margin-right:0px;
-	    margin-left:50px;
-	    list-style-type: square;
-	    font-size:10.5pt;
-	 }
-	 p
-	 {
-	   font-size:13pt;
-	 }
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modules.css" /> <!-- page-specific styles -->
+	<script type="text/javascript" src="/js/modules.js"></script> <!-- js for this page -->
+</head>
+<body>
+	<section id="content" class="content"> 
 
-       </style>
-     </head>
-     <body>
-       <section id="content" class="content"> 
-	 <!--{% include "/templates/test.html" %} -->
- 
-	<!-- This includes the sidebar-->
-	{% include "/templates/sidebar.html"%}
+		<!-- This includes the sidebar-->
+		{% include "/templates/sidebar.html"%}
 
-	<section id="pagecontent" class="cleared">
-	 All the modules for your course!
+		<section id="pagecontent" class="cleared">
+			<h1 id="pagetitle">All the modules for your course!</h1>
 
-	<div id="accordion">	  
-	  <h3><a href="#"> Year 1 </a></h3>
-	  <div id="year1">
-	  <p> Semester 1 </p>
-	  {% if y1s1 %}
-	    <ul id="mods">
-	      {% for module in y1s1 %}
-	      <li> <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]</li>
-	      {% endfor %}
-	    </ul>
-	  {% endif %}
-	  
-	  <p> Semester 2 </p>
-	  {% if y1s2 %}
-	  <ul id="mods">
-	    {% for module in y1s2 %}
-	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]
-	     </li>
-	    {% endfor %}
-	  </ul>
-	  {% endif %}
-	  </div>
-	  <h3> <a href="#">Year 2 </a></h3>
-	  <div>
-	  <p> Semester 1 </p>
-	  {% if y2s1 %}
-	  <ul id="mods">
-	    {% for module in y2s1 %}
-	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]
-	    </li>
-	    {% endfor %}
-	  </ul>
-	  {% endif %}
+			<section class="container">
+				<h3 class="trigger"><a  year="1"> Year 1 </a></h3>
+				<div id="year1" class="year">
+					<p> Semester 1 </p>
+					{% if y1s1 %}
+					<ul class="mods">
+						{% for module in y1s1 %}
+						<li> <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 
-	  <p> Semester 2 </p>
-	  {% if y2s2 %}
-	  <ul id="mods">
-	    {% for module in y2s2 %}
-	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]
-	    </li>
-	    {% endfor %}
-	  </ul>
-	  {% endif %}
-	  </div>
-	  <h3> <a href="#">Year 3 </a></h3>
-	  <div>
-	  <p> Semester 1 </p>
-	  {% if y3s1 %}
-	  <ul id="mods">
-	    {% for module in y3s1 %}
-	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}">ECS page</a>]
-	    </li>
-	    {% endfor %}
-	  </ul>
-	  {% endif %}
+					<p> Semester 2 </p>
+					{% if y1s2 %}
+					<ul class="mods">
+						{% for module in y1s2 %}
+						<li>
+							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+						</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
 
-	  <p> Semester 2 </p>
-	  {% if y3s2 %}
-	  <ul id="mods">
-	    {% for module in y3s2 %}
-	    <li>
-	      <b>{{module.key().name()}}</b>: {{module.title}}[<a href="{{module.ecs_page}}">ECS page</a>]
-	    </li>
-	    {% endfor %}
-	  </ul>
-	  {% endif %}
-	  </div>
-	  </div>
-	  <!-- Add whatever content you want here-->
+				</div>
+			</section>
+			<section class="container">
 
+				<h3 class="trigger"> <a  year="2">Year 2 </a></h3>
+				<div  class="year" id="year2" >
+					<p> Semester 1 </p>
+					{% if y2s1 %}
+					<ul class="mods">
+						{% for module in y2s1 %}
+						<li>
+							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+						</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+
+					<p> Semester 2 </p>
+					{% if y2s2 %}
+					<ul class="mods">
+						{% for module in y2s2 %}
+						<li>
+							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+						</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+				</div>
+			</section>
+			<section class="container">
+
+				<h3 class="trigger"> <a  year="3">Year 3 </a></h3>
+				<div  class="year" id="year3" >
+					<p> Semester 1 </p>
+					{% if y3s1 %}
+					<ul class="mods">
+						{% for module in y3s1 %}
+						<li>
+							<b>{{module.key().name()}}</b>: {{module.title}} [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+						</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+
+					<p> Semester 2 </p>
+					{% if y3s2 %}
+					<ul class="mods">
+						{% for module in y3s2 %}
+						<li>
+							<b>{{module.key().name()}}</b>: {{module.title}}[<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
+						</li>
+						{% endfor %}
+					</ul>
+					{% endif %}
+				</div>
+			</section>
+		</section>
+		<section class="cleared">	</section>
 	</section>
-	<section class="cleared">	</section>
-       </section>
-     
-     </body>
+
+</body>
 </html>
 
 

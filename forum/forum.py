@@ -30,6 +30,7 @@ jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 global current_user
+global subscribed_modules
 
 class rss_item:
     def __init__(self, title, link, description, category, pub_date):
