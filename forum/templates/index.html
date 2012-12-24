@@ -2,6 +2,7 @@
 <head>
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modules.css" /> <!-- page-specific styles -->
 	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
@@ -32,8 +33,12 @@
 		{% include "/templates/sidebar.html"%}
 
 		<section id="pagecontent" class="cleared">
-			<!-- Add whatever content you want here-->
-
+		  <h1 class="pagetitle">What's new</h1>
+		  <ul class="mods">
+		  {% for thread in threads %}
+		    <li> {{thread.subject}} submitted at {{thread.timestamp}} by {{thread.poster.full_name}} to {{thread.category.module.title}}:{{thread.category.name}}
+		  {% endfor%}
+		  </ul>
 		</section>
 		<section class="cleared">	</section>
 	</section>
