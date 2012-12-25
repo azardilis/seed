@@ -17,14 +17,14 @@ $(document).ready(function()
 			dataType: 'html',
 			success: function(data, textStatus)
 			{
-				$('#serverResponse').html('The new thread was created succesfully. Visit it <a href="/showthread?tid='+data+'">here</a>.');
+				$('#serverResponse').html('The new thread was created succesfully. Visit it <a href="/showthread?tid='+data+'">here</a><span id="close">x</span>.');
 				$('#serverResponse').attr('class','success');
 				$('span#close').attr('class','success');
 				$('#serverResponse').fadeIn();
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
-				$('#serverResponse').html('There was an error while creating the new thread.');
+				$('#serverResponse').html('There was an error while creating the new thread<span id="close">x</span>.');
 				$('#serverResponse').attr('class','error');
 				$('span#close').attr('class','error');
 				$('#serverResponse').fadeIn();
