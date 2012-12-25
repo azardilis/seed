@@ -114,6 +114,10 @@ def populate_db():
 
     subscribe(user, comp3001)
     subscribe(current_user, comp3001)
+    subscribe(current_user,comp3033)
+    subscribe(current_user,comp3032)
+    subscribe(current_user,comp3020)
+    subscribe(current_user,comp1314)
     subscribe(current_user, info3005)
     subscribe(current_user, comp3016)
 

@@ -1,9 +1,17 @@
 $(document).ready(function() {
-		$(document).delegate('h3.trigger a','click',function(){
-			$('div.year').slideUp();
+		$(document).delegate('h3.trigger','click',function(){
+			var e = $(this);
 
-			var e = $(this); /*get the a element that triggered the click event*/
+			$('h3.trigger').each(function(){
+				if (e.attr('year') !== $(this).attr('year')){
+					console.log($(this).attr('year'));
+					$('div#year'+$(this).attr('year')).slideUp();
+				}else{
+					$('div#year'+e.attr('year')).slideToggle();
+				}
+			});
 
-			$('div#year'+e.attr('year')).slideDown();
+			 /*get the a element that triggered the click event*/
+
 		});
 	});

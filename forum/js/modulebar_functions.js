@@ -3,7 +3,11 @@ $(document).ready(function(){
 		scroll($(this).attr('dir'));
 	});
 
-	$('ul#modulebar').css('width',$('ul#modulebar').children().length * 404);
+	var tw = 0 ;
+	$('ul#modulebar').children().each(function(){
+		tw += $(this).width();
+	});
+	$('ul#modulebar').css('width',tw + ($('ul#modulebar').children().size()*12));
 
 });
 

@@ -38,6 +38,10 @@ h3.trigger a{
 	font-weight: lighter;
 }
 
+h3.trigger:hover{
+	cursor: pointer;
+}
+
 section.container{
 	border : 1px solid #88ccff ;
 	border-radius : 5px;
