@@ -16,7 +16,7 @@ section.container:hover{
 p.handler{				
 	cursor : pointer ;
 	color : #02527d ;
-	font-size : 20px ;
+	font-size : 15pt ;
 }
 
 section.container .more{

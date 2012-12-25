@@ -1,37 +1,36 @@
 <html>
-     <head>
-       <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
-       <link type="text/css" rel="stylesheet" href="/stylesheets/newthread.css" />
-       <script src="js/jq-1.8.3.js"></script>
-       <script type="text/javascript" src="js/newthread.js"></script>
-       
-  </head>
-  <body>
-<section id="content" class="content">  
-	<!-- This includes the sidebar-->
-	{% include "/templates/sidebar.html" %}
+<head>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/newthread.css" />
+	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
+	<script type="text/javascript" src="js/newthread.js"></script>
 
-	<section id="pagecontent" class="cleared">
-		<section id='serverResponse'>
-		
+	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+	<script type="text/javascript" src="js/modulebar_functions.js"></script>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+
+
+</head>
+<body>
+	<section id="content" class="content">  
+		{% include "/templates/mbar.html" %}
+		{% include "/templates/sidebar.html" %}
+
+		<section id="pagecontent">
+			<p id='serverResponse'></p>
+			<h1 class="pagetitle">Create a new thread</h1>
+			<form action="/createnewthread" method="POST" id="newthreadform">
+				<input type="text" placeholder="Title" name="subject">
+				<input type="text" placeholder = "Comma separated tag list" name="tags">
+				<input type="hidden" name="cid" value="{{cid}}">
+				<textarea name="body" cols="65"  rows="10" placeholder="What do you want to talk about today?"></textarea>
+
+				<input type="submit" value="Submit">
+				<a href="/threads?cid={{cid}}" class="buttonlink">
+					<button>Cancel</button>
+				</a>
+			</form>
 		</section>
-		<form action="/createnewthread" method="POST" id="newthreadform">
-			<input type="text" placeholder="Title" name="subject">
-			<input type="text" placeholder = "comma separated tag list" name="tags">
-			<input type="hidden" name="cid" value="{{ cid}}">
-			<textarea name="body" cols="30"  rows="20">body </textarea>
-
-			<input type="submit" value="Submit">
-			<a href="/threads?cid={{cid}}">
-				<button>Cancel</button>
-			</a>
-
-		</form>
-		
 	</section>
-
-	<section class="cleared"></section>
-</section>
-     
-  </body>
+</body>
 </html>

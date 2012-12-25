@@ -5,12 +5,16 @@
 	
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/forum_thread.css" />
+
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+	<script type="text/javascript" src="js/modulebar_functions.js"></script>
 </head>
 <body>
 
 	<section id="content" class="content"> 
 
-		<!-- This includes the sidebar-->
+		{% include "/templates/mbar.html" %}
 		{% include "/templates/sidebar.html"%}
 
 		<section id="pagecontent">

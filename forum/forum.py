@@ -30,6 +30,7 @@ jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
 global current_user
+global subscribed_modules
 
 class rss_item:
     def __init__(self, title, link, description, category, pub_date):
@@ -279,12 +280,26 @@ class MainPage(webapp2.RequestHandler):
         #to be displayed in the homepage
 
         global current_user
+        global subscribed_modules
         if 'current_user' in globals():
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-            template_values = {
-                       'current_user':current_user,
-                       'subscriptions':homepage_subs
-                            }
+            subscribed_modules = homepage_subs
+
+            modules = [sub.module for sub in homepage_subs]
+            recent_threads = []
+            for mod in modules:
+                categs = mod.categories
+                for cat in categs:
+                    threads = cat.threads
+                    threads = threads.order('-timestamp').fetch(2)
+                    for thread in threads:
+                        recent_threads.append(thread) 
+                        
+                template_values = {
+                    'current_user':current_user,
+                    'subscriptions':homepage_subs,
+                    'threads':recent_threads
+                    }
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
         else:
@@ -323,7 +338,8 @@ class ForumPage(webapp2.RequestHandler):
 			lecturers=[]
 
 		template_params = {
-			'mod_info':mod_info
+			'mod_info':mod_info,
+            'subscriptions':subscribed_modules
 		}
         	self.response.out.write(template.render(template_params))	
 
@@ -348,7 +364,8 @@ class CategoriesPage(webapp2.RequestHandler):
                     'ratings' : module.lecturers,
                     'subscribed' : module.student_count,
                     'assessments' : module.assessments,
-                    'module' : module
+                    'module' : module,
+                    'subscriptions':subscribed_modules
             }
 
             self.response.out.write(template.render(template_values))
@@ -370,7 +387,8 @@ class ThreadPage(webapp2.RequestHandler):
 	    	    'user' : t.poster,
 		    'nop': len([p for p in t.poster.posts]),
                     'thread': t ,
-                    'posts' : posts
+                    'posts' : posts,
+                    'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
         else :
@@ -385,7 +403,8 @@ class ViewAllThreadsPage(webapp2.RequestHandler):
             threads = category.threads.order('-timestamp')
             template_vars = {
                     'category' : category,
-                    'threads':threads
+                    'threads':threads,
+                    'subscriptions':subscribed_modules
             }
             template = jinja_environment.get_template('templates/forum_category_all.html')
             self.response.out.write(template.render(template_vars))
@@ -401,7 +420,8 @@ class NewThread(webapp2.RequestHandler):
 
         if cid :
             template_params = {
-                    'cid' : cid
+                    'cid' : cid,
+                    'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
         else : logging.error('newthread : empty cid >'+str(cid)+'<')
@@ -418,8 +438,7 @@ class CreateNewThread(webapp2.RequestHandler):
         if cat :
             t = Thread(category = cat,poster=current_user, tags=tgs.split(','),subject=sbj,body =bd )
             t.put()
-            self.redirect('/showthread?tid='+str(t.key().id()))
-
+            self.response.out.write(t.key().id())
         else :
             self.response.out.write('category not found')
 
@@ -525,21 +544,6 @@ class ToggleSolution(webapp2.RequestHandler) :
 class ProfilePage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
-    	
-    #    template = jinja_environment.get_template('templates/profile.html')
-     #   user_key = current_user.key()
-      #  userQ=User.all()
-       # userQ=userQ.filter('__key__ = ' ,user_key)
-        #user = userQ.get()
-
-        #subsQ = Subscription.all()
-        #subsQ=subsQ.filter('subscribed_user',user.key())
-        #template_values={
-         #               'user':user,
-          #              'subscriptions':subsQ
-           #             }
-        #self.response.out.write(template.render(template_values))
-    
 		template = jinja_environment.get_template('templates/profile.html')
 		subs = 	current_user.subscriptions
 		user_key = current_user.key()
@@ -562,8 +566,8 @@ class ProfilePage(webapp2.RequestHandler):
 			
 		template_params = {
 			'user':user,
-			'mod_info':mod_info
-			
+			'mod_info':mod_info,
+             'subscriptions':subscribed_modules
 		}
 		self.response.out.write(template.render(template_params))
 
@@ -572,13 +576,20 @@ class AboutPage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/about.html')
-        self.response.out.write(template.render({}))
+        parms = {
+             'subscriptions':subscribed_modules
+        }
+        self.response.out.write(template.render(parms))
 
 class NotesPage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/notes.html')
-        self.response.out.write(template.render({}))
+
+        parms = {
+             'subscriptions':subscribed_modules
+        }
+        self.response.out.write(template.render(parms))
 
 class ContactPage(webapp2.RequestHandler):
     def get(self):
@@ -587,7 +598,8 @@ class ContactPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/contact.html')
         template_values = {
                            subject:'subject',
-                           message:'message'
+                           message:'message',
+                           'subscriptions':subscribed_modules
                            }
         self.response.out.write(template.render(template_values))
 
@@ -611,8 +623,14 @@ class ModuleInfo:
 		self.sub_name=sub_name
 		self.mod_lecturers=mod_lecturers
 		self.mod_assessments=mod_assessments
+
 class ModulesPage(webapp2.RequestHandler):
     def get(self):
+        if 'current_user' in globals():
+            homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+        else:
+            self.redirect('/')
+        
         course = "compsci"
         y1s1 = getYCS(1, course, 1)
         y1s2 = getYCS(1, course, 2)
@@ -625,7 +643,8 @@ class ModulesPage(webapp2.RequestHandler):
          		   'y2s1' : y2s1,
          		   'y2s2' : y2s2,
         		   'y3s1' : y3s1,
-        		   'y3s2' : y3s2
+        		   'y3s2' : y3s2,
+                   'subscriptions':subscribed_modules
 			   }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_values))

@@ -17,11 +17,17 @@ $(document).ready(function()
 			dataType: 'html',
 			success: function(data, textStatus)
 			{
-				alert('Thread created!');
+				$('#serverResponse').html('The new thread was created succesfully. Visit it <a href="/showthread?tid='+data+'">here</a><span id="close">x</span>.');
+				$('#serverResponse').attr('class','success');
+				$('span#close').attr('class','success');
+				$('#serverResponse').fadeIn();
 			},
 			error: function(xmlhttp, textStatus, errorThrown)
 			{
-				alert('There was an error while creating a new thread.');
+				$('#serverResponse').html('There was an error while creating the new thread<span id="close">x</span>.');
+				$('#serverResponse').attr('class','error');
+				$('span#close').attr('class','error');
+				$('#serverResponse').fadeIn();
 			},
 			complete: function()
 			{
@@ -29,5 +35,9 @@ $(document).ready(function()
 			}
 		});
 		event.preventDefault();
+	});
+
+	$(document).delegate('span#close','click',function(){
+		$('#serverResponse').fadeOut('slow');
 	});
 });

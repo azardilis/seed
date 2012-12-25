@@ -5,6 +5,10 @@
 	<script src="js/jq-1.8.3.js"></script>
 	<script src="js/jqui-1.9.2.js"></script>
 
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+	<script type="text/javascript" src="js/modulebar_functions.js"></script>
+
 	<style type="text/css">
 
 		a.newth{
@@ -24,7 +28,7 @@
 </head>
 <body>
 	<section id="content" class="content"> 
-		<!-- This includes the sidebar-->
+		{% include "/templates/mbar.html" %}
 		{% include "/templates/sidebar.html"%}
 		<section id="pagecontent" class="cleared">
 			<section class="category">			

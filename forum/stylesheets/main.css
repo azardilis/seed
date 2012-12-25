@@ -13,6 +13,11 @@ span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, 
 /*making links not underlined*/
 a:visited, a:active, a {
 	text-decoration: none;
+	color : #007275;
+}
+
+a:hover{
+	text-decoration: underline;
 }
 
 body{
@@ -20,6 +25,13 @@ body{
 	background-image: url("resources/bg1.jpg");
 	font-family : 'Segan-Light',sans-serif ;
 }
+
+h1.pagetitle{
+	color : #02527d;
+	font-size :18pt;
+	font-weight: lighter;
+}
+
 /*-----*/
 
 /*CSS for the sidebar*/

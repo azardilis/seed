@@ -5,13 +5,17 @@
 	<script src="js/jq-1.8.3.js"></script>
 	<script src="js/jqui-1.9.2.js"></script>
 	<script type="text/javascript" src="js/forum_categories.js"></script>
+
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+	<script type="text/javascript" src="js/modulebar_functions.js"></script>
 </head>
 <body>
 	
 	<section id="content" class="content"> 
 		
 
-		<!-- This includes the sidebar-->
+		{% include "/templates/mbar.html" %}
 		{% include "/templates/sidebar.html"%}
 
 		<section id="pagecontent" class="cleared">
@@ -72,11 +76,10 @@
 					{% for c in complete %}				
 					<section class="container">
 						<p class="handler"  id="{{c[0].key().id()}}">{{  c[0].name }}</p>
-						<a href="/threads?cid={{ c[0].key().id()}}" class="more">Show more...</a>
+						<a href="/threads?cid={{c[0].key().id()}}" class="more">Show more...</a>
 					</section>
 					<section class="handlercontent" id="cont{{c[0].key().id()}}">
 						{% for th in c[1] %}
-						<!-- after adding all the functionality, make this pretty and display all stats (like ratings and so on) -->
 						<article class="thread">
 							<a href="/showthread?tid={{ th.key().id() }}" class="thtitle">
 								<b>{{th.subject}}</b>

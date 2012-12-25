@@ -3,23 +3,20 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/admin-section.css" />
 	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
+
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
 </head>
 <body>
 
 	<section id="content" class="content"> 
-		<!--{% include "/templates/test.html" %} -->
-		<section id="header">
-			<p>You are a god, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
-			    
-
-
-
-		<!-- This includes the sidebar-->
+		{% include "/templates/mbar.html" %}
 		{% include "/templates/admin-sidebar.html"%}
 		
-		<!-- horizontal menu bar-->
+		<section id="pagecontent" class="cleared">
+			<section id="header">
+			<p>You are a god, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
 		<div id="horizontal-menu">
 			<div id="horizontal-menu-item">
 				<span><a href="/admin-users">Edit an existing user</a></span>
@@ -35,13 +32,11 @@
 				</form>
 			</div>
 		</div>
-		<section id="pagecontent" class="cleared">
 			{%for user in users%}
 			<div class="user"><a href="">{{user.full_name}} ({{user.key().name()}})</a></div>
 			{%endfor%}
 		</section>
 		<div style="margin:10px;float:left">{{message}}</div>
-		<section class="cleared">	</section>
 	</section>
 </body>
 </html>

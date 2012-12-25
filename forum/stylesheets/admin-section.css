@@ -113,13 +113,13 @@ input, select{
 
 /*Users administration*/
 #horizontal-menu{
-	width:820px;
+	width:810px;
 	float:left;
 	height:10px;
 	padding:2px 5px 15px 5px;
 	margin:3px 0 0 10px;
 	background: #007275;
-	border : 5px solid black;
+	border : 1px solid #005355;
 	
 	border-radius : 5px ;
 }

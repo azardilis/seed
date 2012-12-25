@@ -5,12 +5,14 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/forum_subs.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/profile.css" />
 	     
-
+<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+	<script type="text/javascript" src="js/modulebar_functions.js"></script>
 </head>
 <body>
  
 	<div id="content" width= "500">
-		<!-- This includes the sidebar-->
+		{% include "/templates/mbar.html" %}
 		{% include "/templates/sidebar.html"%}
 		<section id="pagecontent" class="cleared">
 			<!-- Add whatever content you want here-->
