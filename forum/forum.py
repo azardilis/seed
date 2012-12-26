@@ -546,12 +546,20 @@ class ProfilePage(webapp2.RequestHandler):
     def get(self):
 		template = jinja_environment.get_template('templates/profile.html')
 		subs = 	current_user.subscriptions
+		sub_to_delete=cgi.escape(self.request.get('mod'))
+		self.response.write(sub_to_delete)
+		
 		user_key = current_user.key()
 		userQ=User.all()
 		userQ=userQ.filter('__key__ = ' ,user_key)
 		user = userQ.get()
 		mod_info=[]
 		lecturers=[]
+		
+		if not sub_to_delete is '':
+			subs.filter("__key__",Key(sub_to_delete))
+			subs.get().delete()
+			subs = 	current_user.subscriptions
 		
 		for s in subs:
 			ratQ=Rating.all()
@@ -561,13 +569,18 @@ class ProfilePage(webapp2.RequestHandler):
 				lectQ.filter("__key__",rat.lecturer.key())
 				lec=lectQ.get()
 				lecturers.append(lec)
-			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers))
+			if s.module.assessments.count()>0:
+				assessments_flag=1
+			else:
+				assessments_flag=0
+			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
+			
 			lecturers=[]
 			
 		template_params = {
 			'user':user,
 			'mod_info':mod_info,
-             'subscriptions':subscribed_modules
+            'subscriptions':subscribed_modules
 		}
 		self.response.out.write(template.render(template_params))
 

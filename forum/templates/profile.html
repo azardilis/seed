@@ -6,8 +6,10 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/profile.css" />
 	     
 <link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<script src="js/jq-1.8.3.js"></script>	
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
+	<script type="text/javascript" src="js/forum_subs.js"></script>
 </head>
 <body>
  
@@ -15,7 +17,7 @@
 		{% include "/templates/mbar.html" %}
 		{% include "/templates/sidebar.html"%}
 		<section id="pagecontent" class="cleared">
-			<!-- Add whatever content you want here-->
+			
 			<div id="profile_header">
 				<img src="{{user.avatar}}" width="180" height="180">
 				<div id="col1">
@@ -40,18 +42,20 @@
 			
 		<section id="pagecontent" class="cleared">
 			<h1><p><b>Modules you are subscribed to</b></p></h1>
+			<div id="allsubs">
 			{% for sub in mod_info%}
-			<div class="subs" width = "300">
-				<a href="/forum?mod={{sub.sub_key}}"><img class="pos"  src="/stylesheets/resources/unsubscribe.png" alt="Delete Sub" height="20" width="20"></a> 
-				<b><p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p></b>
-				<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
-				<b><p class="box">Lecturers</p></b>
-				{% for lect in sub.mod_lecturers %}
-				<a href={{lect.home_page}}>{{lect.full_name}}</a>
-				{% endfor %}
-			</div>
-			
+				<div id="{{sub.sub_code}}" class="subs">
+					<a href="javascript:update_subs('{{sub.sub_key}}','{{sub.sub_code}}',true)"><img class="pos" src="/resources/img/unsub.png" alt="Delete Sub" height="20" width="20"></a> 
+					<b><p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p></b>
+					<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
+					<b><p class="box">Lecturers</p></b>
+					{% for lect in sub.mod_lecturers %}
+					<u><font color="#02527d"><a href={{lect.home_page}}>{{lect.full_name}}</a></font></u>
+					{% endfor %}
+				
+				</div>
 			{% endfor %}
+			</div>
 			<div class="subs" width = "300">
 				
 				<b><p class="box">Add a Module</p></b>
