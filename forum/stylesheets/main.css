@@ -113,6 +113,6 @@ h1.pagetitle{
 	left : 50% ;  
 	margin-left : -500px ;
 	padding : 20px;
-	overflow: auto;
+	overflow: hidden;
 }
 /**/
