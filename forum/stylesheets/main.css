@@ -82,7 +82,15 @@ h1.pagetitle{
 	font-size: 15pt;
 }
 /*---*/
+#banner_image{
+	padding : 10px;
+	margin : 0px;
+	height: 40%;
+	width:105%;
+	margin-left : -30px ;
+	
 
+}
 /*CSS for styiling the container of the content of each page*/
 #pagecontent{
 	position : relative;
