@@ -37,9 +37,14 @@
    }
    div.register{
 	position:relative;
-	float:right;
-	border:solid;
+	float:center;
    }
+   input.info{
+   	color:#808080;
+   
+   }
+   form
+
    #submit {
 	color:white;
 	background-color:#88ccff;
@@ -49,6 +54,15 @@
    }
    
    </style>
+   <script>
+   function fade(){
+   	var inp=document.activeElement;
+	inp.value="";
+	if(inp==document.getElementById('ps') || inp==document.getElementById('retype')){
+		inp.type="password";
+	}
+   }
+   </script>
    <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
@@ -71,19 +85,21 @@
   <div id="pic" class="forum-pic">
   <img src="/resources/img/doorlead.jpg" width="500" height="500">
   <br>
-  forum pic here^^i
+  forum pic here or any nice pic to fill up the page^^
   </div>
   <div id="register" class="register">
   <form name="register" action="" method="post">
   <h2 style="color:#88ccff">Sign Up for FoRules</h2>
   <br>
-  <p>Username:       <input type="text" method="post" name="un"></p>
+  <p><input type="text" class="info" value="Username" value="Username" onfocus="fade()" method="post" name="un"></p>
   <br>
-  <p>Password: <input type="password" name="ps"></p>
+  <p><input type="text" class="info" value="Password" onfocus="fade()" id="ps"></p>
   <br>
-  <p>Re-type Password: <input type="password" name="retype"></p>
+  <p><input type="text" class="info" value="Retype Password" onfocus="fade()" id="retype"></p>
   <br>
-  <p>University Email: <input type="email" name="ps"></p>
+  <p><input type="email" class="info" value="University Email" onfocus="fade()" id="email"></p>
+  <br>
+  <p><input type="text" class="info" value="Full Name" onfocus="fade()" id="fn"></p>
   <br>
   <input type="submit" id="submit" value="Register Now">
   </form>
