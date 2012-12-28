@@ -75,7 +75,7 @@ section.category {
 	padding-bottom : 20px;
 }
 
-#module_stats li {
+#module_stats  {
 	/*float : left;
 	text-align:right;
 	max-width : 60px*/
@@ -139,9 +139,8 @@ section.ratings dd{
 
 h3.title{
 	width : 60% ;
-	border : 1px solid red;
 	position : relative ;
-	float : left;
+	float : left ;
 	margin-bottom : 10px;
 }
 
@@ -184,9 +183,9 @@ h3.title{
     transition:all 0.3s linear;
 }
 .btn-text{
-    padding-top:5px;
+    padding-top:8px;
     display:block;
-    font-size:18px;
+    font-size:14pt;
     text-shadow:0px 1px 1px rgba(255,255,255,0.3);
     color:#446388;
     -webkit-transition:all 0.2s linear;

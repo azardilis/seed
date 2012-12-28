@@ -9,13 +9,35 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
-<script type="text/javascript">
-            $(document).ready(function(){
-                $('span.btn-toggle-subs').click(function(){
-                    console.log('clicked with mid '+$(this).attr('mid'));
-                });
-            });
-        </script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$(document).delegate('span.btn-toggle-subs','click',function()
+		{
+			var e = $(this);
+			serializedData = 'mcode='+e.attr('mid');
+			$.ajax(
+			{
+				url: "/subscriptions",
+				type: "POST",
+				data: serializedData,
+				contentType: 'application/x-www-form-urlencoded',
+				dataType: 'html',
+				success: function(data)
+				{
+					e.html(data);
+				},
+				error: function(xmlhttp, textStatus, errorThrown)
+				{
+					console.log('There was an error while toggling subscriptions.');
+				},
+				complete: function()
+				{
+					console.log('Toggling subscription completed');
+				}
+			});
+		});
+	});
+	</script>
 
 </head>
 <body>
@@ -32,12 +54,12 @@
 				<h3 class="title">{{module.key().name() + ' - ' + module.title}}</h3>
 
 				<section id="toggle-button">
-				<a href="#" class="btn">
-					<span class="btn-text">Subscription</span> 
-					<span class="btn-toggle-subs" mid="{{module.key().name()}}">{{toggle}}</span>
-					<span class="btn-icon-right"></span>
-				</a>
-			</section>
+					<a href="#" class="btn">
+						<span class="btn-text">Subscription</span> 
+						<span class="btn-toggle-subs" mid="{{module.key().name()}}">{{toggle}}</span>
+						<span class="btn-icon-right"></span>
+					</a>
+				</section>
 
 				<section id="module_stats">
 					<!-- TODO: more complete description when hover over-->

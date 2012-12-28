@@ -545,6 +545,24 @@ class ToggleSolution(webapp2.RequestHandler) :
         else :
             logging.error('Unable to find thread or post')
 
+class ToggleSubscription(webapp2.RequestHandler):
+    def post(self):
+        mod = db.get(Key.from_path('Module', cgi.escape(self.request.get('mcode'))))
+        if mod :
+            sub = Subscription.all()
+            sub.filter('subscribed_user =', current_user)
+            sub.filter('module =',mod)
+            sub = sub.get()
+
+            if sub:
+                sub.delete()
+                self.response.out.write('Subscribe')
+            else :
+                Subscription(subscribed_user = current_user , module = mod).put()
+                self.response.out.write('Unsubscribe')
+        else:
+            logging.error('Couldn\'t get module with mcode '+self.request.get('mcode'))
+
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -706,6 +724,7 @@ app = webapp2.WSGIApplication([
 	('/vup',VoteUpPost),
 	('/vdown',VoteDownPost),
 	('/solution',ToggleSolution),
+    ('/subscriptions',ToggleSubscription ),
 	('/about', AboutPage),
 	('/notes', NotesPage),
 	('/contact',ContactPage),
