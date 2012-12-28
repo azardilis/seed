@@ -137,3 +137,97 @@ section.ratings dd{
 	background-color: #FF6F31;
 }
 
+h3.title{
+	width : 60% ;
+	border : 1px solid red;
+	position : relative ;
+	float : left;
+	margin-bottom : 10px;
+}
+
+/*****/
+/*toggle subscriptions button CSS*/
+#toggle-button{
+	position:relative;
+    display:inline;
+    float:left;
+	top : 0px;
+	width : 38%;
+	margin-left : 5px;
+	padding-top : none ;
+	margin -top : none ;
+
+}
+
+.btn{
+	position:relative;
+    display:inline;
+    float:left;
+
+    clear:both;
+    text-decoration: none;
+    background: #88ccff;
+    padding-left:20px;
+    padding-right : 20px ;
+    height:38px;
+    border:1px solid #5d81ab;
+    -webkit-box-shadow:0px 1px 1px rgba(255,255,255,0.8) inset, 1px 1px 3px rgba(0,0,0,0.2), 0px 0px 0px 4px rgba(188,188,188,0.5);
+    -moz-box-shadow:0px 1px 1px rgba(255,255,255,0.8) inset, 1px 1px 3px rgba(0,0,0,0.2), 0px 0px 0px 4px rgba(188,188,188,0.5);
+    box-shadow:0px 1px 1px rgba(255,255,255,0.8) inset, 1px 1px 3px rgba(0,0,0,0.2), 0px 0px 0px 4px rgba(188,188,188,0.5);
+    -webkit-border-radius:20px;
+    -moz-border-radius:20px;
+    overflow:hidden;
+    border-radius:8px;
+    -webkit-transition:all 0.3s linear;
+    -moz-transition:all 0.3s linear;
+    -o-transition:all 0.3s linear;
+    transition:all 0.3s linear;
+}
+.btn-text{
+    padding-top:5px;
+    display:block;
+    font-size:18px;
+    text-shadow:0px 1px 1px rgba(255,255,255,0.3);
+    color:#446388;
+    -webkit-transition:all 0.2s linear;
+    -moz-transition:all 0.2s linear;
+    -o-transition:all 0.2s linear;
+    transition:all 0.2s linear;
+}
+.btn-toggle-subs{
+    position:absolute;
+    height:100%;
+    top:0px;
+    right:10px;
+    width:0px;
+    background:#63707e;
+    text-shadow:0px -1px 1px #363f49;
+    color:#fff;
+    font-size:18px;
+    text-align:left;
+    text-indent:10px;
+    overflow:hidden;
+    line-height:38px;
+    -webkit-transition:width 0.3s linear;
+    -moz-transition:width 0.3s linear;
+    -o-transition:width 0.3s linear;
+    transition:width 0.3s linear;
+}
+.btn-icon-right{
+    position:absolute;
+    right:0px;
+    top:0px;
+    height:100%;
+    width:10px;
+    border-left:1px solid #5d81ab;
+    -webkit-box-shadow:1px 0px 1px rgba(255,255,255,0.4) inset;
+    -moz-box-shadow:1px 0px 1px rgba(255,255,255,0.4) inset;
+    box-shadow:1px 0px 1px rgba(255,255,255,0.4) inset;
+}
+.btn:hover{
+    padding-right:150px;
+    text-decoration: none;
+}
+.btn:hover .btn-toggle-subs{
+    width:130px;
+}

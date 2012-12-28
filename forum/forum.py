@@ -358,14 +358,19 @@ class CategoriesPage(webapp2.RequestHandler):
                 ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10
                 l = [c,ct]
                 complete.append(l)
-
+            
+            toggle = 'Subscribe'
+            if module.key() in [p.module.key() for p in current_user.subscriptions]:
+                toggle = 'Unsubscribe'
+            
             template_values= {
                     'complete' : complete,
                     'ratings' : module.lecturers,
                     'subscribed' : module.student_count,
                     'assessments' : module.assessments,
                     'module' : module,
-                    'subscriptions':subscribed_modules
+                    'subscriptions':subscribed_modules,
+                    'toggle'  : toggle
             }
 
             self.response.out.write(template.render(template_values))

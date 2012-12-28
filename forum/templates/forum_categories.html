@@ -9,6 +9,14 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
+<script type="text/javascript">
+            $(document).ready(function(){
+                $('span.btn-toggle-subs').click(function(){
+                    console.log('clicked with mid '+$(this).attr('mid'));
+                });
+            });
+        </script>
+
 </head>
 <body>
 	
@@ -21,7 +29,15 @@
 		<section id="pagecontent" class="cleared">
 			
 			<section id="module_info">
-				<h3>{{module.key().name() + ' - ' + module.title}}</h3>
+				<h3 class="title">{{module.key().name() + ' - ' + module.title}}</h3>
+
+				<section id="toggle-button">
+				<a href="#" class="btn">
+					<span class="btn-text">Subscription</span> 
+					<span class="btn-toggle-subs" mid="{{module.key().name()}}">{{toggle}}</span>
+					<span class="btn-icon-right"></span>
+				</a>
+			</section>
 
 				<section id="module_stats">
 					<!-- TODO: more complete description when hover over-->
@@ -54,7 +70,7 @@
 						<dd>Interesting: {{"{0:.1f}".format(assessment.sum_interest/assessment.count_interest)}} /5</dd>
 						{% endif %}
 					</dl>
-                                        {% endfor %}
+					{% endfor %}
 				</section>
 				<section class="ratings">
 					{% for rating in ratings %}
