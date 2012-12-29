@@ -100,6 +100,7 @@ function appendToPost(arr){
 	var replies = document.getElementById('replies'+reply_to_post);
 
 	if(!replies){
+		console.log('Replies section doesn\'t exist, creating');
 		replies = document.createElement('section');
 		replies.setAttribute('class','posts');
 		replies.setAttribute('id','replies'+reply_to_post);
@@ -107,8 +108,9 @@ function appendToPost(arr){
 
 	replies.appendChild(elems[1]); //the post section
 
-	var appHere = $('#pstsec'+reply_to_post);
-	appHere.append(replies);
+	var appHere = document.getElementById('pstsec'+reply_to_post);
+
+	appHere.appendChild(replies);
 }
 
 /*a really ugly function for making the dom elements that a post consists of*/
