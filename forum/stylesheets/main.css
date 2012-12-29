@@ -21,7 +21,6 @@ a:hover{
 }
 
 body{
-	padding : 10px ;
 	background-image: url("resources/bg1.jpg");
 	font-family : 'Segan-Light',sans-serif ;
 }
@@ -104,15 +103,21 @@ h1.pagetitle{
 
 /*Just some general styling for the content section*/
 #content {
-	margin : 10px ;
+	
+	position : relative ; 
+	width : 80% ;
+	margin-left : 10%;
+	margin-top : 12px;
+
 	background-color: white;
-	max-width: 1000px ;
 	border : 1px solid white ;
 	border-radius : 20px ;
-	position : relative ;
-	left : 50% ;  
-	margin-left : -500px ;
 	padding : 20px;
 	overflow: hidden;
+	
+	-webkit-box-shadow:0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
+    -moz-box-shadow:0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
+
 }
 /**/
