@@ -79,21 +79,24 @@ section.category {
 	/*float : left;
 	text-align:right;
 	max-width : 60px*/
+    position : relative ;
 	display : inline;
+    float : left ;
 }
 
-#module_stats li.value{
+#module_stats div.value{
 	font-size : 3em;
 	font-weight : bold;
 }
 
-#module_stats li.descr{
-	max-width : 30px;
-	padding-right : 20px;
+#module_stats div.descr{
+	width : 50px;
+	margin-right : 40px;
+    display : inline-block;
 }
 
 #module_stats div{
-	display:inline-block;
+	display:inline;
 }
 
 #module_stats div.value{
