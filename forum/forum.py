@@ -429,7 +429,11 @@ class CategoriesPage(webapp2.RequestHandler):
                 ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10 TODO?
                 l = [c,ct]
                 complete.append(l)
-
+            
+            toggle = 'Subscribe'
+            if module.key() in [p.module.key() for p in current_user.subscriptions]:
+                toggle = 'Unsubscribe'
+            
             template_values= {
                     'complete' : complete,
                     'ratings' : module.lecturers,
@@ -437,6 +441,8 @@ class CategoriesPage(webapp2.RequestHandler):
                     'assessments' : module.assessments,
                     'module' : module,
                     'currentURL' : CATEGORIES+'?'+MID+'='+mcode,
+                    'subscriptions':subscribed_modules,
+                    'toggle'  : toggle
             }
 
             dueRatingId = None
@@ -667,6 +673,24 @@ class ToggleSolution(webapp2.RequestHandler) :
         else :
             logging.error('Unable to find thread or post')
 
+class ToggleSubscription(webapp2.RequestHandler):
+    def post(self):
+        mod = db.get(Key.from_path('Module', cgi.escape(self.request.get('mcode'))))
+        if mod :
+            sub = Subscription.all()
+            sub.filter('subscribed_user =', current_user)
+            sub.filter('module =',mod)
+            sub = sub.get()
+
+            if sub:
+                sub.delete()
+                self.response.out.write('Subscribe')
+            else :
+                Subscription(subscribed_user = current_user , module = mod).put()
+                self.response.out.write('Unsubscribe')
+        else:
+            logging.error('Couldn\'t get module with mcode '+self.request.get('mcode'))
+
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -843,6 +867,7 @@ app = webapp2.WSGIApplication([
 	('/vup',VoteUpPost),
 	('/vdown',VoteDownPost),
 	('/solution',ToggleSolution),
+	('/subscriptions',ToggleSubscription ),
 	('/about', AboutPage),
 	('/notes', NotesPage),
 	('/contact',ContactPage),
