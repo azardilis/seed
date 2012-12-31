@@ -5,6 +5,7 @@ import logging
 from functions.RetrieveFunctions import *
 import os
 import cgi
+import re
 from populate import *
 from google.appengine.api import mail
 from functions.ForumFunctions import * # functions to handle posts and shit # "posts and shit" lol!
@@ -257,22 +258,57 @@ class AdminUserCreation(webapp2.RequestHandler):
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(webapp2.RequestHandler):
     def get(self):
-        if 'current_user' not in globals():
+    	
+	
+	if 'current_user' not in globals():
             template = jinja_environment.get_template('templates/signin.html')
             self.response.out.write(template.render())
+	    global url
+	    url=self.request.url
         else:
             self.redirect("/main")
-
 
     def post(self): #authenticate the user
         global current_user
-        potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
-        if potential_user is not None and potential_user.password==self.request.get('password'):
-            current_user=potential_user
-            self.redirect("/main")
-        else:
-            #proper error message should be displayed (some javascript or something)
-            print "The username and password do not match, please try again!"
+		
+	if self.request.url==url+'?reg=yes':
+		pot_user=self.request.get('email');
+		if pot_user[pot_user.index('@'):]!='ecs.soton.ac.uk' or pot_user[pot_user.index('@'):]!='soton.ac.uk':
+			return 'This is not a University email'
+
+		pot_user=pot_user[:pot_user.index('@')]
+		pot_user_rev=pot_user[::-1]
+		if User.get_by_key_name(pot_user) is not None:
+			return 'User already exists'
+		elif pot_user_rev[2]!='g':
+			return 'This is not a University email'
+		elif self.request.get('password')!=self.request.get('retype'):
+			return 'Your passwords do not match'
+		else:
+			year=int(self.request.get('year'))
+			fname=self.request.get('full_name')
+			course=self.request.get('course')
+			if year is None or year=='Year' or year=='':
+				year=0
+			
+			if fname is None or fname=='Full Name' or fname=='':
+				fname=''
+
+			if course is None or course=='Course' or course=='':
+				course=''
+
+			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'), course=course,user_type="normal", year=year,avatar=self.request.get('avatar'), signature="L33T 5UP4|-| H4X0|2")
+			user.put()
+
+
+	else:
+		potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
+		if potential_user is not None and potential_user.password==self.request.get('password'):
+	       	    current_user=potential_user
+	       	    self.redirect("/main")
+	       	else:
+       		    #proper error message should be displayed (some javascript or something)
+		    print "The username and password do not match, please try again!"
 
 class MainPage(webapp2.RequestHandler):
     def get(self):

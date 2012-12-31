@@ -14,9 +14,8 @@ function update_subs(sub,sub_code,profile){
 		data:sub,
 		dataType:'html',
 		success:function(){
-			alert("You have unsubscribed from the module wiht code "+sub_code);
+			alert("You have unsubscribed from the module with code "+sub_code);
 			var mod=document.getElementById(sub_code);
-			alert(mod);
 			container.removeChild(mod);
 		},
 		error:function(){
