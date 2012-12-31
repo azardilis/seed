@@ -16,6 +16,7 @@ from model.base.Assessment import Assessment
 from model.base.Grade import Grade
 from model.base.Category import Category
 from model.base.Subscription import Subscription
+from model.base.LecturerRating import LecturerRating
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from itertools import izip
@@ -57,6 +58,9 @@ def reset_db():
         i.delete()
 
     for i in Vote.all():
+        i.delete()
+
+    for i in LecturerRating.all():
         i.delete()
 
 def populate_db():
@@ -134,8 +138,9 @@ def populate_db():
                         module=comp3001)
     cwk2_3001.put()
 
-    #grade1 = Grade(student=current_user, assessment=assesCwk3001, mark=100)
-    #grade1.put()
+    Grade(student=current_user, assessment=cwk1_3001).put() 
+    Grade(student=current_user, assessment=cwk2_3001).put()
+
     put_mark(current_user, cwk1_3001, 83)
     put_difficulty(current_user, cwk1_3001, 3)
     put_interest(current_user, cwk1_3001, 3)
@@ -174,9 +179,19 @@ def populate_db():
     nmg = Lecturer(key_name='nmg', full_name='Nicholas Gibbins', home_page='http://google.com')
     nmg.put()
 
-    rate_lecturer(ejz, comp3001, 2, 1)
-    rate_lecturer(msn, comp3001, 3, 4)
-    rate_lecturer(ejz, info3005, 3, 2)
+    rating1 = Rating(lecturer=ejz,module=comp3001)
+    rating1.put()
+    rate_lecturer(rating1,2,1)
+    rating2 = Rating(lecturer=msn,module=comp3001)
+    rating2.put()
+    rate_lecturer(rating2,3,4)
+    rating3 = Rating(lecturer=ejz,module=info3005)
+    rating3.put()
+    rate_lecturer(rating3,3,2)
+
+    LecturerRating(lecturer=ejz,module=comp3001,student=current_user).put()
+    LecturerRating(lecturer=msn,module=comp3001,student=current_user).put()
+    LecturerRating(lecturer=ejz,module=info3005,student=current_user).put()
 
     ###### FORUM #######
     categGeneral3001 = Category(name='General Discussion', description='blah blah', module=comp3001)
@@ -253,8 +268,7 @@ def put_interest(user, assessment, interest_outof5):
 	assessment.module.count_interest += 1
 	assessment.module.put()
 
-def rate_lecturer(lecturer, module, teaching_outof5, overall_outof5):
-	rating = Rating(lecturer=lecturer,module=module)
+def rate_lecturer(rating, teaching_outof5, overall_outof5):
 	rating.teach_sum += teaching_outof5
 	rating.teach_count += 1
 	rating.overall_sum += overall_outof5

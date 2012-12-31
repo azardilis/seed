@@ -1,0 +1,70 @@
+<html>
+<head>
+        <link type="text/css" rel="stylesheet" href="/stylesheets/feedback.css" />
+        <script src="js/jq-1.8.3.js"></script>
+        <script src="js/jqui-1.9.2.js"></script>
+        <script type="text/javascript" src="js/feedback.js"></script>
+</head>
+<body>
+
+<div id="button">
+	{{difficult}}
+	<input type="submit" value="Popup!" />
+	{{interesting}}
+</div>
+
+<div id="popupContact">
+	<a id="popupContactClose">x</a>
+	<h1>Deadline passed</h1>
+	<p id="contactArea"><br/>
+		Anonymously contribute to the rating of:<br><br>
+		<b> - Perl individual assignment</b> <br><br><br><br>
+		How <i>difficult</i> did you find it? <br><br>
+		<form action="/module-feedback" method="post">
+		<div>
+			<ul class="likert">
+				<li class="likert"> 
+					<small>Very Easy</small> 
+					<input id="radDifficultStart" type="radio" name="Difficult" value="1" />
+				<li class="likert">
+					<input type="radio" name="Difficult" value="2" />
+				<li class="likert">
+					<input type="radio" name="Difficult" value="3" />
+				<li class="likert">
+					<input type="radio" name="Difficult" value="4" />
+				<li class="likert">
+					<input id="radDifficultEnd" type="radio" name="Difficult" value="5" />
+					Very Difficult
+			</ul>
+		</div>
+		<br><br><br><br>
+		How <i>interesting</i> did you find it?
+		<br><br>
+		<div>
+			<ul class="likert">
+				<li class="likert">
+					<small>Very Interesting</small>
+					<input id="radInterestingStart" type="radio" name="Interesting" value="1" />
+				<li class="likert">
+					<input type="radio" name="Interesting" value="2" />
+				<li class="likert">
+					<input type="radio" name="Interesting" value="3" />
+				<li class="likert">
+					<input type="radio" name="Interesting" value="4" />
+				<li class="likert">
+					<input id="radInterestingEnd" type="radio" name="Interesting" value="5" />
+					Terribly Boring
+			</ul>
+		</div>
+		<br><br><br><br>
+		<input class="submit" type="submit" value="Submit">
+		<input class="submit" type="submit" value="Remind me later">
+		</form>
+	</p>
+</div>
+
+<div id="backgroundPopup">
+</div>
+
+</body>
+</html>

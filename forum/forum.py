@@ -7,6 +7,7 @@ import os
 import cgi
 import re
 from populate import *
+import populate
 from google.appengine.api import mail
 from functions.ForumFunctions import * # functions to handle posts and shit # "posts and shit" lol!
 from model.base.Module import Module
@@ -21,10 +22,12 @@ from model.base.Assessment import Assessment
 from model.base.Grade import Grade
 from model.base.Category import Category
 from model.base.Subscription import Subscription
+from model.base.LecturerRating import LecturerRating
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from itertools import izip
 from datetime import datetime
+import time
 import PyRSS2Gen
 
 jinja_environment = jinja2.Environment(
@@ -32,6 +35,9 @@ jinja_environment = jinja2.Environment(
 
 global current_user
 global subscribed_modules
+CATEGORIES = 'categories'
+MID = 'mid'
+EXTRA_TIME= 40*24*60*60 # ask for mark 40 days after assessment deadline
 
 class rss_item:
     def __init__(self, title, link, description, category, pub_date):
@@ -381,17 +387,82 @@ class ForumPage(webapp2.RequestHandler):
 
 class CategoriesPage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
-    def get(self) : 
-    	mcode = self.request.get('mid')
-	if not mcode is '' :
+    
+### TEMP ###
+    def getArgyris(self):
+            q = User.all()
+            q = q.filter('full_name =', 'Argyris Zardilis')
+            result = q.run()
+            us = []
+            for u in result:
+		us.append(u)
+            return us[0]
+### END TEMP ###
+
+    def endOfSemester(self,module):
+	semester = module.yearCourseSemester.semester
+	month = datetime.now().month
+	if semester == 1:
+		return month == 12
+	if semester == 2:
+		return month == 5
+	return false
+
+    def getDueAssessments(self,current_user,extraTime=0):
+            mcode = self.getModuleCode()
+	    module = retrieve_module_name(mcode)
+            dueAssessments = {}
+            correspGrades = {}
+
+            q = Grade.all()
+            q = q.filter('student =', current_user)
+            userGrades = q.run()
+            for assessment in module.assessments:	
+		if time.time() > time.mktime(assessment.dueDate.timetuple()) + extraTime:
+			for grade in userGrades:
+				if str(grade.assessment.key()) == str(assessment.key()) and not (grade.voted if extraTime==0 else grade.marked):
+					dueAssessments[assessment.title] = assessment
+					correspGrades[assessment.title] = grade
+
+            return dueAssessments, correspGrades
+
+    def getDueRatings(self,current_user):
+	mcode = self.getModuleCode()
+	module = retrieve_module_name(mcode)
+	dueRatings = {}
+	lecturerRatingObj = {}
+
+	if self.endOfSemester(module):
+		# couldn't find JOINs so:
+		# out of all "lecturers that the current user hasn't rated for this module"
+		q = LecturerRating.all()
+		q = q.filter('module =', module)
+		q = q.filter('student =', current_user)
+		q = q.filter('voted =', False)
+		# find the Rating objects for these lecturers (this module only)
+		lecturerRatings = q.run()
+		q = Rating.all()
+		q = q.filter('module =', module)
+		ratings = q.run()
+		for lectRat in lecturerRatings:
+			for rat in ratings:
+				if rat.lecturer.full_name == lectRat.lecturer.full_name:
+					dueRatings[rat.lecturer.full_name]=rat
+					lecturerRatingObj[rat.lecturer.full_name]=lectRat
+
+	return dueRatings, lecturerRatingObj
+
+    def setUp(self):
+            current_user = self.getArgyris()
             template = jinja_environment.get_template('templates/forum_categories.html')
+            mcode = self.getModuleCode()
 	    module = retrieve_module_name(mcode)
 
             categs = module.categories
             complete = list()
 
             for c in categs :
-                ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10
+                ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10 TODO?
                 l = [c,ct]
                 complete.append(l)
             
@@ -405,14 +476,71 @@ class CategoriesPage(webapp2.RequestHandler):
                     'subscribed' : module.student_count,
                     'assessments' : module.assessments,
                     'module' : module,
+                    'currentURL' : CATEGORIES+'?'+MID+'='+mcode,
                     'subscriptions':subscribed_modules,
                     'toggle'  : toggle
             }
 
+            dueRatingId = None
+            dueAssessments, correspGrades = self.getDueAssessments(current_user)
+            if len(dueAssessments.items()):
+		dueRatingId = '#popupDeadline' #change to popupId
+		dueRatingTitle = dueAssessments.keys()[0]
+            else:
+		dueRatings, lecturerRatingObj = self.getDueRatings(current_user) #relying on subscriptions??
+		if len(dueRatings.items()):
+			dueRatingId = '#popupLecturer' 
+	       		dueRatingTitle = dueRatings.keys()[0]
+            	else:
+			dueAssessments, correspGrades = self.getDueAssessments(current_user, EXTRA_TIME) #TODO:after exams they won't see it => email notification?
+			if len(dueAssessments.items()):
+				dueRatingId = '#popupMark'
+				dueRatingTitle = dueAssessments.keys()[0]
+            
+            if dueRatingId:
+		template_values['dueRatingTitle']= dueRatingTitle
+		template_values['dueRatingId']= dueRatingId
+
             self.response.out.write(template.render(template_values))
 
-        else :
-		logging.error('module code was empty ')
+    def getModuleCode(self):
+	mcode = self.request.get(MID)
+	if not mcode :
+		logging.error('module code was empty ') #does this really work ?
+	return mcode
+
+    def get(self) : 
+	self.setUp()
+    	
+    def post(self) :
+
+	# Define the expected POST params
+	names = 'clear','prompt','difficult','interesting','mark'
+	post_params={}
+
+	# Get the expected POST params
+	for name in names: post_params[name]=self.request.get(name)
+
+	# Cast to int
+	for key,value in post_params.items(): post_params[key] = int(value) if value else value
+
+	# Rating (trying to be secure - not trusting the user)
+	current_user = self.getArgyris()
+	hiddenType = self.request.get('popupType')
+	hiddenTitle = self.request.get('dueRatingTitle')
+	if hiddenType == 'deadline':
+		dueAssessments,correspGrades = self.getDueAssessments(current_user)
+		rate_assessment(dueAssessments[hiddenTitle],post_params['interesting'],post_params['difficult'],correspGrades[hiddenTitle])
+	elif hiddenType == 'mark':
+		dueAssessments,correspGrades = self.getDueAssessments(current_user, EXTRA_TIME)
+		mark_assessment(dueAssessments[hiddenTitle],post_params['mark'],correspGrades[hiddenTitle])
+	elif hiddenType == 'lecturer':
+		dueRatings, lecturerRatingObj = self.getDueRatings(current_user)
+		rate_lecturer(dueRatings[hiddenTitle],post_params['clear'],post_params['prompt'],lecturerRatingObj[hiddenTitle])
+
+	# Reload
+	self.setUp()
+
 class ThreadPage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
@@ -744,13 +872,28 @@ class RssPage(webapp2.RequestHandler):
 	template = jinja_environment.get_template('templates/news.rss')
 	self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
-			    
-populate_db()
+
+class AssessmentFeedback(webapp2.RequestHandler):
+    def get(self):
+	template_values = {}
+        template = jinja_environment.get_template('templates/feedback.html')
+	self.response.headers['Content-Type'] = 'text/html'
+	self.response.out.write(template.render(template_values))
+    def post(self):
+	template_values={
+		'difficult':self.request.get('Difficult'),
+		'interesting':self.request.get('Interesting')
+	}
+        template = jinja_environment.get_template('templates/feedback.html')
+	self.response.headers['Content-Type'] = 'text/html'
+	self.response.out.write(template.render(template_values))
+
+populate.populate_db()
 app = webapp2.WSGIApplication([
 	('/'     , SignInPage),
 	('/main' , MainPage),
 	('/forum', ForumPage),
-	('/categories',CategoriesPage),
+	('/'+CATEGORIES,CategoriesPage),
 	('/threads',ViewAllThreadsPage),
 	('/showthread',ThreadPage),
 	('/newthread',NewThread),
@@ -760,7 +903,7 @@ app = webapp2.WSGIApplication([
 	('/vup',VoteUpPost),
 	('/vdown',VoteDownPost),
 	('/solution',ToggleSolution),
-    ('/subscriptions',ToggleSubscription ),
+	('/subscriptions',ToggleSubscription ),
 	('/about', AboutPage),
 	('/notes', NotesPage),
 	('/contact',ContactPage),
@@ -771,6 +914,7 @@ app = webapp2.WSGIApplication([
 	('/admin-users',AdminUsers),
 	('/profile',ProfilePage),
 	('/admin-user-creation',AdminUserCreation),
-	('/news.rss', RssPage)
+	('/news.rss', RssPage),
+	('/module-feedback', AssessmentFeedback)
 								   
 ], debug=True)

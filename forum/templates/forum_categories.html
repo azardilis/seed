@@ -9,6 +9,10 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="/stylesheets/feedback.css" />
+        <script type="text/javascript" src="js/feedback.js"></script>
+
 	<script type="text/javascript">
 	$(document).ready(function(){
 		$(document).delegate('span.btn-toggle-subs','click',function()
@@ -49,10 +53,9 @@
 		{% include "/templates/sidebar.html"%}
 
 		<section id="pagecontent" class="cleared">
-			
+		
 			<section id="module_info">
 				<h3 class="title">{{module.key().name() + ' - ' + module.title}}</h3>
-
 				<section id="toggle-button">
 					<a href="#" class="btn">
 						<span class="btn-text">Subscription</span> 
@@ -86,7 +89,7 @@
 						<dd>Average Mark: {{"{0:.0f}".format(assessment.sum_marks/assessment.count_marks)}}</dd>
 						{% endif %}
 						{% if assessment.count_difficulty: %}
-						<dd>Difficulty: {{"{0:.1f}".format(assessment.sum_difficulty/assessment.count_difficulty)}} /5</dd>
+						<dd>Difficult: {{"{0:.1f}".format(assessment.sum_difficulty/assessment.count_difficulty)}} /5</dd>
 						{% endif %}
 						{% if assessment.count_interest: %}
 						<dd>Interesting: {{"{0:.1f}".format(assessment.sum_interest/assessment.count_interest)}} /5</dd>
@@ -102,7 +105,7 @@
 						<dd>Teaching: {{"{0:.1f}".format(rating.teach_sum/rating.teach_count)}} /5</dd>
 						{% endif %}
 						{% if rating.overall_count : %}
-						<dd>Overall: {{"{0:.1f}".format(rating.overall_sum/rating.overall_count)}} /5</dd>
+						<dd>Promptness: {{"{0:.1f}".format(rating.overall_sum/rating.overall_count)}} /5</dd>
 						{% endif %}
 					</dl>
 					{% endfor %}
@@ -133,5 +136,140 @@
 			</section>
 		</section>
 	</section>
+
+<h6 id="hiddenRatingId">{{dueRatingId}}</h6>
+
+<div id="popupDeadline" class="feedbackForm">
+	<a class="popupClose">x</a>
+	<h1>Assessment deadline passed</h1>
+	<p id="deadlineArea"><br/>
+		Anonymously contribute to the rating of:
+		<br><br>
+		<b>{{dueRatingTitle}}</b>
+		<br><br><br>
+		How <i>difficult</i> did you find it? 
+		<br><br>
+		<form action={{ currentURL }} method="post">
+		<div>
+			<ul class="likert">
+				<li class="likert"> 
+					<small>Very easy</small> 
+					<input id="raddifficultStart" type="radio" name="difficult" value="1" />
+				<li class="likert">
+					<input type="radio" name="difficult" value="2" />
+				<li class="likert">
+					<input type="radio" name="difficult" value="3" />
+				<li class="likert">
+					<input type="radio" name="difficult" value="4" />
+				<li class="likert">
+					<input id="raddifficultEnd" type="radio" name="difficult" value="5" />
+					Very difficult
+			</ul>
+		</div>
+		<br><br><br>
+		How <i>interesting</i> did you find it?
+		<br><br>
+		<div>
+			<ul class="likert">
+				<li class="likert">
+					<small>Terribly boring</small>
+					<input id="radinterestingStart" type="radio" name="interesting" value="1" />
+				<li class="likert">
+					<input type="radio" name="interesting" value="2" />
+				<li class="likert">
+					<input type="radio" name="interesting" value="3" />
+				<li class="likert">
+					<input type="radio" name="interesting" value="4" />
+				<li class="likert">
+					<input id="radinterestingEnd" type="radio" name="interesting" value="5" />
+					Very interesting
+			</ul>
+		</div>
+		<br><br>
+		<input class="submit" type="submit" value="Submit">
+		<input type="hidden" name="popupType" value="deadline">
+		<input type="hidden" name="dueRatingTitle" value="{{dueRatingTitle}}">
+		</form>
+	</p>
+</div>
+
+<div id="popupMark" class="feedbackForm">
+	<a class="popupClose">x</a>
+	<h1>You should have received your mark</h1>
+	<p id="markArea"><br/>
+		Anonymously contribute to the rating of:
+		<br><br>
+		<b>{{dueRatingTitle}}</b>
+		<br><br><br>
+		What is your mark?
+		<br><br>
+		<form action={{ currentURL }} method="post">
+		<div>
+			<input type="number" name="mark" min="0" max="100">
+		</div>
+		<br><br><br><br><br>
+		<input class="submit" type="submit" value="Submit">
+		<input type="hidden" name="popupType" value="mark">
+		<input type="hidden" name="dueRatingTitle" value="{{dueRatingTitle}}">
+		</form>
+	</p>
+</div>
+
+<div id="popupLecturer" class="feedbackForm">
+	<a class="popupClose">x</a>
+	<h1>Lectures are almost over</h1>
+	<p id="lecturerArea"><br/>
+		Anonymously contribute to the rating of:<br><br>
+		<b>{{dueRatingTitle}}</b>
+		<br><br><br>
+		How <i>clearly</i> did this lecturer explain the material?
+		<br><br>
+		<form action={{ currentURL }} method="post">
+		<div>
+			<ul class="likert">
+				<li class="likert"> 
+					<small>Not clear at all</small> 
+					<input id="radclearStart" type="radio" name="clear" value="1" />
+				<li class="likert">
+					<input type="radio" name="clear" value="2" />
+				<li class="likert">
+					<input type="radio" name="clear" value="3" />
+				<li class="likert">
+					<input type="radio" name="clear" value="4" />
+				<li class="likert">
+					<input id="radclearEnd" type="radio" name="clear" value="5" />
+					Very clearly
+			</ul>
+		</div>
+		<br><br><br>
+		How <i>promptly</i> did this lecturer respond to queries?
+		<br><br>
+		<div>
+			<ul class="likert">
+				<li class="likert">
+					<small>Not prompt at all</small>
+					<input id="radpromptStart" type="radio" name="prompt" value="1" />
+				<li class="likert">
+					<input type="radio" name="prompt" value="2" />
+				<li class="likert">
+					<input type="radio" name="prompt" value="3" />
+				<li class="likert">
+					<input type="radio" name="prompt" value="4" />
+				<li class="likert">
+					<input id="radpromptEnd" type="radio" name="prompt" value="5" />
+					Very promptly
+			</ul>
+		</div>
+		<br><br>
+		<input class="submit" type="submit" value="Submit">
+		<input type="hidden" name="popupType" value="lecturer">
+		<input type="hidden" name="dueRatingTitle" value="{{dueRatingTitle}}">
+		</form>
+	</p>
+</div>
+
+<div id="backgroundPopup">
+</div>
+
 </body>
 </html>
