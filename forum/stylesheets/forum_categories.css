@@ -105,8 +105,8 @@ section.category {
 }
 
 #module_stats div.descr{
-	width : 90px;
-	padding-right : 20px;
+	width :50px;
+	padding-right : 10px;
 }
 
 section.ratings dl{
@@ -140,7 +140,6 @@ h3.title{
 	padding-top : none ;
 	margin -top : none ;
 	clear:right;
-
 }
 
 .btn{
