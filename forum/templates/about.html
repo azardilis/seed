@@ -7,6 +7,24 @@
 	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
+	<style type="text/css">
+		h3{
+			color : #02527d;
+			font-size :16pt;
+			font-weight: lighter;
+			margin : 10px;
+			margin-left : 0px;
+			display: block ;
+		}
+
+		p{
+			font-size :12pt;
+			font-weight: lighter;
+			margin : 10px;
+			margin-left : 0px;
+			display: block ;
+		}
+	</style>
 </head>
 <body>
 	<section id="content" class="content"> 
@@ -15,7 +33,25 @@
 		{% include "/templates/sidebar.html"%}
 
 		<section id="pagecontent" class="cleared">
+			<h1 class="pagetitle">About this forum</h1>
+			<p>It is the year 2012 and this is Scripting Team K and this is our coursework for the year 2012/2013 for the module COMP3001-Scripting Languages.</p>
+			<p>This forum application resides on Google Appengine, and is written in Python 2.7 and Javascript.</p>
+			<h3>The team</h3>
+			<p class="member">Alex Economou</p>
+			<p class="member">Alex Petroaica</p>
+			<p class="member">Argyris Zardiles</p>
+			<p class="member">Dionisio Perez Mavrogenis</p>
+			<p class="member">Kim Svensson</p>
+			<p class="member">Marinos Mavrommatis</p>
+			<p class="member">Panicos Karkallis</p>
+			<h3>The concept</h3>
+			<p>When trying to come up with something to do as our project, we thought that a forum for the ECS students would be the most useful thing to do. The reason for this is that up until now, we had been using Facebook groups as an alternative to comminicate with our course-mates over course related issues. As a result, we thought that a forum designed for that purpose would be more structured and easier to use. We also tried to make other ueful bits of information available through the forum that ECS students will most likely need, like the module explorer or the statistics of a module, to name a few.</p>
 
+			<h3>Functionality</h3>
+			<p> We have tried to make a number of things available and we incorporated functionality from websites like StackOverflow and Reddit that we found useful (marking a reply as the answer, or nested replying, to name some), as well as traditional forum functionality(like creating threads or categories). </p>
+			<p>But, as mentioned before, this not application is not just a forum. </p>
+			<p>Student can rate modules, lecturers and courseworks. This way, students can see how hard or interesting amodule or a coursework is, and how it was different for each year. We believe that this will give students of future years the chance to pick their modules more effortlessly.
+				Students can review coursework deadlines, subscribe to receive notifications on a number of available modules, rate those modules (based on interest and difficulty), rate the lecturers of modules and the courseworks of their modules.  </p>
 
 		</section>
 		<section class="cleared">	</section>

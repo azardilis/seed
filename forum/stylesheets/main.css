@@ -27,8 +27,11 @@ body{
 
 h1.pagetitle{
 	color : #02527d;
-	font-size :18pt;
+	font-size :24pt;
 	font-weight: lighter;
+	margin : 10px;
+	margin-left : 0px;
+	display: block ;
 }
 
 /*-----*/
