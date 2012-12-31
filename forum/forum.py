@@ -6,7 +6,6 @@ from functions.RetrieveFunctions import *
 import os
 import cgi
 import re
-from populate import *
 from ratings import *
 import populate
 from google.appengine.api import mail
