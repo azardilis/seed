@@ -1,70 +1,10 @@
 <html>
-   <style>
-   div#login {
-       position: relative;
-       float: right;
-       height: 20px;
-       padding: 5px;
-   }
-   div#login:hover {
-       background: rgba(0,0,0,0);
-   }
-   div#login div {
-       position: absolute;
-       top:30px;
-       right:0;
-       width:200px;
-       height:100px;
-       padding:10px;
-       background:white;
-       border-style:solid;
-       border-width:1px;
-       border-color:0099FF;
-       border-radius:8px;
-       visibility: hidden;
-   }
-   div#login:hover div {
-       visibility: visible;
-   }
-
-   div.forum-pic{
-	position:relative;
-	float:left;
-	width:500;
-	height:500;
-	padding:0px;
-
-   }
-   div.register{
-	position:relative;
-	float:center;
-   }
-   input.info{
-   	color:#808080;
-   
-   }
-   form
-
-   #submit {
-	color:white;
-	background-color:#88ccff;
-	border:solid;
-	color:white;
-	border:-radius:8px;
-   }
-   
-   </style>
-   <script>
-   function fade(){
-   	var inp=document.activeElement;
-	inp.value="";
-	if(inp==document.getElementById('ps') || inp==document.getElementById('retype')){
-		inp.type="password";
-	}
-   }
-   </script>
    <head>
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <link type="text/css" rel="stylesheet" href="/stylesheets/signin.css"/>
+    <script src="js/jq-1.8.3.js"></script>	
+    <script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+    <script type="text/javascript" src="js/signin.js"></script>
   </head>
   <body>
   <div id="login">
@@ -88,20 +28,28 @@
   forum pic here or any nice pic to fill up the page^^
   </div>
   <div id="register" class="register">
-  <form name="register" action="" method="post">
+  <form id="register" name="register" action="javascript:register_info()" method="post">
   <h2 style="color:#88ccff">Sign Up for FoRules</h2>
   <br>
-  <p><input type="text" class="info" value="Username" value="Username" onfocus="fade()" method="post" name="un"></p>
+  <p><input type="email" name="email" class="info" value="University Email" onfocus="fade()" onblur="rewrite()" id="email"></p>
   <br>
-  <p><input type="text" class="info" value="Password" onfocus="fade()" id="ps"></p>
+  <p><input type="text" name="ps" class="info" value="Password" onfocus="fade()" onblur="rewrite()" id="ps"></p>
   <br>
-  <p><input type="text" class="info" value="Retype Password" onfocus="fade()" id="retype"></p>
+  <p><input type="text" name="retype" class="info" value="Retype Password" onfocus="fade()" onblur="rewrite()" id="retype"></p>
   <br>
-  <p><input type="email" class="info" value="University Email" onfocus="fade()" id="email"></p>
+  <p><input type="text" name="fn" class="info" value="Full Name" onfocus="fade()" onblur="rewrite()" id="fn"><font color="red">*</font></p>
   <br>
-  <p><input type="text" class="info" value="Full Name" onfocus="fade()" id="fn"></p>
+  <p><input type="text" name="avatar" class="info" value="Avatar" onfocus="fade()" onblur="rewrite()" id="avatar"><font color="red">*</font></p>
   <br>
-  <input type="submit" id="submit" value="Register Now">
+  <p><input type="text" name="course" class="info" value="Course" onfocus="fade()" onblur="rewrite()" id="course"><font color="red">*</font></p>
+  <br>
+  <p><input type="number" name="year" class="info" value="Year" onfocus="fade()" onblur="rewrite()" id="year"><font color="red">*</font></p>
+  <br>
+  <input type="submit" name="reg" id="reg" value="Register Now">
+  <br>
+  <br>
+  <font color="red">*</font> <font size="1px">are optional fields. You can also edit them at the profile page once you have logged in.</font>
+
   </form>
   </div>
   
