@@ -7,6 +7,7 @@ import os
 import cgi
 import re
 from populate import *
+from ratings import *
 import populate
 from google.appengine.api import mail
 from functions.ForumFunctions import * # functions to handle posts and shit # "posts and shit" lol!
