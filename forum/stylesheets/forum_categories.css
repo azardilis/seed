@@ -117,23 +117,3 @@ section.ratings dt{
 section.ratings dd{
 	font-size:1em;
 }
-
-.bar{
-	float:left;
-}
-.bar5{
-	background-color: #88B131;
-}
-.bar4{
-	background-color: #A4CC02;
-}
-.bar3{
-	background-color: #FFCF02;
-}
-.bar2{
-	background-color: #FF9F02;
-}
-.bar1{
-	background-color: #FF6F31;
-}
-
