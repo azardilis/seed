@@ -40,7 +40,7 @@ function register_info(){
 		success:function(data){
 			alert('You are now registered to the forum');
 		},
-		error:function(data,textStatus,jqXHR){
+		error:function(){
 			alert("Something went wrong");
 		}
 

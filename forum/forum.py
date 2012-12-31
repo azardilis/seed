@@ -279,7 +279,7 @@ class SignInPage(webapp2.RequestHandler):
 		
 	if self.request.url==url+'?reg=yes':
 		pot_user=self.request.get('email');
-		if pot_user[pot_user.index('@'):]!='ecs.soton.ac.uk' or pot_user[pot_user.index('@'):]!='soton.ac.uk':
+		if pot_user[pot_user.index('@'):]!='@soton.ac.uk':
 			return 'This is not a University email'
 
 		pot_user=pot_user[:pot_user.index('@')]
@@ -291,17 +291,18 @@ class SignInPage(webapp2.RequestHandler):
 		elif self.request.get('password')!=self.request.get('retype'):
 			return 'Your passwords do not match'
 		else:
-			year=int(self.request.get('year'))
 			fname=self.request.get('full_name')
 			course=self.request.get('course')
-			if year is None or year=='Year' or year=='':
+			if self.request.get('year') is None or self.request.get('year')=='Year' or self.request.get('year')=='':
 				year=0
-			
+			else:
+				year=int(self.request.get('year'))
+		
 			if fname is None or fname=='Full Name' or fname=='':
-				fname=''
+				fname=' '
 
 			if course is None or course=='Course' or course=='':
-				course=''
+				course=' '
 
 			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'), course=course,user_type="normal", year=year,avatar=self.request.get('avatar'), signature="L33T 5UP4|-| H4X0|2")
 			user.put()
