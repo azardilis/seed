@@ -23,6 +23,7 @@ from itertools import izip
 from datetime import datetime
 import PyRSS2Gen
 
+
 def reset_db():
     for user in User.all():
         user.delete()
@@ -69,7 +70,7 @@ def populate_db():
     reset_db()
 
     ###### POPULATE ######
-    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type="moderator", year=3,avatar="resources/img/dio.jpg", signature="L33T 5UP4|-| H4X0|2")
+    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type="moderator", year=3, signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='compsci',year=3)

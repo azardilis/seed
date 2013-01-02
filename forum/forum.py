@@ -6,7 +6,6 @@ from functions.RetrieveFunctions import *
 import os
 import cgi
 import re
-from populate import *
 from ratings import *
 import populate
 from google.appengine.api import mail
@@ -28,6 +27,7 @@ from google.appengine.api import images
 from model.base.LecturerRating import LecturerRating
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
+from google.appengine.api import images
 from itertools import izip
 from datetime import datetime
 import time
@@ -759,11 +759,22 @@ class ToggleSubscription(webapp2.RequestHandler):
 '''Uses User Key to query the right User Entity'''
 class ProfilePage(SessionHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
-    def get(self):
-    		if self.session.get('name')=='hello':
-			self.response.write('banana')
-		else:
-			self.response.write('no')
+	def post(self):
+		avatar = self.request.get('img')
+		fullname = self.request.get('fullname')
+		user_key = current_user.key()
+		user = db.get(user_key)
+		if len(avatar) >0:
+			#avatar=images.resize(avatar, 200, 200)
+			user.avatar = db.Blob(avatar)
+			
+		if len(fullname) >0:	
+			user.full_name = fullname
+			
+		user.put()
+		self.redirect('/profile')
+	
+	def get(self):
 		template = jinja_environment.get_template('templates/profile.html')
 		subs = 	current_user.subscriptions
 		sub_to_delete=cgi.escape(self.request.get('mod'))
@@ -802,9 +813,16 @@ class ProfilePage(SessionHandler):
 			'mod_info':mod_info,
             'subscriptions':subscribed_modules
 		}
+		
 		self.response.out.write(template.render(template_params))
-
-
+class GetImage(webapp2.RequestHandler):
+	def get(self):
+		user_key = current_user.key()
+		user = db.get(user_key)
+		if (user and user.avatar):
+			self.response.headers['Content-Type'] = 'image/jpeg'
+			self.response.out.write(user.avatar)
+       
 class AboutPage(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
@@ -948,6 +966,7 @@ app = webapp2.WSGIApplication([
 	('/profile',ProfilePage),
 	('/admin-user-creation',AdminUserCreation),
 	('/news.rss', RssPage),
+	('/profileimage',GetImage),
 	('/module-feedback', AssessmentFeedback)
 								   
 ], debug=True,config=session_dic)

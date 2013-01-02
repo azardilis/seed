@@ -105,8 +105,8 @@ section.category {
 }
 
 #module_stats div.descr{
-	width : 90px;
-	padding-right : 20px;
+	width :50px;
+	padding-right : 10px;
 }
 
 section.ratings dl{
@@ -140,7 +140,6 @@ h3.title{
 	padding-top : none ;
 	margin -top : none ;
 	clear:right;
-
 }
 
 .btn{
@@ -150,7 +149,7 @@ h3.title{
 
     clear:both;
     text-decoration: none;
-    background: #88ccff;
+    background: #007275;
     padding-left:20px;
     padding-right : 20px ;
     height:30px;
@@ -171,8 +170,8 @@ h3.title{
     padding-top : 4px;
     display:block;
     font-size:14pt;
+    color : white;
     text-shadow:0px 1px 1px rgba(255,255,255,0.3);
-    color:#446388;
     -webkit-transition:all 0.2s linear;
     -moz-transition:all 0.2s linear;
     -o-transition:all 0.2s linear;

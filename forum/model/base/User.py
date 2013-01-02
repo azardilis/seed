@@ -13,7 +13,11 @@ class User(db.Model):
 	#consider reference to yearCourseSemester instead
 		
 	full_name = db.StringProperty(required=True)
+<<<<<<< HEAD
 	avatar = db.BlobProperty()
+=======
+	avatar = db.BlobProperty(default=None)
+>>>>>>> 791b71cea8e8f6da4ef858ebdf114964c2295171
 	signature = db.StringProperty()
 	karma = db.IntegerProperty(default=0)
 	home_page  = db.LinkProperty()
