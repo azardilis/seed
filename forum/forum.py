@@ -14,6 +14,7 @@ from functions.ForumFunctions import * # functions to handle posts and shit # "p
 from model.base.Module import Module
 from model.base.User import User
 from model.base.Post import Post
+from webapp2_extras import sessions
 from model.base.Thread import Thread
 from model.base.Vote import Vote
 from model.base.YearCourseSemester import YearCourseSemester
@@ -23,6 +24,7 @@ from model.base.Assessment import Assessment
 from model.base.Grade import Grade
 from model.base.Category import Category
 from model.base.Subscription import Subscription
+from google.appengine.api import images
 from model.base.LecturerRating import LecturerRating
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
@@ -34,11 +36,30 @@ import PyRSS2Gen
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+global session_dic
+session_dic={}
+session_dic['webapp2_extras.sessions'] = {'secret_key': 'my-super-secret-key',
+}
 global current_user
 global subscribed_modules
 CATEGORIES = 'categories'
 MID = 'mid'
 EXTRA_TIME= 40*24*60*60 # ask for mark 40 days after assessment deadline
+
+
+
+class SessionHandler(webapp2.RequestHandler):
+    def dispatch(self):
+    	self.session_store = sessions.get_store(request=self.request)
+	
+	try:
+	        webapp2.RequestHandler.dispatch(self)
+	finally:
+		self.session_store.save_sessions(self.response)
+
+        @webapp2.cached_property
+	def session(self):
+		return self.session_store.get_session()
 
 class rss_item:
     def __init__(self, title, link, description, category, pub_date):
@@ -263,7 +284,7 @@ class AdminUserCreation(webapp2.RequestHandler):
 				self.redirect("/")
 
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
-class SignInPage(webapp2.RequestHandler):
+class SignInPage(SessionHandler):
     def get(self):
     	
 	
@@ -304,16 +325,16 @@ class SignInPage(webapp2.RequestHandler):
 
 			if course is None or course=='Course' or course=='':
 				course=' '
-
-			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'), course=course,user_type="normal", year=year,avatar=self.request.get('avatar'), signature="L33T 5UP4|-| H4X0|2")
+			
+			avatar=self.request.str_POST['avatar']
+			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'), avatar=db.Blob(avatar),course=course,user_type="normal", year=year)
 			user.put()
-
-
 	else:
 		potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
 		if potential_user is not None and potential_user.password==self.request.get('password'):
 	       	    current_user=potential_user
-	       	    self.redirect("/main")
+		    session_dic['name']='hello'
+		    self.redirect("/main")
 	       	else:
        		    #proper error message should be displayed (some javascript or something)
 		    print "The username and password do not match, please try again!"
@@ -326,6 +347,7 @@ class MainPage(webapp2.RequestHandler):
         global current_user
         global subscribed_modules
         if 'current_user' in globals():
+	    homepage_subs=[]
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
             subscribed_modules = homepage_subs
 
@@ -338,12 +360,17 @@ class MainPage(webapp2.RequestHandler):
                     threads = threads.order('-timestamp').fetch(2)
                     for thread in threads:
                         recent_threads.append(thread) 
-                        
-                template_values = {
-                    'current_user':current_user,
-                    'subscriptions':homepage_subs,
-                    'threads':recent_threads
-                    }
+            
+	    if homepage_subs.__len__()==0 or recent_threads.__len__()==0:
+	    	homepage_subs=[]
+		recent_threads=[]
+	    
+                
+	    template_values = {
+               'current_user':current_user,
+               'subscriptions':homepage_subs,
+               'threads':recent_threads
+            }
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
         else:
@@ -730,9 +757,13 @@ class ToggleSubscription(webapp2.RequestHandler):
             logging.error('Couldn\'t get module with mcode '+self.request.get('mcode'))
 
 '''Uses User Key to query the right User Entity'''
-class ProfilePage(webapp2.RequestHandler):
+class ProfilePage(SessionHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
+    		if self.session.get('name')=='hello':
+			self.response.write('banana')
+		else:
+			self.response.write('no')
 		template = jinja_environment.get_template('templates/profile.html')
 		subs = 	current_user.subscriptions
 		sub_to_delete=cgi.escape(self.request.get('mod'))
@@ -765,7 +796,7 @@ class ProfilePage(webapp2.RequestHandler):
 			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
 			
 			lecturers=[]
-			
+		self.response.headers['Content-Type']='image/png'	
 		template_params = {
 			'user':user,
 			'mod_info':mod_info,
@@ -919,4 +950,4 @@ app = webapp2.WSGIApplication([
 	('/news.rss', RssPage),
 	('/module-feedback', AssessmentFeedback)
 								   
-], debug=True)
+], debug=True,config=session_dic)

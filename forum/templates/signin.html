@@ -28,7 +28,7 @@
   forum pic here or any nice pic to fill up the page^^
   </div>
   <div id="register" class="register">
-  <form id="register" name="register" action="javascript:register_info()" method="post">
+  <form id="register" name="register" action="javascript:register_info()" enctype="multipart/form-data" method="post">
   <h2 style="color:#88ccff">Sign Up for FoRules</h2>
   <br>
   <p><input type="email" name="email" class="info" value="University Email" onfocus="fade()" onblur="rewrite()" id="email"></p>
@@ -39,7 +39,8 @@
   <br>
   <p><input type="text" name="fn" class="info" value="Full Name" onfocus="fade()" onblur="rewrite()" id="fn"><font color="red">*</font></p>
   <br>
-  <p><input type="text" name="avatar" class="info" value="Avatar" onfocus="fade()" onblur="rewrite()" id="avatar"><font color="red">*</font></p>
+  <p><font color="#808080">Avatar</font></p>
+  <p><input type="file" name="avatar" id="avatar"><font color="red">*</font></p>
   <br>
   <p><input type="text" name="course" class="info" value="Course" onfocus="fade()" onblur="rewrite()" id="course"><font color="red">*</font></p>
   <br>

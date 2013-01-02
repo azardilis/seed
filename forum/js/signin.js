@@ -27,16 +27,12 @@ function register_info(){
 		alert('Mandatory information has not been completed');
 	}
 	var input_obs=document.forms['register'];
-	var form_info=new Array();
-	for(var i=0;i<input_obs.length;i++){
-		form_info[i]=input_obs[i].value;
-	}
 	$.ajax({
 		type:"post",
 		url:url,
 		dataType:'html',
 		cache:false,
-		data:{email:form_info[0],password:form_info[1],retype:form_info[2],full_name:form_info[3],avatar:form_info[4],course:form_info[5],year:form_info[6]},
+		data:{email:input_obs[0].value,password:input_obs[1].value,retype:input_obs[2].value,full_name:input_obs[3].value,avatar:input_obs[4].value,course:input_obs[5].value,year:input_obs[6].value},
 		success:function(data){
 			alert('You are now registered to the forum');
 		},
