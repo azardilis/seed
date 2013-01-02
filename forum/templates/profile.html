@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
 	<script type="text/javascript" src="js/forum_subs.js"></script>
+	<script type="text/javascript" src="js/edit_mode.js"></script>
 </head>
 <body>
  
@@ -17,9 +18,25 @@
 		{% include "/templates/mbar.html" %}
 		{% include "/templates/sidebar.html"%}
 		<section id="pagecontent" class="cleared">
+			<div id="edit_profile_header">
+				<form action="/profile"
+					enctype="multipart/form-data" method="post">
+					
+					<h2>New Name</h2>
+					<input type="text" name="fullname" value="{{user.full_name}}" size="30">
+										
+					<h2>Upload new avatar picture</h2><br>
+					<input type="file" name="img" size="40">
+					
+					<div>
+					<input type="submit" value="Save">
+					</div>
+				</form>
 			
+			</div>
 			<div id="profile_header">
-				<img src="{{user.avatar}}" width="180" height="180">
+				<a href="javascript:editMode()"<button class="edit_button" type=submit></button></a>
+				<img src="/profileimage" width="180" height="180">
 				<div id="col1">
 					<p id="name">{{user.full_name}}</p>
 					<p class="course">{{user.course}} {{user.year}}</p>
@@ -35,7 +52,8 @@
 					<br>
 					<br>
 					<h2 class="figures">11101</h2><h2 class="desc">Comments Posted</h2> 
-				</div>				
+				</div>	
+					
 			</div>
 			<br>
 		</section> 	

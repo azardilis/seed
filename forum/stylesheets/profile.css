@@ -1,5 +1,24 @@
 
 /* CSS for Profile Page Header*/
+#edit_profile_header{
+	display:none;
+
+
+
+}
+a.edit_button{
+	background: #ccc url(/stylesheets/resources/button_edit.gif);
+	background-repeat: no-repeat;
+	background-position: 3px center;
+	display: block;
+	-moz-border-radius: 12px;
+	-webkit-border-radius: 12px;
+	
+	padding: 1px;
+	width:62px;
+	height:20px;
+}
+
 #profile_header{
 	background-color: white;
 	width: 760px;
