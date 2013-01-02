@@ -807,7 +807,6 @@ class ProfilePage(SessionHandler):
 			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
 			
 			lecturers=[]
-		self.response.headers['Content-Type']='image/png'	
 		template_params = {
 			'user':user,
 			'mod_info':mod_info,

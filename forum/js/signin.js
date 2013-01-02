@@ -19,10 +19,13 @@ function rewrite(){
 }
 
 function register_info(){
-	url=window.location.pathname;
-	url=url+"?reg=yes";
+	var url=window.location.pathname;
 	var password=document.forms['register']['ps'];
 	var retype=document.forms['register']['retype'];
+	var canvas=document.createElement('canvas');
+	var av;
+
+	url=url+"?reg=yes";
 	if(password.value==null || password.value=='' || password.value=='Password' || retype.value==null || retype.value=='' || retype.value=='Retype Password'){
 		alert('Mandatory information has not been completed');
 	}
