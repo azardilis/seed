@@ -911,7 +911,7 @@ class RssPage(webapp2.RequestHandler):
             for cat in mod.categories:
                 for thread in cat.threads:
                     item = rss_item(title=thread.subject,
-				    link="http://localhost:9999/showthread?tid=910",
+				    link="http://localhost:9999/showthread?tid="+str(thread.key().id()),
 				    description=mod.key().name(),
 				    category=cat.name,
 				    pub_date=datetime.now())
