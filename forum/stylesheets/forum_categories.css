@@ -76,7 +76,7 @@ section.category {
 }
 
 #module_stats  {
-   	float : left ;
+	clear:left;
 }
 
 #module_stats div.value{
@@ -109,8 +109,8 @@ section.ratings dd{
 
 h3.title{
 	width : 60% ;
-	float : left ;
 	margin-bottom : 10px;
+	float: left;
 }
 
 /*****/
