@@ -13,6 +13,7 @@
 #mbar-wrapper{
 	width : 100%;
 	overflow : auto ;
+	padding-left: 1%;
 }
 
 ul#modulebar{

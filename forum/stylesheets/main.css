@@ -33,17 +33,16 @@ h1.pagetitle{
 	margin-left : 0px;
 	display: block ;
 }
-
 /*-----*/
 
 /*CSS for the sidebar*/
 #sidebar{
-	width : 15%;	
+	width : 16%;	
 	background-color: 	#DDD;
 	display : block;
 	border-radius : 10px ;
-	padding : 1px ;
-	margin : 3px;
+	margin-left: 2%;
+	padding : 2px ;
 	position : relative;
 	float : left;
 }
@@ -63,7 +62,7 @@ h1.pagetitle{
 	display :block ;
 	margin-bottom : 1px ;	
 	background-color:#007275 ;
-	opacity : 0.8 ;	
+	opacity : 0.8 ;
 }
 
 #sidebar li span{
@@ -95,11 +94,9 @@ h1.pagetitle{
 /*CSS for styiling the container of the content of each page*/
 #pagecontent{
 	position : relative;
-	float:left;	
-	display : block ;
-	margin : 10px;
-	padding : 10px;
-	width : 80% ;
+	float:right;	
+	padding : 1%;
+	width : 78% ;
 }
 /*----*/
 
@@ -112,14 +109,18 @@ h1.pagetitle{
 	margin-bottom : 12px ;
 
 	background-color: white;
-	border : 1px solid white ;
 	border-radius : 20px ;
-	padding : 20px;
+	
 	overflow: hidden;
+	padding-bottom: 1%;
+	padding-top: 1%;
 	
 	-webkit-box-shadow:0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
     -moz-box-shadow:0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
     box-shadow: 0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
-
 }
 /**/
+
+#wlcmmsg{
+	margin : 1%
+}
