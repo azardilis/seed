@@ -81,7 +81,7 @@ def close_section(posts) :
 def make_post(p,posts) :
 	html = '''
 		<section class="userDetails">
-		<img src="/getImage" class="pstimg" >
+		<img src="/profileimage" class="pstimg" >
 		<p class="username">'''+p.poster.key().name()+'''</p>
 		<p class="degree">'''+p.poster.course+'''</p>
 		<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
