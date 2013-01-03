@@ -76,12 +76,7 @@ section.category {
 }
 
 #module_stats  {
-	/*float : left;
-	text-align:right;
-	max-width : 60px*/
-    position : relative ;
-	display : inline;
-    float : left ;
+   	float : left ;
 }
 
 #module_stats div.value{
@@ -92,21 +87,12 @@ section.category {
 #module_stats div.descr{
 	width : 50px;
 	margin-right : 40px;
-    display : inline-block;
+	padding-right : 10px;
+	display : inline-block;
 }
 
 #module_stats div{
 	display:inline;
-}
-
-#module_stats div.value{
-	font-size:3em;
-	font-weight : bold;
-}
-
-#module_stats div.descr{
-	width :50px;
-	padding-right : 10px;
 }
 
 section.ratings dl{
@@ -123,7 +109,6 @@ section.ratings dd{
 
 h3.title{
 	width : 60% ;
-	position : relative ;
 	float : left ;
 	margin-bottom : 10px;
 }
