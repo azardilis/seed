@@ -326,7 +326,7 @@ class SignInPage(SessionHandler):
 			if course is None or course=='Course' or course=='':
 				course=' '
 			
-			avatar=self.request.str_POST['avatar']
+			avatar=self.request.get('avatar')
 			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'), avatar=db.Blob(avatar),course=course,user_type="normal", year=year)
 			user.put()
 	else:
