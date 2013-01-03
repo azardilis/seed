@@ -81,7 +81,7 @@ def close_section(posts) :
 def make_post(p,posts) :
 	html = '''
 		<section class="userDetails">
-		<img src="/profileimage" class="pstimg" >
+		<img src="/profileimage?usr='''+str(p.poster.key())+'''" class="pstimg" >
 		<p class="username">'''+p.poster.key().name()+'''</p>
 		<p class="degree">'''+p.poster.course+'''</p>
 		<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
@@ -126,23 +126,22 @@ def parse_quotes(p):
 
 #look into implementing this with proper data serialization
 def serialize_ajax_info(u , p,r2pid ):
-	resp = 'poster='+str(u.key().name())
+	resp = 'poster=='+str(u.key().name())
 	resp += '&'
-	resp += 'r2pid='+r2pid
+	resp += 'r2pid=='+r2pid
 	resp += '&'
-	resp += 'usrkarma='+str(u.karma)
+	resp += 'usrkarma=='+str(u.karma)
 	resp += '&'
-	resp += 'usrdegree='+u.course
+	resp += 'usrdegree=='+u.course
 	resp += '&'
-	resp += 'usrrdate='+str(p.timestamp.date())
+	resp += 'usrrdate=='+str(p.timestamp.date())
 	resp += '&'
-	resp += 'usrsig='+'signature'#u.signature
+	resp += 'usrsig=='+'signature'#u.signature
 	resp += '&'
-	resp += 'usrimg=/profileimage'
+	resp += 'usrimg==/profileimage?usr='+str(u.key())
 	resp += '&'
-	resp += 'bd='+p.body
+	resp += 'bd=='+p.body
 	resp += '&'
-	resp += 'newID='+str(p.key().id())
+	resp += 'newID=='+str(p.key().id())
 
 	return resp
-

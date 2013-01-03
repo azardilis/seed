@@ -4,7 +4,7 @@
 function returnArray(str){
  	var arr = str.split("&");
  	for (i in arr){
- 		arr[i] = arr[i].split("=");
+ 		arr[i] = arr[i].split("==");
  	}
  	return arr;
  }

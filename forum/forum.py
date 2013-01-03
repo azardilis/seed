@@ -581,10 +581,10 @@ class ThreadPage(webapp2.RequestHandler):
 
             template_params = {
 	    	    'user' : t.poster,
-		    'nop': len([p for p in t.poster.posts]),
-                    'thread': t ,
-                    'posts' : posts,
-                    'subscriptions':subscribed_modules
+		    	'nop': len([p for p in t.poster.posts]),
+                'thread': t ,
+                'posts' : posts,
+                'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
         else :
@@ -650,8 +650,8 @@ class ReplyToThread(webapp2.RequestHandler):
             p = Post(body=bd, thread = thrd, poster = current_user)
             p.put()
 
-	    thrd.answers += 1 
-	    thrd.put()
+            thrd.answers += 1
+            thrd.put()
 
             self.response.out.write(serialize_ajax_info(current_user,p,''))
         else :
