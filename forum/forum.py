@@ -760,8 +760,6 @@ class ProfilePage(BaseHandler):
 		self.redirect('/profile')
 	
 	def get(self):
-		if self.session.get('type')==1:
-			self.redirect('403')
 		template = jinja_environment.get_template('templates/profile.html')
 		subs = 	current_user.subscriptions
 		sub_to_delete=cgi.escape(self.request.get('mod'))
