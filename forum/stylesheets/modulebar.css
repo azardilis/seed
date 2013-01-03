@@ -1,13 +1,18 @@
 
 /*CSS for the modulebar*/
 #modulenav{
-	width : 93%;
+	width : 92%;
 	display : inline ;
 	position : relative ;
 	float : left;
 	overflow : hidden;
 	border-radius : 10px;
 	margin-bottom : 3% ;
+}
+
+#mbar-wrapper{
+	width : 100%;
+	overflow : auto ;
 }
 
 ul#modulebar{
@@ -64,7 +69,6 @@ img.dir,#modules_tag{
 }
 
 img.dir{
-	width : 32px;
-	height : 32px;
+	width : 3%;
 }
 /*----*/
