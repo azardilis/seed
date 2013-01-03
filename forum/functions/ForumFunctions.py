@@ -81,11 +81,11 @@ def close_section(posts) :
 def make_post(p,posts) :
 	html = '''
 		<section class="userDetails">
-			<img src="'''+p.poster.avatar+'''" class="pstimg" >
-			<p class="username">'''+p.poster.key().name()+'''</p>
-			<p class="degree">'''+p.poster.course+'''</p>
-			<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
-			<p class="replydate">'''+str(p.timestamp.date())+'''</p>
+		<img src="/getImage" class="pstimg" >
+		<p class="username">'''+p.poster.key().name()+'''</p>
+		<p class="degree">'''+p.poster.course+'''</p>
+		<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
+		<p class="replydate">'''+str(p.timestamp.date())+'''</p>
 		</section>
 	''' #the count fo posts is a performance drawback I think
 	pst_bd = '<section class="pstbd">'
@@ -138,7 +138,7 @@ def serialize_ajax_info(u , p,r2pid ):
 	resp += '&'
 	resp += 'usrsig='+'signature'#u.signature
 	resp += '&'
-	resp += 'usrimg='+u.avatar
+	resp += 'usrimg=/profileimage'
 	resp += '&'
 	resp += 'bd='+p.body
 	resp += '&'

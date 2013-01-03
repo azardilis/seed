@@ -286,15 +286,13 @@ class AdminUserCreation(webapp2.RequestHandler):
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(SessionHandler):
     def get(self):
-    	
-	
-	if 'current_user' not in globals():
-            template = jinja_environment.get_template('templates/signin.html')
-            self.response.out.write(template.render())
-	    global url
-	    url=self.request.url
-        else:
-            self.redirect("/main")
+		if 'current_user' not in globals():
+	            template = jinja_environment.get_template('templates/signin.html')
+	            self.response.out.write(template.render())
+		    global url
+		    url=self.request.url
+	        else:
+	            self.redirect("/main")
 
     def post(self): #authenticate the user
         global current_user
