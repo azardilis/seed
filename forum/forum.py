@@ -324,7 +324,7 @@ class SignInPage(SessionHandler):
 			if course is None or course=='Course' or course=='':
 				course=' '
 			
-			avatar=self.request.str_POST['avatar']
+			avatar=self.request.get('avatar')
 			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'), avatar=db.Blob(avatar),course=course,user_type="normal", year=year)
 			user.put()
 	else:
@@ -814,7 +814,7 @@ class ProfilePage(SessionHandler):
 		self.response.out.write(template.render(template_params))
 class GetImage(webapp2.RequestHandler):
 	def get(self):
-		user_key = current_user.key()
+		user_key = self.request.get('usr')
 		user = db.get(user_key)
 		if (user and user.avatar):
 			self.response.headers['Content-Type'] = 'image/jpeg'
