@@ -5,7 +5,8 @@ class User(db.Model):
 	#implicit key_name (use for username)
 	password = db.StringProperty(required=True)
 	
-	user_type = db.StringProperty(choices=set(['normal','moderator']), default = 'normal')
+	user_type = db.IntegerProperty(choices=set([0,1,-1]), default = 0)
+	#0 is for a normal user, 1 for a mod and -1 for a user who is not logged in
 	activated = db.BooleanProperty(default=False)
 	
 	course = db.StringProperty(required=True)

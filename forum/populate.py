@@ -70,10 +70,10 @@ def populate_db():
     reset_db()
 
     ###### POPULATE ######
-    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type="moderator", year=3, signature="L33T 5UP4|-| H4X0|2")
+    current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type=1, year=3, signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
-    user = User(key_name='dpm3g10',full_name='dio',password='1234',course='compsci',year=3)
+    user = User(key_name='dpm3g10',full_name='dio',password='1234',course='compsci',year=3,user_type=0)
     user.put()
 
     compsci11 = YearCourseSemester(year=int(1), semester=int(1), course="compsci",prettyName="Computer Science Year 1, Semester 1")

@@ -30,6 +30,7 @@ from google.appengine.ext import db
 from google.appengine.api import images
 from itertools import izip
 from datetime import datetime
+from functions.BaseHandler import BaseHandler
 import time
 import PyRSS2Gen
 
@@ -45,21 +46,6 @@ global subscribed_modules
 CATEGORIES = 'categories'
 MID = 'mid'
 EXTRA_TIME= 40*24*60*60 # ask for mark 40 days after assessment deadline
-
-
-
-class SessionHandler(webapp2.RequestHandler):
-    def dispatch(self):
-    	self.session_store = sessions.get_store(request=self.request)
-	
-	try:
-	        webapp2.RequestHandler.dispatch(self)
-	finally:
-		self.session_store.save_sessions(self.response)
-
-        @webapp2.cached_property
-	def session(self):
-		return self.session_store.get_session()
 
 class rss_item:
     def __init__(self, title, link, description, category, pub_date):
@@ -91,11 +77,11 @@ def getYCS(year, course, semester):
     return ycs.modules
 
 #Main administration page
-class AdminPage(webapp2.RequestHandler):
+class AdminPage(BaseHandler):
     def get(self):
         #passing variables to template
         global current_user
-        if 'current_user' in globals() and current_user.user_type=='moderator':
+        if 'current_user' in globals() and self.session.get('type')==1:
 			
             template_values = {
 				'current_user':current_user
@@ -106,14 +92,14 @@ class AdminPage(webapp2.RequestHandler):
             self.redirect("/")
 			
 #Modules administration page
-class AdminModules(webapp2.RequestHandler):
+class AdminModules(BaseHandler):
     def get(self):
         #passing variables to template
 		global current_user
 		firsthalf=[]
 		secondhalf=[]
 		allYcsArray=[]
-		if 'current_user' in globals() and current_user.user_type=='moderator':
+		if 'current_user' in globals() and self.session.get('type')==1:
 				modules=Module.all().run()
 				allYcs=YearCourseSemester.all().run()
 				count=Module.all().count()
@@ -148,7 +134,7 @@ class AdminModules(webapp2.RequestHandler):
 				self.redirect("/")
     def post(self):
 		global current_user
-		if 'current_user' in globals() and current_user.user_type=='moderator':
+		if 'current_user' in globals() and self.session.get('id')==1:
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
 			is_add = self.request.POST.get('add_button', None)
@@ -211,12 +197,12 @@ class AdminModules(webapp2.RequestHandler):
 			self.redirect("/")
 		
 #Existing user accounts administration page
-class AdminUsers(webapp2.RequestHandler):
+class AdminUsers(BaseHandler):
     def get(self):
         #passing variables to template
 		global current_user
 		message=""
-		if 'current_user' in globals() and current_user.user_type=='moderator':
+		if 'current_user' in globals() and self.session.get('type')==1:
 				users=User.all()
 				users.run()
 				
@@ -239,11 +225,11 @@ class AdminUsers(webapp2.RequestHandler):
 				self.redirect("/")
 
 #Admin user creation page
-class AdminUserCreation(webapp2.RequestHandler):
+class AdminUserCreation(BaseHandler):
 	def get(self):
         #passing variables to template
 		global current_user
-		if 'current_user' in globals() and current_user.user_type=='moderator':
+		if 'current_user' in globals() and self.session.get('type')=='1':
 				template_values = {
 					'current_user':current_user
 				}
@@ -254,7 +240,7 @@ class AdminUserCreation(webapp2.RequestHandler):
 	def post(self):
 		#passing variables to template
 		global current_user
-		if 'current_user' in globals() and current_user.user_type=='moderator':
+		if 'current_user' in globals() and self.session.get('type')==1:
 				new_user_fullname=self.request.get('user-fullname')
 				new_user_ecsid=self.request.get('user-username')
 				new_user_email=self.request.get('user-email')
@@ -284,7 +270,7 @@ class AdminUserCreation(webapp2.RequestHandler):
 				self.redirect("/")
 
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
-class SignInPage(SessionHandler):
+class SignInPage(BaseHandler):
     def get(self):
 		if 'current_user' not in globals():
 	            template = jinja_environment.get_template('templates/signin.html')
@@ -313,10 +299,8 @@ class SignInPage(SessionHandler):
 		else:
 			fname=self.request.get('full_name')
 			course=self.request.get('course')
-			if self.request.get('year') is None or self.request.get('year')=='Year' or self.request.get('year')=='':
+			if self.request.get('year') is not int:
 				year=0
-			else:
-				year=int(self.request.get('year'))
 		
 			if fname is None or fname=='Full Name' or fname=='':
 				fname=' '
@@ -324,14 +308,17 @@ class SignInPage(SessionHandler):
 			if course is None or course=='Course' or course=='':
 				course=' '
 			
-			avatar=self.request.get('avatar')
-			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'), avatar=db.Blob(avatar),course=course,user_type="normal", year=year)
+			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,)
 			user.put()
 	else:
 		potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
 		if potential_user is not None and potential_user.password==self.request.get('password'):
 	       	    current_user=potential_user
-		    session_dic['name']='hello'
+		    self.session['name']=self.request.get('user')
+		    self.session['type']=potential_user.user_type
+		    #if self.session.get('type')==1:
+		    #	self.redirect('/admin')
+		    #else:
 		    self.redirect("/main")
 	       	else:
        		    #proper error message should be displayed (some javascript or something)
@@ -755,7 +742,7 @@ class ToggleSubscription(webapp2.RequestHandler):
             logging.error('Couldn\'t get module with mcode '+self.request.get('mcode'))
 
 '''Uses User Key to query the right User Entity'''
-class ProfilePage(SessionHandler):
+class ProfilePage(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
 	def post(self):
 		avatar = self.request.get('img')
@@ -773,6 +760,8 @@ class ProfilePage(SessionHandler):
 		self.redirect('/profile')
 	
 	def get(self):
+		if self.session.get('type')==1:
+			self.redirect('403')
 		template = jinja_environment.get_template('templates/profile.html')
 		subs = 	current_user.subscriptions
 		sub_to_delete=cgi.escape(self.request.get('mod'))
