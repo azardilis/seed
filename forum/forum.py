@@ -81,7 +81,7 @@ class AdminPage(BaseHandler):
     def get(self):
         #passing variables to template
         global current_user
-        if 'current_user' in globals() and self.session.get('type')==1:
+        if self.session.get('type')==1:
 			
             template_values = {
 				'current_user':current_user
@@ -99,7 +99,7 @@ class AdminModules(BaseHandler):
 		firsthalf=[]
 		secondhalf=[]
 		allYcsArray=[]
-		if 'current_user' in globals() and self.session.get('type')==1:
+		if self.session.get('type')==1:
 				modules=Module.all().run()
 				allYcs=YearCourseSemester.all().run()
 				count=Module.all().count()
@@ -134,7 +134,7 @@ class AdminModules(BaseHandler):
 				self.redirect("/")
     def post(self):
 		global current_user
-		if 'current_user' in globals() and self.session.get('id')==1:
+		if self.session.get('type')==1:
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
 			is_add = self.request.POST.get('add_button', None)
@@ -202,7 +202,7 @@ class AdminUsers(BaseHandler):
         #passing variables to template
 		global current_user
 		message=""
-		if 'current_user' in globals() and self.session.get('type')==1:
+		if self.session.get('type')==1:
 				users=User.all()
 				users.run()
 				
@@ -229,7 +229,7 @@ class AdminUserCreation(BaseHandler):
 	def get(self):
         #passing variables to template
 		global current_user
-		if 'current_user' in globals() and self.session.get('type')=='1':
+		if self.session.get('type')==1:
 				template_values = {
 					'current_user':current_user
 				}
@@ -240,7 +240,7 @@ class AdminUserCreation(BaseHandler):
 	def post(self):
 		#passing variables to template
 		global current_user
-		if 'current_user' in globals() and self.session.get('type')==1:
+		if self.session.get('type')==1:
 				new_user_fullname=self.request.get('user-fullname')
 				new_user_ecsid=self.request.get('user-username')
 				new_user_email=self.request.get('user-email')
@@ -272,9 +272,10 @@ class AdminUserCreation(BaseHandler):
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(BaseHandler):
     def get(self):
-		if 'current_user' not in globals():
+		if self.session.get('type') is None or self.session.get('type')==-1:
 	            template = jinja_environment.get_template('templates/signin.html')
 	            self.response.out.write(template.render())
+		    self.session['type']=-1
 		    global url
 		    url=self.request.url
 	        else:
@@ -324,14 +325,14 @@ class SignInPage(BaseHandler):
        		    #proper error message should be displayed (some javascript or something)
 		    print "The username and password do not match, please try again!"
 
-class MainPage(webapp2.RequestHandler):
+class MainPage(BaseHandler):
     def get(self):
         #passing variables to template, namely the current user and the subs that need
         #to be displayed in the homepage
 
         global current_user
         global subscribed_modules
-        if 'current_user' in globals():
+        if self.session.get('type')==0 or self.session.get('type')==1:
 	    homepage_subs=[]
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
             subscribed_modules = homepage_subs
@@ -361,9 +362,13 @@ class MainPage(webapp2.RequestHandler):
         else:
             self.redirect("/")
 
-class ForumPage(webapp2.RequestHandler):
+class ForumPage(BaseHandler):
 	#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     	def get(self):
+		if self.session.get('type')==-1:
+			self.redirect('/403')
+			return
+
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 		template = jinja_environment.get_template('templates/forum_subscriptions.html')
 		subs = 	current_user.subscriptions
@@ -399,10 +404,7 @@ class ForumPage(webapp2.RequestHandler):
 		}
         	self.response.out.write(template.render(template_params))	
 
-class CategoriesPage(webapp2.RequestHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
-    
-### TEMP ###
+class CategoriesPage(BaseHandler):
     def getArgyris(self):
             q = User.all()
             q = q.filter('full_name =', 'Argyris Zardilis')
@@ -467,7 +469,7 @@ class CategoriesPage(webapp2.RequestHandler):
 	return dueRatings, lecturerRatingObj
 
     def setUp(self):
-            current_user = self.getArgyris()
+	    current_user = self.getArgyris()
             template = jinja_environment.get_template('templates/forum_categories.html')
             mcode = self.getModuleCode()
 	    module = retrieve_module_name(mcode)
@@ -524,6 +526,9 @@ class CategoriesPage(webapp2.RequestHandler):
 	return mcode
 
     def get(self) : 
+	if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
 	self.setUp()
     	
     def post(self) :
@@ -552,13 +557,16 @@ class CategoriesPage(webapp2.RequestHandler):
 		dueRatings, lecturerRatingObj = self.getDueRatings(current_user)
 		rate_lecturer(dueRatings[hiddenTitle],post_params['clear'],post_params['prompt'],lecturerRatingObj[hiddenTitle])
 
-	# Reload
+	# ReloadWe should upload the website 
 	self.setUp()
 
-class ThreadPage(webapp2.RequestHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+class ThreadPage(BaseHandler):
     def get(self):
-        t =retrieve_thread(self.request.get('tid'))
+        if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+
+	t =retrieve_thread(self.request.get('tid'))
         if t :
             template = jinja_environment.get_template('templates/forum_thread.html')
 
@@ -567,8 +575,8 @@ class ThreadPage(webapp2.RequestHandler):
             posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()),current_user)
 
             template_params = {
-	    	    'user' : t.poster,
-		    	'nop': len([p for p in t.poster.posts]),
+	    	'user' : t.poster,
+		'nop': len([p for p in t.poster.posts]),
                 'thread': t ,
                 'posts' : posts,
                 'subscriptions':subscribed_modules
@@ -577,10 +585,12 @@ class ThreadPage(webapp2.RequestHandler):
         else :
             self.response.out.write('Unable to find thread '+str(self.request.get('ti'))+'<')
 
-class ViewAllThreadsPage(webapp2.RequestHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+class ViewAllThreadsPage(BaseHandler):
     def get(self):
-        category = retrieve_category(self.request.get('cid'))
+        if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+	category = retrieve_category(self.request.get('cid'))
 
         if category :
             threads = category.threads.order('-timestamp')
@@ -595,9 +605,13 @@ class ViewAllThreadsPage(webapp2.RequestHandler):
             logging.error('no category found '+str(cid))
             self.response.out.write('Couldn\'t get category')
 
-class NewThread(webapp2.RequestHandler):
+class NewThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
+    	if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+
         cid = cgi.escape(self.request.get('catid'))
         template = jinja_environment.get_template('templates/newthread.html')
 
@@ -609,9 +623,12 @@ class NewThread(webapp2.RequestHandler):
             self.response.out.write(template.render(template_params))
         else : logging.error('newthread : empty cid >'+str(cid)+'<')
 
-class CreateNewThread(webapp2.RequestHandler):
+class CreateNewThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
+    	if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
         bd = cgi.escape(self.request.get('body'))
         sbj = cgi.escape(self.request.get('subject'))
         tgs = cgi.escape(self.request.get('tags'))
@@ -625,9 +642,12 @@ class CreateNewThread(webapp2.RequestHandler):
         else :
             self.response.out.write('category not found')
 
-class ReplyToThread(webapp2.RequestHandler):
+class ReplyToThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
+    	if self.session.get('type')==-1:
+		self.redirect('/403')	
+		return
         thrd = retrieve_thread(self.request.get('tid'))
 
         if thrd :
@@ -645,9 +665,13 @@ class ReplyToThread(webapp2.RequestHandler):
             self.response.out.write('Thread not found')
             logging.error('Thread not found, tid : '+str(tid)+'<')
 
-class ReplyToPost(webapp2.RequestHandler):
+class ReplyToPost(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
+    	if self.session.get('type')==-1:
+		self.redirect('403')
+		return
+
         pst =retrieve_post(self.request.get('r2pid'))
         if pst :
             bd = cgi.escape(self.request.get('bd'))
@@ -658,10 +682,14 @@ class ReplyToPost(webapp2.RequestHandler):
             self.response.out.write('Could not reply')
             logging.error('Couldnt find post, pid : '+pid+'<')
 
-class VoteUpPost(webapp2.RequestHandler):
+class VoteUpPost(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
-        pst =retrieve_post(self.request.get('pid'))
+        if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+
+	pst =retrieve_post(self.request.get('pid'))
 
         if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
             pst.votes = pst.votes +1
@@ -674,10 +702,14 @@ class VoteUpPost(webapp2.RequestHandler):
             logging.error('unable to vote up post pid '+self.request.get('pid')+'<')
 
 
-class VoteDownPost(webapp2.RequestHandler):
+class VoteDownPost(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
-        pst = retrieve_post(self.request.get('pid'))
+        if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+
+	pst = retrieve_post(self.request.get('pid'))
 
         if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
             pst.votes = pst.votes-1
@@ -689,9 +721,12 @@ class VoteDownPost(webapp2.RequestHandler):
             self.response.out.write('Didn\'t vote down')
             logging.error('unable to vote down pid '+self.request.get('pid')+'<')
 
-class ToggleSolution(webapp2.RequestHandler) :
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+class ToggleSolution(BaseHandler) :
+#hould upload the website ODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
+	if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
         thrd = retrieve_thread(self.request.get('tid'))
         pst = retrieve_post(self.request.get('pid'))
         if thrd and pst  :
@@ -723,8 +758,12 @@ class ToggleSolution(webapp2.RequestHandler) :
         else :
             logging.error('Unable to find thread or post')
 
-class ToggleSubscription(webapp2.RequestHandler):
+class ToggleSubscription(BaseHandler):
     def post(self):
+    	if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+
         mod = db.get(Key.from_path('Module', cgi.escape(self.request.get('mcode'))))
         if mod :
             sub = Subscription.all()
@@ -745,6 +784,10 @@ class ToggleSubscription(webapp2.RequestHandler):
 class ProfilePage(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
 	def post(self):
+		if self.session.get('type')==-1:
+			self.redirect('/403')
+			return
+
 		avatar = self.request.get('img')
 		fullname = self.request.get('fullname')
 		user_key = current_user.key()
@@ -760,6 +803,10 @@ class ProfilePage(BaseHandler):
 		self.redirect('/profile')
 	
 	def get(self):
+		if self.session.get('type')==-1:
+			self.redirect('/403')
+			return
+
 		template = jinja_environment.get_template('templates/profile.html')
 		subs = 	current_user.subscriptions
 		sub_to_delete=cgi.escape(self.request.get('mod'))
@@ -799,8 +846,12 @@ class ProfilePage(BaseHandler):
 		}
 		
 		self.response.out.write(template.render(template_params))
-class GetImage(webapp2.RequestHandler):
+class GetImage(BaseHandler):
 	def get(self):
+		if self.session.get('type')==-1:
+			self.redirect('/403')
+			return
+
 		user_key = self.request.get('usr')
 		user = db.get(user_key)
 		if (user and user.avatar):
@@ -826,9 +877,12 @@ class NotesPage(webapp2.RequestHandler):
         }
         self.response.out.write(template.render(parms))
 
-class ContactPage(webapp2.RequestHandler):
+class ContactPage(BaseHandler):
     def get(self):
-        subject=''
+        if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+	subject=''
         message=''
         template = jinja_environment.get_template('templates/contact.html')
         template_values = {
@@ -859,12 +913,13 @@ class ModuleInfo:
 		self.mod_lecturers=mod_lecturers
 		self.mod_assessments=mod_assessments
 
-class ModulesPage(webapp2.RequestHandler):
+class ModulesPage(BaseHandler):
     def get(self):
-        if 'current_user' in globals():
-            homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-        else:
-            self.redirect('/')
+        if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+
+        homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         
         course = "compsci"
         y1s1 = getYCS(1, course, 1)
@@ -884,8 +939,12 @@ class ModulesPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_values))
 	
-class RssPage(webapp2.RequestHandler):
+class RssPage(BaseHandler):
     def get(self):
+    	if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+
         subs = current_user.subscriptions
         subs.filter('receive_notifications =', True)
         modules = [sub.module for sub in subs]
@@ -908,8 +967,12 @@ class RssPage(webapp2.RequestHandler):
 	self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
-class AssessmentFeedback(webapp2.RequestHandler):
+class AssessmentFeedback(BaseHandler):
     def get(self):
+    	if self.session.get('type')==-1:
+		self.redirect('/403')
+		return
+
 	template_values = {}
         template = jinja_environment.get_template('templates/feedback.html')
 	self.response.headers['Content-Type'] = 'text/html'
@@ -922,6 +985,17 @@ class AssessmentFeedback(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/feedback.html')
 	self.response.headers['Content-Type'] = 'text/html'
 	self.response.out.write(template.render(template_values))
+
+class Logout(BaseHandler):
+	def get(self):
+		self.session.clear()
+		self.redirect('/')
+class FourOThree(BaseHandler):
+	def get(self):
+		self.response.out.write("""
+		<h1>403 Access is Forbiden</h1>
+		<p>You are not allowed to access this webpage</p>
+		""")
 
 populate.populate_db()
 app = webapp2.WSGIApplication([
@@ -951,6 +1025,8 @@ app = webapp2.WSGIApplication([
 	('/admin-user-creation',AdminUserCreation),
 	('/news.rss', RssPage),
 	('/profileimage',GetImage),
-	('/module-feedback', AssessmentFeedback)
+	('/module-feedback', AssessmentFeedback),
+	('/logout',Logout),
+	('/403',FourOThree)
 								   
 ], debug=True,config=session_dic)
