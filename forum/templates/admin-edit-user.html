@@ -32,9 +32,7 @@
 				</form>
 			</div>
 		</div>
-			{%for user in users%}
-			<div class="user"><a href="/admin-edit-user?user={{user.key().name()}}">{{user.full_name}} ({{user.key().name()}})</a></div>
-			{%endfor%}
+			
 		</section>
 		<div style="margin:10px;float:left">{{message}}</div>
 	</section>

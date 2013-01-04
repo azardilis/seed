@@ -229,7 +229,7 @@ class AdminUserCreation(BaseHandler):
 	def get(self):
         #passing variables to template
 		global current_user
-		if 'current_user' in globals() and self.session.get('type')=='1':
+		if 'current_user' in globals() and self.session.get('type')==1:
 				template_values = {
 					'current_user':current_user
 				}
@@ -251,7 +251,7 @@ class AdminUserCreation(BaseHandler):
 				
 				new_user=User(	password=new_user_password,
 								key_name=new_user_ecsid,
-								user_type=new_user_type,
+								user_type=int(new_user_type),
 								course=new_user_course,
 								year=int(new_user_year),
 								full_name=new_user_fullname,
@@ -262,13 +262,39 @@ class AdminUserCreation(BaseHandler):
 				
 				template_values = {
 						'current_user':current_user,
-						'message':"'new_user_fullname' has been added to the user list."
+						'message':"The user has been added to the user list."
 					}
 				template = jinja_environment.get_template('templates/message-page.html')
 				self.response.out.write(template.render(template_values))
 		else:
 				self.redirect("/")
 
+class AdminEditUser(BaseHandler):
+    def get(self):
+        #passing variables to template
+		global current_user
+		message=""
+		if 'current_user' in globals() and self.session.get('type')==1:
+				users=User.all()
+				users.run()
+				
+				if self.request.get('filter-username') is not "":
+					if User.get_by_key_name(self.request.get('filter-username')) is not None:
+						filter=self.request.get('filter-username')
+						users=[User.get_by_key_name(filter)]
+					else:
+						message="There are no users with that username, please try again!"
+						users=[]
+				
+				template_values = {
+					'current_user':current_user,
+					'users':users,
+					'message':message
+				}
+				template = jinja_environment.get_template('templates/admin-users.html')
+				self.response.out.write(template.render(template_values))
+		else:
+				self.redirect("/")
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(BaseHandler):
     def get(self):
@@ -951,6 +977,7 @@ app = webapp2.WSGIApplication([
 	('/admin-user-creation',AdminUserCreation),
 	('/news.rss', RssPage),
 	('/profileimage',GetImage),
-	('/module-feedback', AssessmentFeedback)
+	('/module-feedback', AssessmentFeedback),
+	('/admin-edit-user', AdminEditUser)
 								   
 ], debug=True,config=session_dic)
