@@ -11,6 +11,8 @@
 <body>
 
 	<section id="content" class="content"> 
+		<section id="header">
+			<p>Godmode engaged, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
 		{% include "/templates/mbar.html" %}
 		{% include "/templates/admin-sidebar.html"%}
 		
@@ -24,15 +26,57 @@
 			<div id="horizontal-menu-item">
 				<span><a href="/admin-user-creation">Add a new user</a></span>
 			</div>
-			<div id="horizontal-menu-search">
-				<form name="search" action="/admin-users">
-					<label for="filter-username">Filter usernames:</label>
-					<input type="text" name="filter-username" value="" id="filter"  size=50>
-					<input type="submit" name="filter-button" id="filter-button" value="Filter" >
-				</form>
-			</div>
-		</div>
 			
+		</div>
+		<form method="post" action="/admin-edit-user" id="admin-user-creation-form">
+
+					<label for="user-fullname">Full name:</label>
+					<input type="text" name="user-fullname" id="user-fullname" value="{{user.full_name}}" size=50>
+
+					<label for="user-username">ECS Username:</label>
+					<input type="text" name="user-username" id="user-username" value="{{user.key().name()}}" size=50 readonly>
+					
+
+					<label for="user-email">Alternate E-mail address:</label>
+					<input type="text" name="user-email" id="user-email" value="{{user.alternative_email}}"size=50>
+					
+					<label for="user-website">Personal web site:</label>
+					<input type="text" name="user-website" id="user-website" value="{{user.home_page}}" size=50>
+					
+					
+					<label for="user-karma">Karma level:</label>
+					<input type="text" name="user-karma" id="user-karma" value="{{user.karma}}"size=50>
+					
+					<label for="user-signature">Signature:</label>
+					<input type="text" name="user-signature" id="user-signature" value="{{user.signature}}"size=50>
+
+					<label for="user-course">Course:</label>
+					<select name="user-course">
+						<option {%if user.course=="compsci" %} selected="selected"{%endif%}value="compsci">Computer Science</option>
+						<option {%if user.course=="elec" %} selected="selected"{%endif%}value="elec">Electronics</option>
+					</select>
+
+					<label for="user-year">Year:</label>
+					<select name="user-year">
+						<option {%if user.year==1 %} selected="selected"{%endif%}value="1">1</option>
+						<option {%if user.year==2 %} selected="selected"{%endif%}value="2">2</option>
+						<option {%if user.year==3 %} selected="selected"{%endif%}value="3">3</option>
+						<option {%if user.year==4 %} selected="selected"{%endif%} value="4">4 or Master's</option>
+					</select>
+
+
+					<label for="user-type">User clearance:</label>
+					<select name="user-type" >
+						<option {%if user.user_type==0 %} selected="selected"{%endif%}value="0">Normal user</option>
+						<option {%if user.user_type==1 %} selected="selected"{%endif%}value="1">Moderator</option>
+					</select>
+					<p>
+						<input type="submit" name="apply_button" id="apply_button" value="Apply changes" >
+
+
+
+
+					</form>
 		</section>
 		<div style="margin:10px;float:left">{{message}}</div>
 	</section>

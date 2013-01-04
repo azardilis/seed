@@ -145,6 +145,7 @@ input, select{
 #admin-user-creation-form{
 	width:350px;
 	float:left;
+	margin:15px 5px 0 10px;
 }
 .user{
 	float:left;

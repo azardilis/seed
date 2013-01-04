@@ -15,8 +15,15 @@
 <body>
  
 	<div id="content" width= "500">
-		{% include "/templates/mbar.html" %}
-		{% include "/templates/sidebar.html"%}
+				<section id="header">
+					<p id="wlcmmsg">Logged in as <a href='/profile'>{{current_user.full_name}}</a></p> 
+				{% include "/templates/mbar.html" %}
+				{%if current_user.user_type==1%}
+				{% include "/templates/admin-sidebar.html"%}
+				{%else%}
+				{% include "/templates/sidebar.html"%}
+				{%endif%}
+
 		<section id="pagecontent" class="cleared">
 			<div id="edit_profile_header">
 				<form action="/profile"

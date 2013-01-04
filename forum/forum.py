@@ -241,7 +241,7 @@ class AdminUserCreation(BaseHandler):
 	def post(self):
 		#passing variables to template
 		global current_user
-		if self.session.get('type')==1:
+		if 'current_user' in globals() and self.session.get('type')==1:
 				new_user_fullname=self.request.get('user-fullname')
 				new_user_ecsid=self.request.get('user-username')
 				new_user_email=self.request.get('user-email')
@@ -271,31 +271,60 @@ class AdminUserCreation(BaseHandler):
 				self.redirect("/")
 
 class AdminEditUser(BaseHandler):
-    def get(self):
-        #passing variables to template
-		global current_user
-		message=""
-		if 'current_user' in globals() and self.session.get('type')==1:
-				users=User.all()
-				users.run()
-				
-				if self.request.get('filter-username') is not "":
-					if User.get_by_key_name(self.request.get('filter-username')) is not None:
-						filter=self.request.get('filter-username')
-						users=[User.get_by_key_name(filter)]
-					else:
-						message="There are no users with that username, please try again!"
-						users=[]
-				
-				template_values = {
-					'current_user':current_user,
-					'users':users,
-					'message':message
-				}
-				template = jinja_environment.get_template('templates/admin-users.html')
-				self.response.out.write(template.render(template_values))
-		else:
+		def get(self):
+			#passing variables to template
+			global current_user
+			message=""
+			if 'current_user' in globals() and self.session.get('type')==1:
+					#first check that the user parameter is set
+					if self.request.get('user') is not "":
+						if User.get_by_key_name(self.request.get('user')) is not None:
+							filter=self.request.get('user')
+							users=[User.get_by_key_name(filter)]
+							
+							template_values = {
+								'current_user':current_user,
+								'user':users[0],
+								'message':message
+							}
+						else:
+							message="There are no users with that username, please try again!"
+							users=[]
+							template_values = {
+								'current_user':current_user,
+								'user':None,
+								'message':message
+							}
+					template = jinja_environment.get_template('templates/admin-edit-user.html')
+					self.response.out.write(template.render(template_values))
+			else:
 				self.redirect("/")
+		def post(self):
+			global current_user
+			if 'current_user' in globals() and self.session.get('type')==1:
+				#get the module object from the datastore
+				userObject=User.get_by_key_name(self.request.get('user-username'))
+				if cgi.escape(self.request.get('user-fullname')) is not None:
+					userObject.full_name=cgi.escape(self.request.get('user-fullname'))
+				if cgi.escape(self.request.get('user-course')) is not None:
+					userObject.course=cgi.escape(self.request.get('user-course'))
+				if cgi.escape(self.request.get('user-year')) is not None:
+					userObject.year=int(cgi.escape(self.request.get('user-year')))
+				if cgi.escape(self.request.get('user-type')) is not None:
+					userObject.user_type=int(cgi.escape(self.request.get('user-type')))
+				userObject.alternative_email=cgi.escape(self.request.get('user-email'))
+				userObject.karma=int(cgi.escape(self.request.get('user-karma')))
+				userObject.put()
+				template_values = {
+						'current_user':current_user,
+						'message':"The changes have been saved!"
+					}
+				template = jinja_environment.get_template('templates/message-page.html')
+				self.response.out.write(template.render(template_values))
+			else:
+				#proper error message should be displayed (some javascript or something)
+				self.redirect("/")
+
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(BaseHandler):
     def get(self):
@@ -359,7 +388,9 @@ class MainPage(BaseHandler):
 
         global current_user
         global subscribed_modules
-        if self.session.get('type')==0 or self.session.get('type')==1:
+		#stop removing "if 'current_user' in globals()"from below. if you remove it, the main page returns an error if a non logged in user tries to acces it instead of redirecting
+		#them to the registration page!
+        if 'current_user' in globals() and (self.session.get('type')==0 or self.session.get('type')==1):
 	    homepage_subs=[]
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
             subscribed_modules = homepage_subs
@@ -426,6 +457,7 @@ class ForumPage(BaseHandler):
 			lecturers=[]
 
 		template_params = {
+			'current_user':current_user,
 			'mod_info':mod_info,
             'subscriptions':subscribed_modules
 		}
@@ -514,6 +546,7 @@ class CategoriesPage(BaseHandler):
                 toggle = 'Unsubscribe'
             
             template_values= {
+					'current_user':current_user,
                     'complete' : complete,
                     'ratings' : module.lecturers,
                     'subscribed' : module.student_count,
@@ -549,7 +582,7 @@ class CategoriesPage(BaseHandler):
     def getModuleCode(self):
 	mcode = self.request.get(MID)
 	if not mcode :
-		logging.error('module code was empty ') #does this really work ?
+		logging.error('module code was empty ') #does this really work ? #who the fuck knows? :P
 	return mcode
 
     def get(self) : 
@@ -867,6 +900,7 @@ class ProfilePage(BaseHandler):
 			
 			lecturers=[]
 		template_params = {
+			'current_user':current_user,
 			'user':user,
 			'mod_info':mod_info,
             'subscriptions':subscribed_modules
@@ -890,6 +924,7 @@ class AboutPage(webapp2.RequestHandler):
     def get(self):
         template = jinja_environment.get_template('templates/about.html')
         parms = {
+			'current_user':current_user,
              'subscriptions':subscribed_modules
         }
         self.response.out.write(template.render(parms))
@@ -900,6 +935,7 @@ class NotesPage(webapp2.RequestHandler):
         template = jinja_environment.get_template('templates/notes.html')
 
         parms = {
+			'current_user':current_user,
              'subscriptions':subscribed_modules
         }
         self.response.out.write(template.render(parms))
@@ -913,6 +949,7 @@ class ContactPage(BaseHandler):
         message=''
         template = jinja_environment.get_template('templates/contact.html')
         template_values = {
+							'current_user':current_user,
                            subject:'subject',
                            message:'message',
                            'subscriptions':subscribed_modules
@@ -961,7 +998,8 @@ class ModulesPage(BaseHandler):
          		   'y2s2' : y2s2,
         		   'y3s1' : y3s1,
         		   'y3s2' : y3s2,
-                   'subscriptions':subscribed_modules
+                   'subscriptions':subscribed_modules,
+				   'current_user':current_user
 			   }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_values))
