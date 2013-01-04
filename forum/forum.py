@@ -464,15 +464,6 @@ class ForumPage(BaseHandler):
         	self.response.out.write(template.render(template_params))	
 
 class CategoriesPage(BaseHandler):
-    def getArgyris(self):
-            q = User.all()
-            q = q.filter('full_name =', 'Argyris Zardilis')
-            result = q.run()
-            us = []
-            for u in result:
-		us.append(u)
-            return us[0]
-### END TEMP ###
 
     def endOfSemester(self,module):
 	semester = module.yearCourseSemester.semester
@@ -528,7 +519,6 @@ class CategoriesPage(BaseHandler):
 	return dueRatings, lecturerRatingObj
 
     def setUp(self):
-	    current_user = self.getArgyris()
             template = jinja_environment.get_template('templates/forum_categories.html')
             mcode = self.getModuleCode()
 	    module = retrieve_module_name(mcode)
@@ -604,18 +594,20 @@ class CategoriesPage(BaseHandler):
 	for key,value in post_params.items(): post_params[key] = int(value) if value else value
 
 	# Rating (trying to be secure - not trusting the user)
-	current_user = self.getArgyris()
 	hiddenType = self.request.get('popupType')
 	hiddenTitle = self.request.get('dueRatingTitle')
 	if hiddenType == 'deadline':
 		dueAssessments,correspGrades = self.getDueAssessments(current_user)
-		rate_assessment(dueAssessments[hiddenTitle],post_params['interesting'],post_params['difficult'],correspGrades[hiddenTitle])
+		if hiddenTitle in dueAssessments.keys():
+			rate_assessment(dueAssessments[hiddenTitle],post_params['interesting'],post_params['difficult'],correspGrades[hiddenTitle])
 	elif hiddenType == 'mark':
 		dueAssessments,correspGrades = self.getDueAssessments(current_user, EXTRA_TIME)
-		mark_assessment(dueAssessments[hiddenTitle],post_params['mark'],correspGrades[hiddenTitle])
+		if hiddenTitle in dueAssessments.keys():
+			mark_assessment(dueAssessments[hiddenTitle],post_params['mark'],correspGrades[hiddenTitle])
 	elif hiddenType == 'lecturer':
 		dueRatings, lecturerRatingObj = self.getDueRatings(current_user)
-		rate_lecturer(dueRatings[hiddenTitle],post_params['clear'],post_params['prompt'],lecturerRatingObj[hiddenTitle])
+		if hiddenTitle in dueAssessments.keys():
+			rate_lecturer(dueRatings[hiddenTitle],post_params['clear'],post_params['prompt'],lecturerRatingObj[hiddenTitle])
 
 	# ReloadWe should upload the website 
 	self.setUp()
@@ -1032,25 +1024,6 @@ class RssPage(BaseHandler):
 	self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
-class AssessmentFeedback(BaseHandler):
-    def get(self):
-    	if self.session.get('type')==-1:
-		self.redirect('/403')
-		return
-
-	template_values = {}
-        template = jinja_environment.get_template('templates/feedback.html')
-	self.response.headers['Content-Type'] = 'text/html'
-	self.response.out.write(template.render(template_values))
-    def post(self):
-	template_values={
-		'difficult':self.request.get('Difficult'),
-		'interesting':self.request.get('Interesting')
-	}
-        template = jinja_environment.get_template('templates/feedback.html')
-	self.response.headers['Content-Type'] = 'text/html'
-	self.response.out.write(template.render(template_values))
-
 class Logout(BaseHandler):
 	def get(self):
 		self.session.clear()
@@ -1090,7 +1063,6 @@ app = webapp2.WSGIApplication([
 	('/admin-user-creation',AdminUserCreation),
 	('/news.rss', RssPage),
 	('/profileimage',GetImage),
-	('/module-feedback', AssessmentFeedback),
 	('/admin-edit-user', AdminEditUser),
 	('/logout',Logout),
 	('/403',FourOThree)
