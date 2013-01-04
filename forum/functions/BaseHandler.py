@@ -13,4 +13,5 @@ class BaseHandler(webapp2.RequestHandler):
 
    @webapp2.cached_property
    def session(self):
-	return self.session_store.get_session()
+	return self.session_store.get_session(name='FoRules')
+
