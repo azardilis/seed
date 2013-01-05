@@ -1006,7 +1006,7 @@ class RssPage(BaseHandler):
         subs.filter('receive_notifications =', True)
         modules = [sub.module for sub in subs]
         name = current_user.full_name
-	date = datetime.now()
+	date = time.strftime("%a, %d %b %Y %X %Z")
         items =  []
         for mod in modules:
             for cat in mod.categories:
@@ -1015,7 +1015,7 @@ class RssPage(BaseHandler):
 				    link="http://localhost:9999/showthread?tid="+str(thread.key().id()),
 				    description=mod.key().name(),
 				    category=cat.name,
-				    pub_date=datetime.now())
+				    pub_date=date)
 		    items.append(item)
 	template_values = {'name':name,
 			   'items':items,
