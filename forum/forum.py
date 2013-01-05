@@ -37,6 +37,19 @@ import PyRSS2Gen
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
+def getSchoolYear(now):
+	q=SchoolYear.all().run()
+	for schY in q:
+		if now.month > 9:
+			if schY.start == now.year:
+				return schY
+		else:
+			if schY.end == now.year:
+				return schY
+
+	# not found
+	return None
+
 global session_dic
 session_dic={}
 session_dic['webapp2_extras.sessions'] = {'secret_key': 'my-super-secret-key',
@@ -45,7 +58,9 @@ global current_user
 global subscribed_modules
 CATEGORIES = 'categories'
 MID = 'mid'
-EXTRA_TIME= 40*24*60*60 # ask for mark 40 days after assessment deadline
+EXTRA_TIME= 40*24*60*60 # ask to contribute mark 40 days after the assessment's deadline
+CURRENT_SCHOOLYEAR = getSchoolYear(datetime.now())
+SELECTED_SCHOOLYEAR = CURRENT_SCHOOLYEAR
 
 class rss_item:
     def __init__(self, title, link, description, category, pub_date):
