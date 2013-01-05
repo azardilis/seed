@@ -25,3 +25,13 @@ function update_subs(sub,sub_code,profile){
 
 	});
 };
+
+$(document).ready(function(){
+    $("#rss").hide();
+    $("#rss_button").click(function(e){
+	$("#rss").fadeToggle();
+	$("#url").focus();
+	$("#url").select();
+	e.preventDefault();
+    });
+});
