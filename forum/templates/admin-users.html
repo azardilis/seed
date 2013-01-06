@@ -11,12 +11,13 @@
 <body>
 
 	<section id="content" class="content"> 
+		<section id="header">
+			<p>Godmode engaged, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
 		{% include "/templates/mbar.html" %}
 		{% include "/templates/admin-sidebar.html"%}
 		
 		<section id="pagecontent" class="cleared">
-			<section id="header">
-			<p>You are a god, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
+			
 		<div id="horizontal-menu">
 			<div id="horizontal-menu-item">
 				<span><a href="/admin-users">Edit an existing user</a></span>
@@ -33,7 +34,7 @@
 			</div>
 		</div>
 			{%for user in users%}
-			<div class="user"><a href="">{{user.full_name}} ({{user.key().name()}})</a></div>
+			<div class="user"><a href="/admin-edit-user?user={{user.key().name()}}">{{user.full_name}} ({{user.key().name()}})</a></div>
 			{%endfor%}
 		</section>
 		<div style="margin:10px;float:left">{{message}}</div>

@@ -13,14 +13,15 @@
 <body>
 
 	<section id="content" class="content"> 
+		<section id="header">
+			<p>Godmode engaged, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
 		{% include "/templates/mbar.html" %}
 		{% include "/templates/admin-sidebar.html"%}
 
 
 		<section id="pagecontent" class="cleared">
 			<!-- Add whatever content you want here-->
-			<section id="header">
-				<p>You are a god, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
+			
 				<div id="admin-left-column">
 					{% for module in firsthalf %}				
 					<section class="admin-container">

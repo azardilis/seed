@@ -12,8 +12,14 @@
 <body>
 
 	<section id="content" class="content"> 
+		<section id="header">
+			<p id="wlcmmsg">Logged in as <a href='/profile'>{{current_user.full_name}}</a></p> 
 		{% include "/templates/mbar.html" %}
+		{%if current_user.user_type==1%}
+		{% include "/templates/admin-sidebar.html"%}
+		{%else%}
 		{% include "/templates/sidebar.html"%}
+		{%endif%}
 
 		<section id="pagecontent" class="cleared">
 			<h1 class="pagetitle" >Your subscriptions </h1>
@@ -31,13 +37,21 @@
 				 It doesn't actually check if the date has passed yet. Still to implement this functionality
 				<div class="assessment">This module has assignments still to be submitted!</div>
 				{% endif %}-->
+				
 			</div>
 			
 			{% endfor %}
-			<a href="news.rss" class="feed">RSS</a>
+			
 
 		</div>
-			
+			<button id="rss_button" class="rss_button">
+			  <img src="../stylesheets/resources/feed-icon-14x14.png" alt="rss icon"/> RSS
+			</button>
+			<div id="rss" >
+			  <input id="url" type="text" name="sometext" size="20" value="http://localhost:9999/news.rss">
+			  <label id="instructions" class="copy">copy and paste the feed URL (the address above)
+			    into your favourite reader [<a href="news.rss">feed</a>]</label>
+			</div>
 	</section>
 		
 </section>
