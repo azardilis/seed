@@ -99,27 +99,27 @@ def populate_db():
     y1112 = SchoolYear(start=int(2011), end=int(2012))
     y1112.put()
 
-    comp3001 = Module(key_name = 'changeme3001', ecsCode='COMP3001', title='Scripting Languages',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/changeme3001/",
+    comp3001 = Module(key_name = 'COMP3001', ecsCode='COMP3001', title='Scripting Languages',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/",
                   yearCourseSemester=compsci31, schoolYear=y1213)
     comp3001.put()
-    comp3033 = Module(key_name = 'changeme3033', ecsCode='COMP3033', title='Computational Biology',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/changeme3033/",
+    comp3033 = Module(key_name = 'COMP3033', ecsCode='COMP3033', title='Computational Biology',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3033/",
                   yearCourseSemester=compsci31, schoolYear=y1213)
     comp3033.put()
-    comp3032 = Module(key_name = 'changeme3032', ecsCode='COMP3032', title='Intelligent Algorithms',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/changeme3032/",
+    comp3032 = Module(key_name = 'COMP3032', ecsCode='COMP3032', title='Intelligent Algorithms',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3032/",
                   yearCourseSemester=compsci31, schoolYear=y1213)
     comp3032.put()
-    comp3016 = Module(key_name = 'changeme3016', ecsCode='COMP3016', title='Hypertext and Web Technologies',
+    comp3016 = Module(key_name = 'COMP3016', ecsCode='COMP3016', title='Hypertext and Web Technologies',
                   ecs_page='http://www.google.com',
                   yearCourseSemester=compsci31, schoolYear=y1213)
     comp3016.put()
-    comp3020 = Module(key_name = 'changeme3020', ecsCode='COMP3020', title='Individual Project',
+    comp3020 = Module(key_name = 'COMP3020', ecsCode='COMP3020', title='Individual Project',
                   ecs_page='http://www.google.com',
                   yearCourseSemester=compsci31, schoolYear=y1213)
     comp3020.put()
-    comp1314 = Module(key_name = 'changeme1314', ecsCode='COMP1314', title='Introduction to Everything',
+    comp1314 = Module(key_name = 'COMP1314', ecsCode='COMP1314', title='Introduction to Everything',
                   ecs_page='http://goo.gl/S0e62',
                   yearCourseSemester=compsci11, schoolYear=y1213)
     comp1314.put()
@@ -129,16 +129,16 @@ def populate_db():
     info3005.put()
 
 # what happens if we put some modules for more than one years:
-    old3001 = Module(key_name = 'other3001', ecsCode='COMP3001', title='Scripting Languages',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1112/COMP3001/",
-                  yearCourseSemester=compsci31, schoolYear=y1112)
-    old3001.put()
-    old3033 = Module(key_name = 'other3033', ecsCode='COMP3033', title='Computational Biology',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1112/COMP3033/",
-                  yearCourseSemester=compsci31, schoolYear=y1112)
-    old3033.put()
-    subscribe(current_user, old3001)
-    subscribe(current_user, old3033)
+#    old3001 = Module(key_name = 'other3001', ecsCode='COMP3001', title='Scripting Languages',
+#                  ecs_page="https://secure.ecs.soton.ac.uk/module/1112/COMP3001/",
+#                  yearCourseSemester=compsci31, schoolYear=y1112)
+#    old3001.put()
+#    old3033 = Module(key_name = 'other3033', ecsCode='COMP3033', title='Computational Biology',
+#                 ecs_page="https://secure.ecs.soton.ac.uk/module/1112/COMP3033/",
+#                  yearCourseSemester=compsci31, schoolYear=y1112)
+#    old3033.put()
+#    subscribe(current_user, old3001)
+#    subscribe(current_user, old3033)
 #############################################################
 
 
