@@ -286,6 +286,33 @@ def subscribe(user, module):
 	for rating in ratings:
 		LecturerRating(lecturer=rating.lecturer,module=module,student=user).put()
 
+def unsubscribe(user, module):
+	q=Subscription.all()
+	q=q.filter('subscribed_user =', user)
+	q=q.filter('module =', module)
+	subs=q.run()
+	for s in subs:
+		s.delete()
+
+	module.student_count-=1
+	module.put()
+
+	q=Grade.all()
+	q=q.filter('student =', user)
+	grades=q.run()
+
+	for assessm in module.assessments:
+		for grade in grades:
+			if grade.assessment == assessm:
+				grade.delete()
+
+	q=LecturerRating.all()
+        q=q.filter('module =', module)
+	q=q.filter('user =', user)
+        lectRats=q.run()
+        for lectRat in lectRats:
+		lectRat.delete()
+
 def associate(lecturer, module):
 	rating = Rating(lecturer=lecturer,module=module)
 	rating.put()
