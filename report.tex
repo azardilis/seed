@@ -24,7 +24,7 @@ Svensson, Kim\\
 Oikonomou, Alexandros\\
  \texttt{ao2g10@ecs.soton.ac.uk}
 }
-\title{COMP3001: Team K}
+\title{Cool title}
 
 \begin{document}
 \maketitle
@@ -41,10 +41,6 @@ The functionality of the application is extended by allowing the users to rate m
 \newpage
 \section{Tools and techniques used}
  \begin{description}
- \item[Google App Engine SDK]\hfill\\
-  Used for development and testing of the application before it was uploaded.
-\item[Mozilla Firebug+Chrome equivalent]\hfill\\
-  Used for testing and debugging Javascript.
   \item[Emacs, vim, notepad++] \hfill \\
   These text editors were used for writing code.(you don't say)
   \item[Git] \hfill \\
@@ -79,14 +75,6 @@ html & 1311\\
 \caption{Lines of code for project per language}
 \end{table}
 External tools used:
-\begin{description}
-\item[\href{http://jquery.com/}{jQuery}]\hfill\\
-Providing an abstraction layer above Javascript functionality allowing us to focus more on the problem than implementation details.
-\item[\href{http://jqueryui.com/}{jQuery UI}]\hfill\\
-Library build on top of jQuery that offers more advanced features, interactive widgets and effects.
-\item[\href{http://flesler.blogspot.co.uk/2007/10/jqueryscrollto.html}{jQuery.ScrollTo}]\hfill\\
-Plugin to jQuery for scrolling elements.
-\end{description}
 \newpage
 \section{Overview of design and implementation}
 Our main design philosophy was to create an easy to use forum-like interface that also has the characteristics of other online-communities or question/answer websites with the notion of measuring the importance or usefulness of answers based on user ratings. It also had to be tailored to the needs of students of our department by providing user generated module information. We felt that these two requirements were what had be the starting point for all our design decisions as these were the features that would set our application apart from alternatives and also make it attractive to students. The main design decisions regarded the back-end, namely the database and what was going to be stored and how to suit our needs, and the front-end, how the informations was going to be presented to the user in a nice way.
@@ -96,7 +84,4 @@ For the presentation part we took ideas from other online-communities websites w
 For the back-end we used the Datastore facilities as provided by Google App Engine to accommodate all the necessary information and entities interactions. We again looked at our main requirements to shape the design of the database and also drawn from our personal experience or what we thought might be useful. The main challenge here was to keep track of the reply hierarchy needed for the correct indented presentation of the threads.
 \newpage
 \section{Critical evaluation}
-We feel that we have fulfilled the main requirements that we have set at the start of the project. The application provides a nice and intuitive user interface for discussion incorporating the required characteristics such as replies ratings and user reputation. These concepts and the way that they were incorporated in the interface will undoubtedly be familiar to many of the potential users making the learning and adjustment process easier. Also the user-generated information in the form of statistics for each module along with topics and replies could prove to be very valuable for current and most importantly future students. From our experience we have observed that peer learning is one of the best ways to learn at the university level and we believe that this system with user reputation is exactly what is needed to give an extra push to people to help out and the nice to the eye reply-hierarchy layout will improve interactivity and spark discussions.
-
-However as with all user-centric websites where the almost all of the content is user-generated the main ingredient for their success is a strong user-base. An important first step is to attract users who might be using other means of communication and although we believe that having targeted the application to the needs of students of our department thus making it better for this purpose, it will still be hard to move from other technologies which have become prevalent. Also because the application developed is at a prototype level, some functionality addition will be needed to be fully functional and usable although it can be perfectly used at its present state. One such addition could be the incorporation of search functionality for a topic of interest or for a specific user.
 \end{document}

@@ -122,13 +122,5 @@ h1.pagetitle{
 /**/
 
 #wlcmmsg{
-	margin : 1%;
-	position : relative ;
-	float : left ;
-}
-
-#lgout{
-	margin : 1%;
-	position : relative ;
-	float : right ;
+	margin : 1%
 }

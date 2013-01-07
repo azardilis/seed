@@ -101,16 +101,13 @@ function appendToPost(arr){
 
 	if(!replies){
 		console.log('Replies section doesn\'t exist, creating');
-		replies = null ;
 		replies = document.createElement('section');
 		replies.setAttribute('class','posts');
 		replies.setAttribute('id','replies'+reply_to_post);
-	}else{
-		console.log('found replies section for post id '+reply_to_post);
 	}
 
 	replies.appendChild(elems[1]); //the post section
-	console.log('new post id is '+reply_to_post);
+
 	var appHere = document.getElementById('pstsec'+reply_to_post);
 
 	appHere.appendChild(replies);
@@ -153,8 +150,6 @@ function makePostSection(arr){
 
 	var postsec = document.createElement('section');
 	postsec.setAttribute('class','post');
-	postsec.setAttribute('pid',newID);
-	postsec.setAttribute('id','pstsec'+newID);
 
 	var usrdtls = document.createElement('section');
 	usrdtls.setAttribute('class','userDetails');
@@ -190,7 +185,7 @@ function makePostSection(arr){
 
 	var art = document.createElement('article');
 	art.setAttribute('poster',poster);
-	art.setAttribute('pid',newID);
+	art.setAttribute('pid',reply_to_post);
 	art.setAttribute('id','pst'+newID);
 	art.appendChild(document.createTextNode(bd));
 
@@ -325,7 +320,7 @@ $(document).ready(function(){
 	});
 
 	/*AJAX for marking an answer*/
-	$(document).delegate('p.ans','click',function(){
+	$('p.ans').click(function(){
 		var e = $(this);
 		var pid = e.attr('pid');
 		var dt = 'pid='+pid;

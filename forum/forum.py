@@ -646,7 +646,6 @@ class ThreadPage(BaseHandler):
 		'nop': len([p for p in t.poster.posts]),
                 'thread': t ,
                 'posts' : posts,
-                'current_user':current_user,
                 'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
@@ -664,8 +663,7 @@ class ViewAllThreadsPage(BaseHandler):
             threads = category.threads.order('-timestamp')
             template_vars = {
                     'category' : category,
-                    'current_user':current_user,
-					'threads':threads,
+                    'threads':threads,
                     'subscriptions':subscribed_modules
             }
             template = jinja_environment.get_template('templates/forum_category_all.html')
@@ -687,7 +685,6 @@ class NewThread(BaseHandler):
         if cid :
             template_params = {
                     'cid' : cid,
-                    'current_user':current_user,
                     'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
@@ -863,7 +860,7 @@ class ProfilePage(BaseHandler):
 		user_key = current_user.key()
 		user = db.get(user_key)
 		if len(avatar) >0:
-			avatar=images.resize(avatar, 200, 200)
+			#avatar=images.resize(avatar, 200, 200)
 			user.avatar = db.Blob(avatar)
 			
 		if len(fullname) >0:	
@@ -889,13 +886,6 @@ class ProfilePage(BaseHandler):
 		mod_info=[]
 		lecturers=[]
 		
-		posts = Post.all()
-		posts=posts.filter("poster",user_key)
-		num_posts=posts.count()
-		
-		threads = Thread.all()
-		threads = threads.filter("poster",user_key)
-		created_threads = threads.count()
 		if not sub_to_delete is '':
 			subs.filter("__key__",Key(sub_to_delete))
 			subs.get().delete()
@@ -915,15 +905,12 @@ class ProfilePage(BaseHandler):
 				assessments_flag=0
 			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
 			
-			
 			lecturers=[]
 		template_params = {
 			'current_user':current_user,
 			'user':user,
 			'mod_info':mod_info,
-            'subscriptions':subscribed_modules,
-			'user_posts':num_posts,
-			'user_threads':created_threads
+            'subscriptions':subscribed_modules
 		}
 		
 		self.response.out.write(template.render(template_params))
@@ -1034,7 +1021,7 @@ class RssPage(BaseHandler):
         subs.filter('receive_notifications =', True)
         modules = [sub.module for sub in subs]
         name = current_user.full_name
-        date = time.strftime("%a, %d %b %Y %X %Z")
+	date = time.strftime("%a, %d %b %Y %X %Z")
         items =  []
         for mod in modules:
             for cat in mod.categories:
@@ -1045,11 +1032,11 @@ class RssPage(BaseHandler):
 				    category=cat.name,
 				    pub_date=date)
 		    items.append(item)
-	    template_values = {'name':name,
+	template_values = {'name':name,
 			   'items':items,
 			   'date':date}
-	    template = jinja_environment.get_template('templates/news.rss')
-	    self.response.headers['Content-Type'] = 'application/rss+xml'
+	template = jinja_environment.get_template('templates/news.rss')
+	self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
 class Logout(BaseHandler):
