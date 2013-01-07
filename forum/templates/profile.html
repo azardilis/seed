@@ -15,8 +15,6 @@
 <body>
  
 	<div id="content" width= "500">
-				<section id="header">
-					<p id="wlcmmsg">Logged in as <a href='/profile'>{{current_user.full_name}}</a></p> 
 				{% include "/templates/mbar.html" %}
 				{%if current_user.user_type==1%}
 				{% include "/templates/admin-sidebar.html"%}
@@ -42,7 +40,7 @@
 			
 			</div>
 			<div id="profile_header">
-				<a href="javascript:editMode()"<button class="edit_button" type=submit></button></a>
+				<a href="javascript:editMode()"><button class="edit_button" type=submit>Edit</button></a>
 				<img src="/profileimage?usr={{user.key()}}" width="180" height="180">
 				<div id="col1">
 					<p id="name">{{user.full_name}}</p>
@@ -63,9 +61,6 @@
 					
 			</div>
 			<br>
-		</section> 	
-			
-		<section id="pagecontent" class="cleared">
 			<h1><p><b>Modules you are subscribed to</b></p></h1>
 			<div id="allsubs">
 			{% for sub in mod_info%}
@@ -89,7 +84,7 @@
 				</a>
 			</div>
 			<a href="/news.rss">RSS</a>
-		</section>
+		</section> 	
 	</div>
 		
 </body>

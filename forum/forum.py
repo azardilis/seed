@@ -645,6 +645,7 @@ class ThreadPage(BaseHandler):
 		'nop': len([p for p in t.poster.posts]),
                 'thread': t ,
                 'posts' : posts,
+                'current_user':current_user,
                 'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
@@ -662,7 +663,8 @@ class ViewAllThreadsPage(BaseHandler):
             threads = category.threads.order('-timestamp')
             template_vars = {
                     'category' : category,
-                    'threads':threads,
+                    'current_user':current_user,
+					'threads':threads,
                     'subscriptions':subscribed_modules
             }
             template = jinja_environment.get_template('templates/forum_category_all.html')
@@ -684,6 +686,7 @@ class NewThread(BaseHandler):
         if cid :
             template_params = {
                     'cid' : cid,
+                    'current_user':current_user,
                     'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
@@ -1020,7 +1023,7 @@ class RssPage(BaseHandler):
         subs.filter('receive_notifications =', True)
         modules = [sub.module for sub in subs]
         name = current_user.full_name
-	date = time.strftime("%a, %d %b %Y %X %Z")
+        date = time.strftime("%a, %d %b %Y %X %Z")
         items =  []
         for mod in modules:
             for cat in mod.categories:
@@ -1031,11 +1034,11 @@ class RssPage(BaseHandler):
 				    category=cat.name,
 				    pub_date=date)
 		    items.append(item)
-	template_values = {'name':name,
+	    template_values = {'name':name,
 			   'items':items,
 			   'date':date}
-	template = jinja_environment.get_template('templates/news.rss')
-	self.response.headers['Content-Type'] = 'application/rss+xml'
+	    template = jinja_environment.get_template('templates/news.rss')
+	    self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
 class Logout(BaseHandler):

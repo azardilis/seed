@@ -12,8 +12,7 @@
 <body>
 
 	<section id="content" class="content"> 
-		<section id="header">
-			<p id="wlcmmsg">Logged in as <a href='/profile'>{{current_user.full_name}}</a></p> 
+
 		{% include "/templates/mbar.html" %}
 		{%if current_user.user_type==1%}
 		{% include "/templates/admin-sidebar.html"%}
@@ -56,8 +55,6 @@
 			</div>
 		    </div>
 	</section>
-		
-</section>
 	
 </body>
 </html>
