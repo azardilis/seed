@@ -85,7 +85,7 @@ def search_thread_tags(search_terms):
         for search_term in search_terms:
             if search_term in thread.tags and thread in results:
 		    results[thread] += 1
-	    elif search_term in thread.tags and not thread in results:
+	    elif search_term in thread.tags and not (thread in results):
 		    results[thread] = 1
     #sort the results dict by the occurences of search_terms in tags
     sorted_results = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
@@ -1045,9 +1045,7 @@ class ModulesPage(BaseHandler):
         if self.session.get('type')==-1:
 		self.redirect('/403')
 		return
-
         homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-        
         course = "compsci"
         y1s1 = getYCS(1, course, 1)
         y1s2 = getYCS(1, course, 2)
@@ -1061,8 +1059,8 @@ class ModulesPage(BaseHandler):
          		   'y2s2' : y2s2,
         		   'y3s1' : y3s1,
         		   'y3s2' : y3s2,
-                   'subscriptions':subscribed_modules,
-				   'current_user':current_user
+			   'subscriptions':subscribed_modules,
+			   'current_user':current_user
 			   }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_values))
@@ -1095,6 +1093,20 @@ class RssPage(BaseHandler):
 	    self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
+class SearchPage(BaseHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/search_page.html')
+	self.response.out.write(template.render({'current_user':current_user}))
+
+class SearchResults(BaseHandler):
+    def get(self):
+	    
+        query = self.request.get("search_terms")
+	search_terms = query.split()
+	results = search_thread_tags(search_terms)
+        template = jinja_environment.get_template('templates/search_results.html')
+	self.response.out.write(template.render({'current_user':current_user, 'results':results}))
+        
 class Logout(BaseHandler):
 	def get(self):
 		self.session.clear()
@@ -1137,5 +1149,7 @@ app = webapp2.WSGIApplication([
 	('/admin-edit-user', AdminEditUser),
 	('/logout',Logout),
 	('/403',FourOThree),
-	('/removeThread',removeThread)
+	('/removeThread',removeThread),
+	('/search', SearchPage),
+	('/results',SearchResults)
 ], debug=True,config=session_dic)
