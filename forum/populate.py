@@ -17,6 +17,7 @@ from model.base.Grade import Grade
 from model.base.Category import Category
 from model.base.Subscription import Subscription
 from model.base.LecturerRating import LecturerRating
+from model.base.SchoolYear import SchoolYear
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from itertools import izip
@@ -30,6 +31,9 @@ def reset_db():
 
     for ycs in YearCourseSemester.all():
         ycs.delete()
+
+    for i in SchoolYear.all():
+        i.delete()
 
     for mod in Module.all():
         mod.delete()
@@ -89,33 +93,54 @@ def populate_db():
     compsci32 = YearCourseSemester(year=int(3), semester=int(2), course="compsci",prettyName="Computer Science Year 3, Semester 2")
     compsci32.put()
 
-    comp3001 = Module(key_name='COMP3001', title='Scripting Languages',
+    y1213 = SchoolYear(start=int(2012), end=int(2013))
+    y1213.put()
+
+    y1112 = SchoolYear(start=int(2011), end=int(2012))
+    y1112.put()
+
+    comp3001 = Module(key_name = 'COMP3001', ecsCode='COMP3001', title='Scripting Languages',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/",
-                  yearCourseSemester=compsci31)
+                  yearCourseSemester=compsci31, schoolYear=y1213)
     comp3001.put()
-    comp3033 = Module(key_name='COMP3033', title='Computational Biology',
+    comp3033 = Module(key_name = 'COMP3033', ecsCode='COMP3033', title='Computational Biology',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3033/",
-                  yearCourseSemester=compsci31)
+                  yearCourseSemester=compsci31, schoolYear=y1213)
     comp3033.put()
-    comp3032 = Module(key_name='COMP3032', title='Intelligent Algorithms',
+    comp3032 = Module(key_name = 'COMP3032', ecsCode='COMP3032', title='Intelligent Algorithms',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3032/",
-                  yearCourseSemester=compsci31)
+                  yearCourseSemester=compsci31, schoolYear=y1213)
     comp3032.put()
-    comp3016 = Module(key_name='COMP3016', title='Hypertext and Web Technologies',
+    comp3016 = Module(key_name = 'COMP3016', ecsCode='COMP3016', title='Hypertext and Web Technologies',
                   ecs_page='http://www.google.com',
-                  yearCourseSemester=compsci31)
+                  yearCourseSemester=compsci31, schoolYear=y1213)
     comp3016.put()
-    comp3020 = Module(key_name='COMP3020', title='Individual Project',
+    comp3020 = Module(key_name = 'COMP3020', ecsCode='COMP3020', title='Individual Project',
                   ecs_page='http://www.google.com',
-                  yearCourseSemester=compsci31)
-    comp1314 = Module(key_name='COMP1314', title='Introduction to Everything',
+                  yearCourseSemester=compsci31, schoolYear=y1213)
+    comp3020.put()
+    comp1314 = Module(key_name = 'COMP1314', ecsCode='COMP1314', title='Introduction to Everything',
                   ecs_page='http://goo.gl/S0e62',
-                  yearCourseSemester=compsci11)
+                  yearCourseSemester=compsci11, schoolYear=y1213)
     comp1314.put()
-    info3005 = Module(key_name='INFO3005', title='Security & Information Technology',
+    info3005 = Module(key_name = 'INFO3005', ecsCode='INFO3005', title='Security & Information Technology',
                   ecs_page='http://www.google.com',
-                  yearCourseSemester=compsci31)
+                  yearCourseSemester=compsci31, schoolYear=y1213)
     info3005.put()
+
+# what happens if we put some modules for more than one years:
+#    old3001 = Module(key_name = 'other3001', ecsCode='COMP3001', title='Scripting Languages',
+#                  ecs_page="https://secure.ecs.soton.ac.uk/module/1112/COMP3001/",
+#                  yearCourseSemester=compsci31, schoolYear=y1112)
+#    old3001.put()
+#    old3033 = Module(key_name = 'other3033', ecsCode='COMP3033', title='Computational Biology',
+#                 ecs_page="https://secure.ecs.soton.ac.uk/module/1112/COMP3033/",
+#                  yearCourseSemester=compsci31, schoolYear=y1112)
+#    old3033.put()
+#    subscribe(current_user, old3001)
+#    subscribe(current_user, old3033)
+#############################################################
+
 
     subscribe(user, comp3001)
     subscribe(current_user, comp3001)
