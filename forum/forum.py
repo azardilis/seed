@@ -32,6 +32,7 @@ from itertools import izip
 from datetime import datetime
 from functions.BaseHandler import BaseHandler
 import time
+import operator
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -76,7 +77,20 @@ def cloneEntity(e, **extra_args):
 	props = dict((k, v.__get__(e, klass)) for k, v in klass.properties().iteritems())
 	props.update(extra_args)
 	return klass(**props)
-	
+
+def search_thread_tags(search_terms):
+    results = {}
+    threads = Thread.all()
+    for thread in threads:
+        for search_term in search_terms:
+            if search_term in thread.tags and thread in results:
+		    results[thread] += 1
+	    elif search_term in thread.tags and not thread in results:
+		    results[thread] = 1
+    #sort the results dict by the occurences of search_terms in tags
+    sorted_results = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
+    return sorted_results
+
 def getYcsFromCode(code):
 	course=code.split('-')[1]
 	year=code.split('-')[2]
