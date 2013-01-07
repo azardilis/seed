@@ -300,4 +300,3 @@ def rate_lecturer(rating, teaching_outof5, overall_outof5):
 	rating.overall_sum += overall_outof5
 	rating.overall_count += 1
 	rating.put()
-

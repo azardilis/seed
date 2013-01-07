@@ -863,7 +863,7 @@ class ProfilePage(BaseHandler):
 		user_key = current_user.key()
 		user = db.get(user_key)
 		if len(avatar) >0:
-			#avatar=images.resize(avatar, 200, 200)
+			avatar=images.resize(avatar, 200, 200)
 			user.avatar = db.Blob(avatar)
 			
 		if len(fullname) >0:	
@@ -889,6 +889,13 @@ class ProfilePage(BaseHandler):
 		mod_info=[]
 		lecturers=[]
 		
+		posts = Post.all()
+		posts=posts.filter("poster",user_key)
+		num_posts=posts.count()
+		
+		threads = Thread.all()
+		threads = threads.filter("poster",user_key)
+		created_threads = threads.count()
 		if not sub_to_delete is '':
 			subs.filter("__key__",Key(sub_to_delete))
 			subs.get().delete()
@@ -908,12 +915,15 @@ class ProfilePage(BaseHandler):
 				assessments_flag=0
 			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
 			
+			
 			lecturers=[]
 		template_params = {
 			'current_user':current_user,
 			'user':user,
 			'mod_info':mod_info,
-            'subscriptions':subscribed_modules
+            'subscriptions':subscribed_modules,
+			'user_posts':num_posts,
+			'user_threads':created_threads
 		}
 		
 		self.response.out.write(template.render(template_params))
