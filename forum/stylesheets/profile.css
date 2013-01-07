@@ -2,9 +2,6 @@
 /* CSS for Profile Page Header*/
 #edit_profile_header{
 	display:none;
-
-
-
 }
 a.edit_button{
 	background: #ccc url(/stylesheets/resources/button_edit.gif);
@@ -34,9 +31,6 @@ a.edit_button{
 	position : relative;
 	float:left;	
 	display : block ;
-	margin : 10px;
-	padding : 5px;
-	width : 80% ;
 }
 #profile_header #col1{
 	margin: 10 0 0 10px;
