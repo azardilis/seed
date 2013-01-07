@@ -74,12 +74,17 @@ def populate_db():
     reset_db()
 
     ###### POPULATE ######
+
+    # create admins  (course ??)
     current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type=1, year=3, signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
+    #temp:
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='compsci',year=3,user_type=0)
     user.put()
+    #end_temp
 
+    # create yearCourseSemester objects (how about semester 3 - individual project for masters ??) (course ??)
     compsci11 = YearCourseSemester(year=int(1), semester=int(1), course="compsci",prettyName="Computer Science Year 1, Semester 1")
     compsci11.put()
     compsci12 = YearCourseSemester(year=int(1), semester=int(2), course="compsci",prettyName="Computer Science Year 1, Semester 2")
@@ -92,13 +97,17 @@ def populate_db():
     compsci31.put()
     compsci32 = YearCourseSemester(year=int(3), semester=int(2), course="compsci",prettyName="Computer Science Year 3, Semester 2")
     compsci32.put()
+    # +year 4 
 
+    #temp:
     y1213 = SchoolYear(start=int(2012), end=int(2013))
     y1213.put()
 
     y1112 = SchoolYear(start=int(2011), end=int(2012))
     y1112.put()
+    #end_temp
 
+    # create modules (schoolYear, ecsCode ??)
     comp3001 = Module(key_name = 'COMP3001', ecsCode='COMP3001', title='Scripting Languages',
                   ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/",
                   yearCourseSemester=compsci31, schoolYear=y1213)
@@ -141,16 +150,7 @@ def populate_db():
 #    subscribe(current_user, old3033)
 #############################################################
 
-
-    subscribe(user, comp3001)
-    subscribe(current_user, comp3001)
-    subscribe(current_user,comp3033)
-    subscribe(current_user,comp3032)
-    subscribe(current_user,comp3020)
-    subscribe(current_user,comp1314)
-    subscribe(current_user, info3005)
-    subscribe(current_user, comp3016)
-
+    # put assessments on modules
     cwk1_3001 = Assessment(title='Perl Coursework',
                         dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'),
                         specLink=db.Link("http://www.google.com/"),
@@ -164,9 +164,7 @@ def populate_db():
                         module=comp3001)
     cwk2_3001.put()
 
-    Grade(student=current_user, assessment=cwk1_3001).put() 
-    Grade(student=current_user, assessment=cwk2_3001).put()
-
+    #temp: 
     put_mark(current_user, cwk1_3001, 83)
     put_difficulty(current_user, cwk1_3001, 3)
     put_interest(current_user, cwk1_3001, 3)
@@ -179,7 +177,9 @@ def populate_db():
     put_mark(user, cwk2_3001, 65)
     put_difficulty(user, cwk2_3001, 5)
     put_interest(user, cwk2_3001, 5)
+    #end_temp
 
+    # create lecturers
     ejz = Lecturer(key_name='ejz', full_name='Ed J Zaluska', home_page='http://google.com')
     ejz.put()
     mjw = Lecturer(key_name='mjw', full_name='Mark J Weal', home_page='http://google.com')
@@ -205,36 +205,41 @@ def populate_db():
     nmg = Lecturer(key_name='nmg', full_name='Nicholas Gibbins', home_page='http://google.com')
     nmg.put()
 
-    rating1 = Rating(lecturer=ejz,module=comp3001)
-    rating1.put()
-    rate_lecturer(rating1,2,1)
-    rating2 = Rating(lecturer=msn,module=comp3001)
-    rating2.put()
-    rate_lecturer(rating2,3,4)
-    rating3 = Rating(lecturer=ejz,module=info3005)
-    rating3.put()
-    rate_lecturer(rating3,3,2)
+    # associate them to modules they teach
+    rating1 = associate(lecturer=ejz, module=comp3001)
+    rating2 = associate(lecturer=msn,module=comp3001)
+    rating3 = associate(lecturer=ejz,module=info3005)
 
+    #temp:
+    rate_lecturer(rating1,2,1)
+    rate_lecturer(rating2,3,4)
+    rate_lecturer(rating3,3,2)
+    #end_temp
+
+    # when user subscribes to amodule, call this function (make sure it's after lecturer-module associations (ie. Ratings) have been created)
+    subscribe(user, comp3001)
+    subscribe(current_user, comp3001)
+    subscribe(current_user,comp3033)
+    subscribe(current_user,comp3032)
+    subscribe(current_user,comp3020)
+    subscribe(current_user,comp1314)
+    subscribe(current_user, info3005)
+    subscribe(current_user, comp3016)
+
+    #temp:
     LecturerRating(lecturer=ejz,module=comp3001,student=current_user).put()
     LecturerRating(lecturer=msn,module=comp3001,student=current_user).put()
     LecturerRating(lecturer=ejz,module=info3005,student=current_user).put()
+    #end_temp
 
     ###### FORUM #######
+#TODO iterate over all assessments in each module and create one category for each + 1 general category at the end
     categGeneral3001 = Category(name='General Discussion', description='blah blah', module=comp3001)
     categGeneral3001.put()
     categCoursework3001 = Category(name='Coursework Discussion', description='blah blah', module=comp3001)
     categCoursework3001.put()
 
-    ## TODO ##
-    #make Post to inherit from PolyModel and Thread inherit from Post
-    #import Post and Thread classes in this file (look at other imports)
-    #create Thread called thread1 making its category=categGeneral3001
-    #create Post called t1reply1 making its post=thread1
-    #create Post called t1reply1_1 making its post=t1reply1
-    #create Post called t1reply1_1_1 making its post=t1reply1_1
-    #create Post called t1reply2 making its post=thread1
-    #create Thread called thread2 making its category=categGeneral3001 again
-
+    #temp:
     #dios scripts for polulation
     q = User.all();
     q.filter('__key__ =',Key.from_path('User','az2g10'))
@@ -264,12 +269,29 @@ def populate_db():
             r.put()
     r = Post(body='#This has no replies ',poster=rg, thread = t, answer = False)
     r.put()
+    #end_temp
 
 def subscribe(user, module):
 	Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=user, module=module).put()
+
 	module.student_count+=1
 	module.put()
 
+	for assessm in module.assessments:
+		Grade(student=user, assessment=assessm).put() 
+	
+	q=Rating.all()
+	q=q.filter('module =', module)
+	ratings=q.run()
+	for rating in ratings:
+		LecturerRating(lecturer=rating.lecturer,module=module,student=user).put()
+
+def associate(lecturer, module):
+	rating = Rating(lecturer=lecturer,module=module)
+	rating.put()
+	return rating #temp
+
+#temp:
 def put_mark(user, assessment, mark):
  	assessment.sum_marks += mark
 	assessment.count_marks += 1
@@ -300,4 +322,5 @@ def rate_lecturer(rating, teaching_outof5, overall_outof5):
 	rating.overall_sum += overall_outof5
 	rating.overall_count += 1
 	rating.put()
+#end_temp
 
