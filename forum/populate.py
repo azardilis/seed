@@ -75,7 +75,7 @@ def populate_db():
 
     ###### POPULATE ######
 
-    # create admins  (course ??)
+    # create admins (course should match course in YearCourseSemester objects)
     current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type=1, year=3, signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
@@ -84,7 +84,7 @@ def populate_db():
     user.put()
     #end_temp
 
-    # create yearCourseSemester objects (how about semester 3 - individual project for masters ??) (course ??)
+    # create yearCourseSemester objects (how about semester 3 - individual project for masters ??)
     compsci11 = YearCourseSemester(year=int(1), semester=int(1), course="compsci",prettyName="Computer Science Year 1, Semester 1")
     compsci11.put()
     compsci12 = YearCourseSemester(year=int(1), semester=int(2), course="compsci",prettyName="Computer Science Year 1, Semester 2")
@@ -272,14 +272,14 @@ def populate_db():
     r.put()
     #end_temp
 
-def subscribe(user, module):
+def subscribe(user, module, a=0):
 	Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=user, module=module).put()
 
 	module.student_count+=1
 	module.put()
 
 	for assessm in module.assessments:
-		Grade(student=user, assessment=assessm).put() 
+		Grade(student=user,assessment=assessm).put() 
 	
 	q=Rating.all()
 	q=q.filter('module =', module)
@@ -304,7 +304,7 @@ def unsubscribe(user, module):
 
 	for assessm in module.assessments:
 		for grade in grades:
-			if grade.assessment == assessm:
+			if grade.assessment.key() == assessm.key():
 				grade.delete()
 
 	q=LecturerRating.all()

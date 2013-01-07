@@ -446,9 +446,10 @@ class ForumPage(BaseHandler):
 		template = jinja_environment.get_template('templates/forum_subscriptions.html')
 		subs = 	current_user.subscriptions
 		self.response.write(sub_to_delete)
-		if not sub_to_delete is '':
+		if sub_to_delete:
 			subs.filter("__key__",Key(sub_to_delete))
-			subs.get().delete()
+			sub = subs.get()
+			populate.unsubscribe(sub.subscribed_user, sub.module)
 			subs = 	current_user.subscriptions
 				
 		mod_info=[]
@@ -830,7 +831,7 @@ class ToggleSolution(BaseHandler) :
 
 class ToggleSubscription(BaseHandler):
     def post(self):
-    	if self.session.get('type')==-1:
+	if self.session.get('type')==-1:
 		self.redirect('/403')
 		return
 
@@ -842,10 +843,10 @@ class ToggleSubscription(BaseHandler):
             sub = sub.get()
 
             if sub:
-                sub.delete()
+                populate.unsubscribe(current_user, mod)
                 self.response.out.write('Subscribe')
             else :
-                Subscription(subscribed_user = current_user , module = mod).put()
+                populate.subscribe(current_user, mod, a=1)
                 self.response.out.write('Unsubscribe')
         else:
             logging.error('Couldn\'t get module with mcode '+self.request.get('mcode'))
