@@ -11,8 +11,6 @@
 <body>
 
 	<section id="content" class="content"> 
-		<section id="header">
-			<p>Godmode engaged, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
 		{% include "/templates/mbar.html" %}
 		{% include "/templates/admin-sidebar.html"%}
 		
@@ -26,9 +24,9 @@
 				<span><a href="/admin-user-creation">Add a new user</a></span>
 			</div>
 			<div id="horizontal-menu-search">
-				<form name="search" action="/admin-users">
+				<form id="search" name="search" action="/admin-users">
 					<label for="filter-username">Filter usernames:</label>
-					<input type="text" name="filter-username" value="" id="filter"  size=50>
+					<input type="text" name="filter-username" value="" id="filter"  size="20">
 					<input type="submit" name="filter-button" id="filter-button" value="Filter" >
 				</form>
 			</div>
@@ -38,6 +36,5 @@
 			{%endfor%}
 		</section>
 		<div style="margin:10px;float:left">{{message}}</div>
-	</section>
 </body>
 </html>

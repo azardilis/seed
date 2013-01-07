@@ -631,10 +631,10 @@ class CategoriesPage(BaseHandler):
 class ThreadPage(BaseHandler):
     def get(self):
         if self.session.get('type')==-1:
-		self.redirect('/403')
-		return
-
-	t =retrieve_thread(self.request.get('tid'))
+			self.redirect('/403')
+			return
+        t =retrieve_thread(self.request.get('tid'))
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
         if t :
             template = jinja_environment.get_template('templates/forum_thread.html')
 
@@ -644,11 +644,11 @@ class ThreadPage(BaseHandler):
 
             template_params = {
 	    	'user' : t.poster,
-		'nop': len([p for p in t.poster.posts]),
-                'thread': t ,
-                'posts' : posts,
-                'current_user':current_user,
-                'subscriptions':subscribed_modules
+			'nop': len([p for p in t.poster.posts]),
+            'thread': t ,
+            'posts' : posts,
+            'current_user':current_user,
+            'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
         else :
@@ -660,6 +660,7 @@ class ViewAllThreadsPage(BaseHandler):
 		self.redirect('/403')
 		return
 	category = retrieve_category(self.request.get('cid'))
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
 
         if category :
             threads = category.threads.order('-timestamp')
@@ -675,6 +676,7 @@ class ViewAllThreadsPage(BaseHandler):
         else :
             logging.error('no category found '+str(cid))
             self.response.out.write('Couldn\'t get category')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 			
 class removeThread(BaseHandler):
     def get(self):

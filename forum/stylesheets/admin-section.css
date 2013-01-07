@@ -30,7 +30,7 @@ section.admin-container-new{
 	border : 1px solid #88ccff ;
 	
 	border-radius : 5px ;
-	background-color:C6FFBF;
+	background-color:#C6FFBF;
 }
 
 p.admin-handler{				
@@ -128,6 +128,7 @@ input, select{
 	color:white;
 	padding:2px;
 	margin-right:15px;
+	display : inline ;
 }
 
 #horizontal-menu-item a{

@@ -13,17 +13,52 @@
 <body>
 
 	<section id="content" class="content"> 
-		<section id="header">
-			<p>Godmode engaged, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
 		{% include "/templates/mbar.html" %}
 		{% include "/templates/admin-sidebar.html"%}
+		<section id="pagecontent" class="cleared">			
+			<div id="admin-left-column">
+				{% for module in firsthalf %}				
+				<section class="admin-container">
+					<p class="admin-handler"  id="{{module.key().name()}}">{{  module.title }}</p>
+					<section class="admin-handlercontent" id="cont{{module.key().name()}}">
+						<form name="edit_module" action="/admin-modules" method="post">
+							<label for="module_key">Datastore Entity Key:</label>
+							<input type="text" name="module_key" id="module_key" value="{{module.key()}}" size=51 readonly>
+
+							<label for="module_code">Module Code:</label>
+							<input type="text" name="module_code" id="module_code" value="{{module.key().name()}}" size=51 readonly>
+
+							<label for="module_title">Module Title:</label>
+							<input type="text" name="module_title" id="module_title" value="{{module.title}}" size=51>
+
+							<label for="module_page">ECS Module page:</label>
+							<input type="text" name="module_page" id="module_page" value="{{module.ecs_page}}" size=51>
+
+							<label for="module_title">Year, course and semester information:</label>
+							<select name="ycs">
+								{% for ycs in allYcs %}
+								<option 
+								{% if ycs.course~ycs.year~ycs.semester == module.yearCourseSemester.course~module.yearCourseSemester.year~module.yearCourseSemester.semester %}
+								selected="selected"
+								{% endif %}
+								value="{{ycs.course~'-'~ycs.year~'-'~ycs.semester}}">{{ycs.course~" year "~ycs.year~", semester "~ycs.semester}}</option>
+								{% endfor %}
+							</select>
+							<p>
+								<input type="submit" name="apply_button" id="apply_button" value="Apply changes" >
+								<input type="submit" name="remove_module_button" id="remove_module_button" value="Remove module permanently" >
+
+							</form>
 
 
-		<section id="pagecontent" class="cleared">
-			<!-- Add whatever content you want here-->
-			
-				<div id="admin-left-column">
-					{% for module in firsthalf %}				
+						</section>
+					</section>
+
+					{% endfor %}
+				</div>
+
+				<div id="admin-right-column">
+					{% for module in secondhalf %}				
 					<section class="admin-container">
 						<p class="admin-handler"  id="{{module.key().name()}}">{{  module.title }}</p>
 						<section class="admin-handlercontent" id="cont{{module.key().name()}}">
@@ -61,79 +96,37 @@
 						</section>
 
 						{% endfor %}
-					</div>
-
-					<div id="admin-right-column">
-						{% for module in secondhalf %}				
-						<section class="admin-container">
-							<p class="admin-handler"  id="{{module.key().name()}}">{{  module.title }}</p>
-							<section class="admin-handlercontent" id="cont{{module.key().name()}}">
+						<section class="admin-container-new">
+							<p class="admin-handler"  id="_new_module">Add new module</p>
+							<img id="plus" src="/resources/img/plus.png">
+							<section class="admin-handlercontent" id="cont_new_module">
 								<form name="edit_module" action="/admin-modules" method="post">
-									<label for="module_key">Datastore Entity Key:</label>
-									<input type="text" name="module_key" id="module_key" value="{{module.key()}}" size=51 readonly>
 
 									<label for="module_code">Module Code:</label>
-									<input type="text" name="module_code" id="module_code" value="{{module.key().name()}}" size=51 readonly>
+									<input type="text" name="module_code" id="module_code"  size=51 >
 
 									<label for="module_title">Module Title:</label>
-									<input type="text" name="module_title" id="module_title" value="{{module.title}}" size=51>
+									<input type="text" name="module_title" id="module_title" size=51>
 
 									<label for="module_page">ECS Module page:</label>
-									<input type="text" name="module_page" id="module_page" value="{{module.ecs_page}}" size=51>
+									<input type="text" name="module_page" id="module_page"  size=51>
 
 									<label for="module_title">Year, course and semester information:</label>
 									<select name="ycs">
 										{% for ycs in allYcs %}
 										<option 
-										{% if ycs.course~ycs.year~ycs.semester == module.yearCourseSemester.course~module.yearCourseSemester.year~module.yearCourseSemester.semester %}
-										selected="selected"
-										{% endif %}
+
 										value="{{ycs.course~'-'~ycs.year~'-'~ycs.semester}}">{{ycs.course~" year "~ycs.year~", semester "~ycs.semester}}</option>
 										{% endfor %}
 									</select>
 									<p>
-										<input type="submit" name="apply_button" id="apply_button" value="Apply changes" >
-										<input type="submit" name="remove_module_button" id="remove_module_button" value="Remove module permanently" >
+										<input type="submit" name="add_button" id="apply_button" value="Add to datastore" >
 
 									</form>
-
-
 								</section>
 							</section>
-
-							{% endfor %}
-							<section class="admin-container-new">
-								<p class="admin-handler"  id="_new_module">Add new module</p>
-								<img id="plus" src="/resources/img/plus.png">
-								<section class="admin-handlercontent" id="cont_new_module">
-									<form name="edit_module" action="/admin-modules" method="post">
-
-										<label for="module_code">Module Code:</label>
-										<input type="text" name="module_code" id="module_code"  size=51 >
-
-										<label for="module_title">Module Title:</label>
-										<input type="text" name="module_title" id="module_title" size=51>
-
-										<label for="module_page">ECS Module page:</label>
-										<input type="text" name="module_page" id="module_page"  size=51>
-
-										<label for="module_title">Year, course and semester information:</label>
-										<select name="ycs">
-											{% for ycs in allYcs %}
-											<option 
-
-											value="{{ycs.course~'-'~ycs.year~'-'~ycs.semester}}">{{ycs.course~" year "~ycs.year~", semester "~ycs.semester}}</option>
-											{% endfor %}
-										</select>
-										<p>
-											<input type="submit" name="add_button" id="apply_button" value="Add to datastore" >
-
-										</form>
-									</section>
-								</section>
-							</div>
-						</section>
+						</div>
 					</section>
 				</section>
-	</body>
-</html>
+			</body>
+			</html>

@@ -9,70 +9,57 @@
 
 </head>
 <body>
-
 	<section id="content" class="content"> 
-		<section id="header">
-			<p>Godmode engaged, <a href='/profile'>{{current_user.full_name}}</a></p> <br/>
 		{% include "/templates/mbar.html" %}
 		{% include "/templates/admin-sidebar.html"%}
-
-		
 		<section id="pagecontent" class="cleared">
-			
-			
-
-				<div id="horizontal-menu">
-					<div id="horizontal-menu-item">
-						<span><a href="/admin-users">Edit an existing user</a></span>
-					</div>
-					<div id="horizontal-menu-item">
-						<span><a href="/admin-user-creation">Add a new user</a></span>
-					</div>
+			<div id="horizontal-menu">
+				<div id="horizontal-menu-item">
+					<span><a href="/admin-users">Edit an existing user</a></span>
 				</div>
+				<div id="horizontal-menu-item">
+					<span><a href="/admin-user-creation">Add a new user</a></span>
+				</div>
+			</div>
 
-				<form method="post" action="/admin-user-creation" id="admin-user-creation-form">
+			<form method="post" action="/admin-user-creation" id="admin-user-creation-form">
 
-					<label for="user-fullname">Full name:</label>
-					<input type="text" name="user-fullname" id="user-fullname" size=50>
+				<label for="user-fullname">Full name:</label>
+				<input type="text" name="user-fullname" id="user-fullname" size=50>
 
-					<label for="user-username">ECS Username:</label>
-					<input type="text" name="user-username" id="user-username" size=50>
+				<label for="user-username">ECS Username:</label>
+				<input type="text" name="user-username" id="user-username" size=50>
 
-					<label for="user-email">Alternate E-mail address:</label>
-					<input type="text" name="user-email" id="user-email" size=50>
+				<label for="user-email">Alternate E-mail address:</label>
+				<input type="text" name="user-email" id="user-email" size=50>
 
-					<label for="user-password">Password:</label>
-					<input type="password" name="user-password" id="user-password" size=50>
+				<label for="user-password">Password:</label>
+				<input type="password" name="user-password" id="user-password" size=50>
 
-					<label for="user-course">Course:</label>
-					<select name="user-course">
-						<option value="compsci">Computer Science</option>
-						<option value="elec">Electronics</option>
-					</select>
+				<label for="user-course">Course:</label>
+				<select name="user-course">
+					<option value="compsci">Computer Science</option>
+					<option value="elec">Electronics</option>
+				</select>
 
-					<label for="user-year">Year:</label>
-					<select name="user-year">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4 or Master's</option>
-					</select>
-
-
-					<label for="user-type">User clearance:</label>
-					<select name="user-type" >
-						<option value="0">Normal user</option>
-						<option value="1">Moderator</option>
-					</select>
-					<p>
-						<input type="submit" name="apply_button" id="apply_button" value="Add user" >
+				<label for="user-year">Year:</label>
+				<select name="user-year">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4 or Master's</option>
+				</select>
 
 
-
-
-					</form>
-
-				</section>
+				<label for="user-type">User clearance:</label>
+				<select name="user-type" >
+					<option value="0">Normal user</option>
+					<option value="1">Moderator</option>
+				</select>
+				<p>
+					<input type="submit" name="apply_button" id="apply_button" value="Add user" >
+				</form>
 			</section>
-		</body>
-		</html>
+		</section>
+	</body>
+	</html>
