@@ -234,6 +234,7 @@ def populate_db():
 
     ###### FORUM #######
 #TODO iterate over all assessments in each module and create one category for each + 1 general category at the end
+#when the above todo is done, make sure that when the admin adds a new module they call a function to add categories to it as well
     categGeneral3001 = Category(name='General Discussion', description='blah blah', module=comp3001)
     categGeneral3001.put()
     categCoursework3001 = Category(name='Coursework Discussion', description='blah blah', module=comp3001)
