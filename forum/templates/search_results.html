@@ -20,7 +20,7 @@
 		  <h1 class="pagetitle">Results</h1>
 		  <ul>
 		    {%for result in results %}
-		    <li> {{result[0].subject}} </li>
+		    <li> <a href="showthread?tid={{result[0].key().id()}}"> {{result[0].category.module.key().name()}}: {{result[0].subject}}</a> </li>
 		    {% endfor %}
 		  </ul>
 </body>
