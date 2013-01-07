@@ -445,9 +445,10 @@ class ForumPage(BaseHandler):
 		template = jinja_environment.get_template('templates/forum_subscriptions.html')
 		subs = 	current_user.subscriptions
 		self.response.write(sub_to_delete)
-		if not sub_to_delete is '':
+		if sub_to_delete:
 			subs.filter("__key__",Key(sub_to_delete))
-			subs.get().delete()
+			sub = subs.get()
+			populate.unsubscribe(sub.subscribed_user, sub.module)
 			subs = 	current_user.subscriptions
 				
 		mod_info=[]
@@ -662,6 +663,7 @@ class ViewAllThreadsPage(BaseHandler):
         if category :
             threads = category.threads.order('-timestamp')
             template_vars = {
+					'current_user':current_user,
                     'category' : category,
                     'current_user':current_user,
 					'threads':threads,
@@ -669,6 +671,21 @@ class ViewAllThreadsPage(BaseHandler):
             }
             template = jinja_environment.get_template('templates/forum_category_all.html')
             self.response.out.write(template.render(template_vars))
+        else :
+            logging.error('no category found '+str(cid))
+            self.response.out.write('Couldn\'t get category')
+			
+class removeThread(BaseHandler):
+    def get(self):
+        if self.session.get('type')!=1:
+		self.redirect('/')
+		return
+	tid= self.request.get('tid')
+
+        if tid :
+			thread=Thread.get(tid)
+			thread.delete()
+			self.redirect("javascript:history.go(-1)")
         else :
             logging.error('no category found '+str(cid))
             self.response.out.write('Couldn\'t get category')
@@ -829,7 +846,7 @@ class ToggleSolution(BaseHandler) :
 
 class ToggleSubscription(BaseHandler):
     def post(self):
-    	if self.session.get('type')==-1:
+	if self.session.get('type')==-1:
 		self.redirect('/403')
 		return
 
@@ -841,10 +858,10 @@ class ToggleSubscription(BaseHandler):
             sub = sub.get()
 
             if sub:
-                sub.delete()
+                populate.unsubscribe(current_user, mod)
                 self.response.out.write('Subscribe')
             else :
-                Subscription(subscribed_user = current_user , module = mod).put()
+                populate.subscribe(current_user, mod, a=1)
                 self.response.out.write('Unsubscribe')
         else:
             logging.error('Couldn\'t get module with mcode '+self.request.get('mcode'))
@@ -862,7 +879,7 @@ class ProfilePage(BaseHandler):
 		user_key = current_user.key()
 		user = db.get(user_key)
 		if len(avatar) >0:
-			#avatar=images.resize(avatar, 200, 200)
+			avatar=images.resize(avatar, 200, 200)
 			user.avatar = db.Blob(avatar)
 			
 		if len(fullname) >0:	
@@ -888,6 +905,13 @@ class ProfilePage(BaseHandler):
 		mod_info=[]
 		lecturers=[]
 		
+		posts = Post.all()
+		posts=posts.filter("poster",user_key)
+		num_posts=posts.count()
+		
+		threads = Thread.all()
+		threads = threads.filter("poster",user_key)
+		created_threads = threads.count()
 		if not sub_to_delete is '':
 			subs.filter("__key__",Key(sub_to_delete))
 			subs.get().delete()
@@ -907,12 +931,15 @@ class ProfilePage(BaseHandler):
 				assessments_flag=0
 			mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
 			
+			
 			lecturers=[]
 		template_params = {
 			'current_user':current_user,
 			'user':user,
 			'mod_info':mod_info,
-            'subscriptions':subscribed_modules
+            'subscriptions':subscribed_modules,
+			'user_posts':num_posts,
+			'user_threads':created_threads
 		}
 		
 		self.response.out.write(template.render(template_params))
@@ -1082,5 +1109,6 @@ app = webapp2.WSGIApplication([
 	('/profileimage',GetImage),
 	('/admin-edit-user', AdminEditUser),
 	('/logout',Logout),
-	('/403',FourOThree)
+	('/403',FourOThree),
+	('/removeThread',removeThread)
 ], debug=True,config=session_dic)
