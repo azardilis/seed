@@ -1047,8 +1047,8 @@ class ModulesPage(BaseHandler):
          		   'y2s2' : y2s2,
         		   'y3s1' : y3s1,
         		   'y3s2' : y3s2,
-                   'subscriptions':subscribed_modules,
-				   'current_user':current_user
+			   'subscriptions':subscribed_modules,
+			   'current_user':current_user
 			   }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_values))
@@ -1088,8 +1088,12 @@ class SearchPage(BaseHandler):
 
 class SearchResults(BaseHandler):
     def get(self):
+	    
+        query = self.request.get("search_terms")
+	search_terms = query.split()
+	results = search_thread_tags(search_terms)
         template = jinja_environment.get_template('templates/search_results.html')
-	self.response.out.write(template.render({'current_user':current_user}))
+	self.response.out.write(template.render({'current_user':current_user, 'results':results}))
         
 class Logout(BaseHandler):
 	def get(self):
