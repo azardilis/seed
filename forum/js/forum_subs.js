@@ -29,7 +29,7 @@ function update_subs(sub,sub_code,profile){
 $(document).ready(function(){
     $("#rss").hide();
     $("#rss_button").click(function(e){
-	$("#rss").fadeToggle();
+	$("#rss").slideToggle();
 	$("#url").focus();
 	$("#url").select();
 	e.preventDefault();

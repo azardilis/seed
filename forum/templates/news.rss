@@ -5,8 +5,7 @@
 	<link>http://www.google.com</link>
 	<description>News from your subscribed modules</description>
 	<pubDate>{{date}}</pubDate>
-    
-
+	
     {% for item in items %}
        <item>
 	    <title>{{item.title}}</title>

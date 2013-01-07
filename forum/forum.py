@@ -32,7 +32,6 @@ from itertools import izip
 from datetime import datetime
 from functions.BaseHandler import BaseHandler
 import time
-import PyRSS2Gen
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))

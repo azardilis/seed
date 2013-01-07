@@ -22,8 +22,6 @@ from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from itertools import izip
 from datetime import datetime
-import PyRSS2Gen
-
 
 def reset_db():
     for user in User.all():

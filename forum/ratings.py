@@ -20,7 +20,6 @@ from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from itertools import izip
 from datetime import datetime
-import PyRSS2Gen
 
 def subscribe(user, module):
 	Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=user, module=module).put()
