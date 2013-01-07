@@ -662,12 +662,28 @@ class ViewAllThreadsPage(BaseHandler):
         if category :
             threads = category.threads.order('-timestamp')
             template_vars = {
+					'current_user':current_user,
                     'category' : category,
                     'threads':threads,
                     'subscriptions':subscribed_modules
             }
             template = jinja_environment.get_template('templates/forum_category_all.html')
             self.response.out.write(template.render(template_vars))
+        else :
+            logging.error('no category found '+str(cid))
+            self.response.out.write('Couldn\'t get category')
+			
+class removeThread(BaseHandler):
+    def get(self):
+        if self.session.get('type')!=1:
+		self.redirect('/')
+		return
+	tid= self.request.get('tid')
+
+        if tid :
+			thread=Thread.get(tid)
+			thread.delete()
+			self.redirect("javascript:history.go(-1)")
         else :
             logging.error('no category found '+str(cid))
             self.response.out.write('Couldn\'t get category')
@@ -1080,5 +1096,6 @@ app = webapp2.WSGIApplication([
 	('/profileimage',GetImage),
 	('/admin-edit-user', AdminEditUser),
 	('/logout',Logout),
-	('/403',FourOThree)
+	('/403',FourOThree),
+	('/removeThread',removeThread)
 ], debug=True,config=session_dic)

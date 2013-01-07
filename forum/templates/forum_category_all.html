@@ -28,8 +28,14 @@
 </head>
 <body>
 	<section id="content" class="content"> 
-		{% include "/templates/mbar.html" %}
-		{% include "/templates/sidebar.html"%}
+		<section id="header">
+					<p id="wlcmmsg">Logged in as <a href='/profile'>{{current_user.full_name}}</a></p> 
+				{% include "/templates/mbar.html" %}
+				{%if current_user.user_type==1%}
+				{% include "/templates/admin-sidebar.html"%}
+				{%else%}
+				{% include "/templates/sidebar.html"%}
+				{%endif%}
 		<section id="pagecontent" class="cleared">
 			<section class="category">			
 				<section class="container">
@@ -44,6 +50,9 @@
 						</a>
 						<p class="details">Posted by {{th.poster.key().name()}} on {{th.timestamp.date()}}</p>							
 						<p class="thbody">{{th.body[0:50]}}...</p>
+						{%if current_user.user_type==1%}
+						<p class="rating"><a href="/removeThread?tid={{th.key()}}"><img style="width:20px;"src="/resources/img/cross.png"></a></p>
+						{%endif%}
 						<p class="rating">Replies : {{th.answers}}</p>
 					</article>
 					{% endfor %}
