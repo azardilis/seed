@@ -8,7 +8,7 @@ class Module(db.Model) :
 	ecs_page = db.LinkProperty(required=True)
 	yearCourseSemester = db.ReferenceProperty(YearCourseSemester.YearCourseSemester , collection_name='modules', required=True)
 	student_count = db.IntegerProperty(default=0) #must be increamented every time a student subscribes (eg when creating Subscriptions in populate_db)
-	schoolYear = db.ReferenceProperty(SchoolYear, collection_name='modules', required=True)
+	schoolYear = db.ReferenceProperty(SchoolYear, collection_name='modules', required=False)
 
 	sum_marks = db.IntegerProperty(default=0)
 	count_marks = db.IntegerProperty(default=0)
