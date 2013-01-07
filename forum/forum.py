@@ -906,16 +906,26 @@ class ProfilePage(BaseHandler):
 		if self.session.get('type')==-1:
 			self.redirect('/403')
 			return
-
+		edit_mode = False
 		template = jinja_environment.get_template('templates/profile.html')
-		subs = 	current_user.subscriptions
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 		self.response.write(sub_to_delete)
+		username = cgi.escape(self.request.get('usr'))
 		
-		user_key = current_user.key()
-		userQ=User.all()
-		userQ=userQ.filter('__key__ = ' ,user_key)
-		user = userQ.get()
+		if len(username) == 0: 
+			user_key = current_user.key()
+			userQ=User.all()
+			userQ=userQ.filter('__key__ = ' ,user_key)
+			user = userQ.get()
+			edit_mode=True
+		else:
+			user_key = Key.from_path('User',username)
+			userQ=User.all()
+			userQ=userQ.filter('__key__ = ' ,user_key)
+			user = userQ.get()
+			if user.key() == current_user.key():
+				edit_mode=True
+		subs = 	user.subscriptions	
 		mod_info=[]
 		lecturers=[]
 		
@@ -926,6 +936,7 @@ class ProfilePage(BaseHandler):
 		threads = Thread.all()
 		threads = threads.filter("poster",user_key)
 		created_threads = threads.count()
+		
 		if not sub_to_delete is '':
 			subs.filter("__key__",Key(sub_to_delete))
 			sub = subs.get()
@@ -954,7 +965,8 @@ class ProfilePage(BaseHandler):
 			'mod_info':mod_info,
             'subscriptions':subscribed_modules,
 			'user_posts':num_posts,
-			'user_threads':created_threads
+			'user_threads':created_threads,
+			'edit':edit_mode
 		}
 		
 		self.response.out.write(template.render(template_params))
