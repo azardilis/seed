@@ -915,7 +915,8 @@ class ProfilePage(BaseHandler):
 		created_threads = threads.count()
 		if not sub_to_delete is '':
 			subs.filter("__key__",Key(sub_to_delete))
-			subs.get().delete()
+			sub = subs.get()
+			populate.unsubscribe(sub.subscribed_user, sub.module)
 			subs = 	current_user.subscriptions
 		
 		for s in subs:
