@@ -18,7 +18,7 @@
 		{% include "/templates/sidebar.html"%}
 		{%endif%}
 		<section id="pagecontent" class="cleared">
-		  <h1 class="pagetitle">What's new</h1><ul class="mods">
+		  <h1 class="pagetitle">What's new with your subscriptions</h1><ul class="mods">
 		  {% for thread in threads %}
 		    <li> <a href="showthread?tid={{thread.key().id()}}"> {{thread.category.module.key().name()}}: {{thread.subject}} [{{",".join(thread.tags)}}]</a> </li>
 		  {% endfor%}

@@ -1087,7 +1087,7 @@ class RssPage(BaseHandler):
         for mod in modules:
             for cat in mod.categories:
                 for thread in cat.threads:
-		            items.append(rss_item(title=thread.subject, link="http://localhost:9999/showthread?tid="+str(thread.key().id()), description=mod.key().name(), category=cat.name, pub_date=thread.timestamp.strftime('%a, %d %b %Y %X %Z')))
+		            items.append(rss_item(title=thread.subject, link="http://1.modulediscussionforum.appspot.com/showthread?tid="+str(thread.key().id()), description=mod.key().name(), category=cat.name, pub_date=thread.timestamp.strftime('%a, %d %b %Y %X %Z')))
 	    template_values = {'name':name, 'items':items, 'date':date}
 	    template = jinja_environment.get_template('templates/news.rss')
 	    self.response.headers['Content-Type'] = 'application/rss+xml'
