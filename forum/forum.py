@@ -424,10 +424,10 @@ class SignInPage(BaseHandler):
 				year=0
 		
 			if fname is None or fname=='Full Name' or fname=='':
-				fname=' '
+				fname=pot_user 
 
 			if course is None or course=='Course' or course=='':
-				course=' '
+				course='compsci'
 			
 			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,)
 			user.put()
@@ -439,9 +439,6 @@ class SignInPage(BaseHandler):
 			current_user=potential_user
 			self.session['name']=self.request.get('user')
 			self.session['type']=potential_user.user_type
-		    #if self.session.get('type')==1:
-		    #	self.redirect('/admin')
-		    #else:
 			self.redirect("/main")
 		else:
        		    #proper error message should be displayed (some javascript or something)
