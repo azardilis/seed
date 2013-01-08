@@ -317,6 +317,14 @@ def associate(lecturer, module):
 	rating.put()
 	return rating #temp
 
+def rm_module(module):
+	q=Subscribtion.all()
+	q=q.filter('module =', module)
+	subs = q.run()
+	for s in subs:
+		s.delete()
+	module.delete()
+
 #temp:
 def put_mark(user, assessment, mark):
  	assessment.sum_marks += mark
