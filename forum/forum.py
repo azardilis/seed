@@ -78,17 +78,27 @@ def cloneEntity(e, **extra_args):
 	return klass(**props)
 
 def search_success(thread, search_term):
-    return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()	
+    success = 0
+    search_places = []
+    search_places.append(thread.tags)
+    search_places.append(thread.poster.full_name)
+    search_places.append(thread.subject)
+    search_places.append(thread.poster.key().name())
+    for search_place in search_places:
+	    if search_term in search_place: success += 1
+    return success
+    #return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()	
 
 def search_thread_tags(search_terms):
     results = {}
     threads = Thread.all()
     for thread in threads:
+        succ = search_success(thread, search_term)
         for search_term in search_terms:
-            if search_success(thread, search_term) and thread in results:
-		    results[thread] += 1
-	    elif search_success(thread, search_term) and not (thread in results):
-		    results[thread] = 1
+            if succ > 0 and thread in results:
+		    results[thread] += succ
+	    elif succ > 0 and not (thread in results):
+		    results[thread] = succ
     #sort the results dict by the occurences of search_terms in tags
     sorted_results = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
     return sorted_results
@@ -422,18 +432,21 @@ class SignInPage(BaseHandler):
 			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,)
 			user.put()
 	else:
+		username = self.request.get('user')
+		password = self.request.get('password')
 		potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
 		if potential_user is not None and potential_user.password==self.request.get('password'):
-	       	    current_user=potential_user
-		    self.session['name']=self.request.get('user')
-		    self.session['type']=potential_user.user_type
+			current_user=potential_user
+			self.session['name']=self.request.get('user')
+			self.session['type']=potential_user.user_type
 		    #if self.session.get('type')==1:
 		    #	self.redirect('/admin')
 		    #else:
-		    self.redirect("/main")
-	       	else:
+			self.redirect("/main")
+		else:
        		    #proper error message should be displayed (some javascript or something)
-		    print "The username and password do not match, please try again!"
+			print "The username and password do not match, please try again!"
+			#self.redirect("/")
 
 class MainPage(BaseHandler):
     def get(self):
@@ -696,14 +709,15 @@ class ThreadPage(BaseHandler):
             }
             self.response.out.write(template.render(template_params))
         else :
-            self.response.out.write('Unable to find thread '+str(self.request.get('ti'))+'<')
+            logging.error('Unable to find thread '+str(self.request.get('ti'))+'<')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Unable to find the specified thread.'}))
 
 class ViewAllThreadsPage(BaseHandler):
     def get(self):
         if self.session.get('type')==-1:
 		self.redirect('/403')
 		return
-	category = retrieve_category(self.request.get('cid'))
+    	category = retrieve_category(self.request.get('cid'))
         current_user = db.get(Key.from_path('User',self.session.get('name')))
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 
@@ -719,8 +733,7 @@ class ViewAllThreadsPage(BaseHandler):
             template = jinja_environment.get_template('templates/forum_category_all.html')
             self.response.out.write(template.render(template_vars))
         else :
-            logging.error('no category found '+str(cid))
-            self.response.out.write('Couldn\'t get category')
+            logging.error('no category found '+str(self.request.get('cid')))
             self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 			
 class removeThread(BaseHandler):
@@ -728,7 +741,7 @@ class removeThread(BaseHandler):
         if self.session.get('type')!=1:
 		self.redirect('/')
 		return
-	tid= self.request.get('tid')
+    	tid= self.request.get('tid')
 
         if tid :
 			thread=Thread.get(tid)
@@ -744,7 +757,7 @@ class removeThread(BaseHandler):
 			self.response.headers.add_header("Cache-Control","no-cache, no-store, must-revalidate")
         else :
             logging.error('no category found '+str(cid))
-            self.response.out.write('Couldn\'t get category')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class NewThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -765,7 +778,9 @@ class NewThread(BaseHandler):
                     'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
-        else : logging.error('newthread : empty cid >'+str(cid)+'<')
+        else :
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
+            logging.error('newthread : empty cid >'+str(cid)+'<')
 
 class CreateNewThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -786,7 +801,7 @@ class CreateNewThread(BaseHandler):
             t.put()
             self.response.out.write(t.key().id())
         else :
-            self.response.out.write('category not found')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class ReplyToThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -948,9 +963,12 @@ class ProfilePage(BaseHandler):
 		user_key = current_user.key()
 		user = db.get(user_key)
 		if len(avatar) >0:
-			avatar=images.resize(avatar, 200, 200)
-			user.avatar = db.Blob(avatar)
-			
+			try:
+				avatar=images.resize(avatar, 200, 200)
+				user.avatar = db.Blob(avatar)
+			except Exception, err:
+				self.redirect('/403')
+				
 		if len(fullname) >0:	
 			user.full_name = fullname
 			
