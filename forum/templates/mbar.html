@@ -11,9 +11,7 @@
 			<nav id='modulenav'>
 				<ul id='modulebar'>
 					{% for sub in subscriptions %}
-					<li>
-					  <a href="/categories?mid={{sub.module.key().name()}}">{{sub.module.title}}</a>
-					</li>
+					<li><a href="/categories?mid={{sub.module.key().name()}}">{{sub.module.title}}</a></li>
 					{% endfor %}
 				</ul>
 			</nav>

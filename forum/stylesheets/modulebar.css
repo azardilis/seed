@@ -1,25 +1,16 @@
 
 /*CSS for the modulebar*/
-#modulenav{
-	width : 92%;
-	display : inline ;
-	position : relative ;
-	float : left;
-	overflow : hidden;
-	border-radius : 10px;
-	margin-bottom : 3% ;
-}
+#modulenav{ width : 92%;
+	    display : inline ;
+	    position : relative ;
+	    float : left;
+	    overflow : hidden;
+	    border-radius : 10px;
+	    margin-bottom : 3% ; }
 
-#mbar-wrapper{
-	width : 100%;
-	overflow : auto ;
-	padding-left: 1%;
-}
+#mbar-wrapper{	width : 100%; overflow : auto ; padding-left: 1%;}
 
-ul#modulebar{
-	position : relative;
-	float : left ;
-}
+ul#modulebar{ position : relative; float : left ;}
 
 #modulebar li{
 	margin-left : 1px;
@@ -49,27 +40,16 @@ ul#modulebar{
 	-o-transition-timing-function:ease-out;
 }
 
-#modulebar li:hover {
-	opacity : 1;
-}
+#modulebar li:hover { opacity : 1; }
 
-#modulebar li:hover a {
-	color : white;
-}
+#modulebar li:hover a {	color : white;}
 
-#modulebar li a{
-	font-size : 13pt;
-	font-weight: normal;
-	text-decoration: none;
-	color : #FBE4C7;
-}
+#modulebar li a{ font-size : 13pt;
+		font-weight: normal;
+		text-decoration: none;
+		color : #FBE4C7;}
 
-img.dir,#modules_tag{
-	position :relative;
-	float: left;
-}
+img.dir,#modules_tag{ position :relative; float: left;}
 
-img.dir{
-	width : 3%;
-}
+img.dir{width : 3%;}
 /*----*/

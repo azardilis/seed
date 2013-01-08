@@ -3,7 +3,6 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/forum_subs.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
-
 	<script src="js/jq-1.8.3.js"></script>	
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
@@ -32,28 +31,18 @@
 					{% for lect in sub.mod_lecturers %}
 					<u><font color="#02527d"><a href={{lect.home_page}}>{{lect.full_name}}</a></font></u>
 					{% endfor %}
-				<!--{% if sub.mod_assessments %}
-				 It doesn't actually check if the date has passed yet. Still to implement this functionality
-				<div class="assessment">This module has assignments still to be submitted!</div>
-				{% endif %}-->
 				
 			</div>
-			
 			{% endfor %}
-			
-
-		</div>
-		    <div>
+			</div>
+		 	<div>
 			<button id="rss_button" class="rss_button">
-			  <img src="../stylesheets/resources/feed-icon-14x14.png" alt="rss icon"/> RSS
-			</button>
-			<br>
+			  <img src="../stylesheets/resources/feed-icon-14x14.png" alt="rss icon"/> RSS</button><br>
 			<div id="rss" >
-			  <input id="url" type="text" name="sometext" size="18" value="http://localhost:9999/news.rss"><br>
+			  <input id="url" type="text" name="sometext" size="18" value="http://1.modulediscussionforum.appspot.com/news.rss"><br>
 			  <label id="instructions" class="copy">copy and paste the feed URL (the address above)
 			    <br>into your favourite reader [<a href="news.rss">feed</a>]</label>
-			</div>
-		    </div>
+			</div></div>
 	</section>
 	
 </body>

@@ -22,6 +22,7 @@ from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from itertools import izip
 from datetime import datetime
+from Crawler import *
 
 def reset_db():
     for user in User.all():
@@ -57,8 +58,8 @@ def reset_db():
     for i in Grade.all():
         i.delete()
 
-    for i in Lecturer.all():
-        i.delete()
+    #for i in Lecturer.all():
+    #    i.delete()
 
     for i in Vote.all():
         i.delete()
@@ -73,6 +74,7 @@ def populate_db():
 
     ###### POPULATE ######
 
+
     # create admins (course should match course in YearCourseSemester objects)
     current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type=1, year=3, signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
@@ -81,6 +83,8 @@ def populate_db():
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='compsci',year=3,user_type=0)
     user.put()
     #end_temp
+
+    
 
     # create yearCourseSemester objects (how about semester 3 - individual project for masters ??)
     compsci11 = YearCourseSemester(year=int(1), semester=int(1), course="compsci",prettyName="Computer Science Year 1, Semester 1")
@@ -95,14 +99,62 @@ def populate_db():
     compsci31.put()
     compsci32 = YearCourseSemester(year=int(3), semester=int(2), course="compsci",prettyName="Computer Science Year 3, Semester 2")
     compsci32.put()
+    
+    compsci41 = YearCourseSemester(year=int(4), semester=int(1), course="compsci",prettyName="Computer Science Year 4, Semester 1")
+    compsci41.put()
+    compsci42 = YearCourseSemester(year=int(4), semester=int(2), course="compsci",prettyName="Computer Science Year 4, Semester 2")
+    compsci42.put()
+
     # +year 4 
 
     #temp:
     y1213 = SchoolYear(start=int(2012), end=int(2013))
     y1213.put()
+    
 
-    y1112 = SchoolYear(start=int(2011), end=int(2012))
-    y1112.put()
+
+
+
+    open_link('https://secure.ecs.soton.ac.uk/notes/')
+    yearstart = ret_yearstart()
+    yearend =   ret_yearend()
+    years = SchoolYear(start=int(yearstart), end=int(yearend))
+    years.put()
+
+    modules = ret_allmodule() 
+    while len(modules):
+        (key, val) = modules.popitem()
+        ycs = compsci31
+        if val.semester == 1:
+            if val.year == 1:
+                ycs = compsci11
+            elif val.year == 2:
+                ycs = compsci21
+            elif val.year == 3:
+                ycs = compsci31
+            elif val.year == 4:
+                ycs = compsci41
+        elif val.semester == 2:
+            if val.year == 1:
+                ycs = compsci12
+            elif val.year == 2:
+                ycs = compsci22
+            elif val.year == 3:
+                ycs = compsci32
+            elif val.year == 4:
+                ycs = compsci42
+
+        temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
+        temp.put()
+        tcw = val.cw
+        while len(tcw):
+            #title date handin spec
+            (ttitle, tdate,thandin,tspec) = tcw.pop()
+            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.Link(tspec),handin=db.Link(thandin),module=temp)
+            tempcw.put()
+                                
+
+
     #end_temp
 
     # create modules (schoolYear, ecsCode ??)
@@ -163,18 +215,18 @@ def populate_db():
     cwk2_3001.put()
 
     #temp: 
-    put_mark(current_user, cwk1_3001, 83)
-    put_difficulty(current_user, cwk1_3001, 3)
-    put_interest(current_user, cwk1_3001, 3)
-    put_mark(user, cwk1_3001, 56)
-    put_difficulty(user, cwk1_3001, 2)
-    put_interest(user, cwk1_3001, 2)
-    put_mark(current_user, cwk2_3001, 40)
-    put_difficulty(current_user, cwk2_3001, 4)
-    put_interest(current_user, cwk2_3001, 4)
-    put_mark(user, cwk2_3001, 65)
-    put_difficulty(user, cwk2_3001, 5)
-    put_interest(user, cwk2_3001, 5)
+#    put_mark(current_user, cwk1_3001, 83)
+#    put_difficulty(current_user, cwk1_3001, 3)
+#    put_interest(current_user, cwk1_3001, 3)
+#    put_mark(user, cwk1_3001, 56)
+#    put_difficulty(user, cwk1_3001, 2)
+#    put_interest(user, cwk1_3001, 2)
+#    put_mark(current_user, cwk2_3001, 40)
+#    put_difficulty(current_user, cwk2_3001, 4)
+#    put_interest(current_user, cwk2_3001, 4)
+#    put_mark(user, cwk2_3001, 65)
+#    put_difficulty(user, cwk2_3001, 5)
+#    put_interest(user, cwk2_3001, 5)
     #end_temp
 
     # create lecturers
@@ -316,6 +368,14 @@ def associate(lecturer, module):
 	rating = Rating(lecturer=lecturer,module=module)
 	rating.put()
 	return rating #temp
+
+def rm_module(module):
+	q=Subscribtion.all()
+	q=q.filter('module =', module)
+	subs = q.run()
+	for s in subs:
+		s.delete()
+	module.delete()
 
 #temp:
 def put_mark(user, assessment, mark):

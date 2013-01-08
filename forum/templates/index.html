@@ -1,8 +1,9 @@
 	<html>
 <head>
-	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modules.css" /> <!-- page-specific styles -->
+	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
@@ -17,8 +18,7 @@
 		{% include "/templates/sidebar.html"%}
 		{%endif%}
 		<section id="pagecontent" class="cleared">
-		  <h1 class="pagetitle">What's new</h1>
-		  <ul class="mods">
+		  <h1 class="pagetitle">What's new</h1><ul class="mods">
 		  {% for thread in threads %}
 		    <li> <a href="showthread?tid={{thread.key().id()}}"> {{thread.category.module.key().name()}}: {{thread.subject}} [{{",".join(thread.tags)}}]</a> </li>
 		  {% endfor%}

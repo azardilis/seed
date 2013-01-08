@@ -5,7 +5,6 @@
 	<script src="js/jq-1.8.3.js"></script>
 	<script src="js/jqui-1.9.2.js"></script>
 	<script type="text/javascript" src="js/admin-section-accordion.js"></script>
-
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
@@ -22,17 +21,13 @@
 					<p class="admin-handler"  id="{{module.key().name()}}">{{  module.title }}</p>
 					<section class="admin-handlercontent" id="cont{{module.key().name()}}">
 						<form name="edit_module" action="/admin-modules" method="post">
-							<label for="module_key">Datastore Entity Key:</label>
-							<input type="text" name="module_key" id="module_key" value="{{module.key()}}" size="51" readonly>
+							<label for="module_key">Datastore Entity Key:</label><input type="text" name="module_key" id="module_key" value="{{module.key()}}" size="51" readonly>
 
-							<label for="module_code">Module Code:</label>
-							<input type="text" name="module_code" id="module_code" value="{{module.key().name()}}" size="51" readonly>
+							<label for="module_code">Module Code:</label><input type="text" name="module_code" id="module_code" value="{{module.key().name()}}" size="51" readonly>
 
-							<label for="module_title">Module Title:</label>
-							<input type="text" name="module_title" id="module_title" value="{{module.title}}" size="51">
+							<label for="module_title">Module Title:</label><input type="text" name="module_title" id="module_title" value="{{module.title}}" size="51">
 
-							<label for="module_page">ECS Module page:</label>
-							<input type="text" name="module_page" id="module_page" value="{{module.ecs_page}}" size="51">
+							<label for="module_page">ECS Module page:</label><input type="text" name="module_page" id="module_page" value="{{module.ecs_page}}" size="51">
 
 							<label for="module_title">Year, course and semester information:</label>
 							<select name="ycs">
@@ -43,8 +38,7 @@
 								{% endif %}
 								value="{{ycs.course~'-'~ycs.year~'-'~ycs.semester}}">{{ycs.course~" year "~ycs.year~", semester "~ycs.semester}}</option>
 								{% endfor %}
-							</select>
-							<p>
+							</select><p>
 								<input type="submit" name="apply_button" id="apply_button" value="Apply changes" >
 								<input type="submit" name="remove_module_button" id="remove_module_button" value="Remove module permanently" >
 
@@ -63,17 +57,13 @@
 						<p class="admin-handler"  id="{{module.key().name()}}">{{  module.title }}</p>
 						<section class="admin-handlercontent" id="cont{{module.key().name()}}">
 							<form name="edit_module" action="/admin-modules" method="post">
-								<label for="module_key">Datastore Entity Key:</label>
-								<input type="text" name="module_key" id="module_key" value="{{module.key()}}" size="51" readonly>
+								<label for="module_key">Datastore Entity Key:</label><input type="text" name="module_key" id="module_key" value="{{module.key()}}" size="51" readonly>
 
-								<label for="module_code">Module Code:</label>
-								<input type="text" name="module_code" id="module_code" value="{{module.key().name()}}" size="51" readonly>
+								<label for="module_code">Module Code:</label><input type="text" name="module_code" id="module_code" value="{{module.key().name()}}" size="51" readonly>
 
-								<label for="module_title">Module Title:</label>
-								<input type="text" name="module_title" id="module_title" value="{{module.title}}" size="51">
+								<label for="module_title">Module Title:</label><input type="text" name="module_title" id="module_title" value="{{module.title}}" size="51">
 
-								<label for="module_page">ECS Module page:</label>
-								<input type="text" name="module_page" id="module_page" value="{{module.ecs_page}}" size="51">
+								<label for="module_page">ECS Module page:</label><input type="text" name="module_page" id="module_page" value="{{module.ecs_page}}" size="51">
 
 								<label for="module_title">Year, course and semester information:</label>
 								<select name="ycs">
@@ -102,14 +92,11 @@
 							<section class="admin-handlercontent" id="cont_new_module">
 								<form name="edit_module" action="/admin-modules" method="post">
 
-									<label for="module_code">Module Code:</label>
-									<input type="text" name="module_code" id="module_code"  size="51" >
+									<label for="module_code">Module Code:</label><input type="text" name="module_code" id="module_code"  size="51" >
 
-									<label for="module_title">Module Title:</label>
-									<input type="text" name="module_title" id="module_title" size="51">
+									<label for="module_title">Module Title:</label><input type="text" name="module_title" id="module_title" size="51">
 
-									<label for="module_page">ECS Module page:</label>
-									<input type="text" name="module_page" id="module_page"  size="51">
+									<label for="module_page">ECS Module page:</label><input type="text" name="module_page" id="module_page"  size="51">
 
 									<label for="module_title">Year, course and semester information:</label>
 									<select name="ycs">
@@ -123,10 +110,8 @@
 										<input type="submit" name="add_button" id="apply_button" value="Add to datastore" >
 
 									</form>
-								</section>
-							</section>
+							</section></section>
 						</div>
-					</section>
-				</section>
+				</section></section>
 			</body>
 			</html>
