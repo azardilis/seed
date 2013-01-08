@@ -1259,7 +1259,7 @@ class RssPage(BaseHandler):
 				    link="http://localhost:9999/showthread?tid="+str(thread.key().id()),
 				    description=mod.key().name(),
 				    category=cat.name,
-				    pub_date=thread.timestamp.strftime(%a, %d %b %Y %X %Z)
+				    pub_date=thread.timestamp.strftime('%a, %d %b %Y %X %Z'))
 		    items.append(item)
 	    template_values = {'name':name,
 			       'items':items,
