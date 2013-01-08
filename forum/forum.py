@@ -32,7 +32,7 @@ from itertools import izip
 from datetime import datetime
 from functions.BaseHandler import BaseHandler
 import time
-import PyRSS2Gen
+import operator
 
 jinja_environment = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
@@ -76,7 +76,20 @@ def cloneEntity(e, **extra_args):
 	props = dict((k, v.__get__(e, klass)) for k, v in klass.properties().iteritems())
 	props.update(extra_args)
 	return klass(**props)
-	
+
+def search_thread_tags(search_terms):
+    results = {}
+    threads = Thread.all()
+    for thread in threads:
+        for search_term in search_terms:
+            if search_term in thread.tags and thread in results:
+		    results[thread] += 1
+	    elif search_term in thread.tags and not (thread in results):
+		    results[thread] = 1
+    #sort the results dict by the occurences of search_terms in tags
+    sorted_results = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
+    return sorted_results
+
 def getYcsFromCode(code):
 	course=code.split('-')[1]
 	year=code.split('-')[2]
@@ -936,17 +949,30 @@ class ProfilePage(BaseHandler):
 		if self.session.get('type')==-1:
 			self.redirect('/403')
 			return
-
+		edit_mode = False
 		template = jinja_environment.get_template('templates/profile.html')
+
 		current_user = db.get(Key.from_path('User',self.session.get('name')))
 		subs = 	current_user.subscriptions
+
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 		self.response.write(sub_to_delete)
+		username = cgi.escape(self.request.get('usr'))
 		
-		user_key = current_user.key()
-		userQ=User.all()
-		userQ=userQ.filter('__key__ = ' ,user_key)
-		user = userQ.get()
+		if len(username) == 0: 
+			user_key = current_user.key()
+			userQ=User.all()
+			userQ=userQ.filter('__key__ = ' ,user_key)
+			user = userQ.get()
+			edit_mode=True
+		else:
+			user_key = Key.from_path('User',username)
+			userQ=User.all()
+			userQ=userQ.filter('__key__ = ' ,user_key)
+			user = userQ.get()
+			if user.key() == current_user.key():
+				edit_mode=True
+		subs = 	user.subscriptions	
 		mod_info=[]
 		lecturers=[]
 		
@@ -957,9 +983,11 @@ class ProfilePage(BaseHandler):
 		threads = Thread.all()
 		threads = threads.filter("poster",user_key)
 		created_threads = threads.count()
+		
 		if not sub_to_delete is '':
 			subs.filter("__key__",Key(sub_to_delete))
-			subs.get().delete()
+			sub = subs.get()
+			populate.unsubscribe(sub.subscribed_user, sub.module)
 			subs = 	current_user.subscriptions
 		
 		for s in subs:
@@ -985,7 +1013,8 @@ class ProfilePage(BaseHandler):
 			'mod_info':mod_info,
             'subscriptions':subscribed_modules,
 			'user_posts':num_posts,
-			'user_threads':created_threads
+			'user_threads':created_threads,
+			'edit':edit_mode
 		}
 		
 		self.response.out.write(template.render(template_params))
@@ -1073,6 +1102,8 @@ class ModulesPage(BaseHandler):
 
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         
+        homepage_subs = subscribed_modules
+
         course = "compsci"
         y1s1 = getYCS(1, course, 1)
         y1s2 = getYCS(1, course, 2)
@@ -1086,8 +1117,8 @@ class ModulesPage(BaseHandler):
          		   'y2s2' : y2s2,
         		   'y3s1' : y3s1,
         		   'y3s2' : y3s2,
-                   'subscriptions':subscribed_modules,
-				   'current_user':current_user
+			   'subscriptions':subscribed_modules,
+			   'current_user':current_user
 			   }
         template = jinja_environment.get_template('templates/modules.html')
         self.response.out.write(template.render(template_values))
@@ -1120,6 +1151,20 @@ class RssPage(BaseHandler):
 	    self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
+class SearchPage(BaseHandler):
+    def get(self):
+        template = jinja_environment.get_template('templates/search_page.html')
+	self.response.out.write(template.render({'current_user':current_user}))
+
+class SearchResults(BaseHandler):
+    def get(self):
+	    
+        query = self.request.get("search_terms")
+	search_terms = query.split()
+	results = search_thread_tags(search_terms)
+        template = jinja_environment.get_template('templates/search_results.html')
+	self.response.out.write(template.render({'current_user':current_user, 'results':results}))
+        
 class Logout(BaseHandler):
 	def get(self):
 		self.session.clear()
@@ -1162,5 +1207,7 @@ app = webapp2.WSGIApplication([
 	('/admin-edit-user', AdminEditUser),
 	('/logout',Logout),
 	('/403',FourOThree),
-	('/removeThread',removeThread)
+	('/removeThread',removeThread),
+	('/search', SearchPage),
+	('/results',SearchResults)
 ], debug=True,config=session_dic)
