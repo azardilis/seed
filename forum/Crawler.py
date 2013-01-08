@@ -26,13 +26,24 @@ count = 0 #useless
 #
 
 #we like it global
-alllecturers = {}
-allmodules = {}
-modulename = ""
-yearstart = 0
-yearend = 0
+global alllecturers
+global allmodules
+global modulename
+global yearstart 
+global yearend
+
+
+def ret_allmodule():
+    return allmodules
+
+def ret_yearstart():
+    return yearstart
+
+def ret_yearend():
+    return yearend
+
 #do not need to document these functions
-def parse_modulepage(page,url):
+def parse_modulepage(page,url,opener):
     global modulename
     global allmodules
 
@@ -40,11 +51,10 @@ def parse_modulepage(page,url):
     result = re.search(title_regex,msg)
 
     if not result:
-        sys.stdout.write(url+" - no title in page\n")
         return
     
     modulename = result.group(1)
-    sys.stdout.write(modulename+"\n")
+    
 
     _module = TModule(modulename,url)
     allmodules[modulename] = _module
@@ -114,7 +124,7 @@ def parse_lecturer(lect):
         lecturer = alllecturers[name]
         lecturer.append_class(modulename,role)
     else:
-        lecturer = Lecturer(name,url)
+        lecturer = TLecturer(name,url)
         lecturer.append_class(modulename,role)
         alllecturers[name] =lecturer 
 
@@ -130,6 +140,7 @@ def parse_cw(cw):
     spec = cw.group(7)
     title = cw.group(8)
     year = yearstart 
+    ttime = cw.group(5)
     # 2 = date 3 = month 4 = time
     date = cw.group(2)
     if cw.group(3):
@@ -139,7 +150,7 @@ def parse_cw(cw):
         month = cw.group(4)
         year = yearstart
     
-    formated_date = str(month) + " " + str(date) + " " + str(year) + " " str(time)
+    formated_date = str(month) + " " + str(date) + " " + str(year) + " " + str(ttime)
 #    if(cw.group(5)):
 #        date = date+"/"+cw.group(4)
     module = allmodules[modulename]
@@ -189,17 +200,17 @@ class TModule:
         course = ""
         if programme[0] is 'G':
             if re.search(compsci,programme): course = "compsci"
-            else if re.search(ito,programme): course = "ito"
+            elif re.search(ito,programme): course = "ito"
         else:
             if re.search(ee,programme): course = "ee"
-            else if re.search(eme,programme):course = "eme"
+            elif re.search(eme,programme):course = "eme"
         if course not in self.programmes:
             self.programmes.append(course)
         
     def append_cw(self,cw,deadline,handin,desc):
         self.cw.append((cw,deadline,handin,desc))
 
-class Lecturer:
+class TLecturer:
     name = ""
     page = ""
     keyname = ""
@@ -218,7 +229,20 @@ class Lecturer:
 
 
 def open_link(link):
-    tocrawl.put(link)
+    global alllecturers
+    global allmodules
+    global modulename
+    global yearstart 
+    global yearend
+
+
+    alllecturers = {}
+    allmodules = {}
+    modulename = ""
+    yearstart = 0
+    yearend = 0
+
+    tocrawl.add(link)
     try:
         crawling = tocrawl.pop()
 #		print "try"+crawling
@@ -231,22 +255,19 @@ def open_link(link):
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
     login_data = urllib.urlencode({'ecslogin_username' : username, 'ecslogin_password' : password})
     resp = opener.open('https://secure.ecs.soton.ac.uk/login/now/index.php', login_data)
-    print 'hello'
     resp = resp.read()
     resp = opener.open('https://secure.ecs.soton.ac.uk/login/now/index.php', login_data) #do it twice, why not, it is needed to set cookies
     resp = resp.read()
 
     if re.search('LOGIN FAILED!',resp):
         sys.stdout.write("Login failed\n")
-        break
-    else:
-        sys.stdout.write("Login successfull\n")
-        
+        return
+            
     purl = urlparse.urlparse(crawling)
     try:
         response = opener.open(crawling)
     except:
-        continue
+        return
     msg = response.read()
     startPos = msg.find('<title>')#find relevant
     if startPos != -1:
@@ -256,11 +277,9 @@ def open_link(link):
             
     result = re.search(year_regex,msg)
     if result:
-        print "hellssso"
         yearstart = 2000+int(result.group(1)[0:2])
         yearend = 2000+int(result.group(1)[2:])
-        
-    print str(yearstart) + " " + str(yearend) + "\n"
+
     links = linkregex.findall(msg)
     crawled.add(crawling)
     i = 0
@@ -275,11 +294,11 @@ def open_link(link):
         elif not link.startswith('http'):
             link = 'http://' + purl[1] + '/' + link
         if link not in crawled:
-            parse_modulepage(opener.open(link),link)
+            parse_modulepage(opener.open(link),link,opener)
             crawled.add(link)       
-            if i > 10:
+            if i > 2:
                 return
-            i++
+            i += 1
                 
             
                  

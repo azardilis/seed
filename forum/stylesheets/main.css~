@@ -87,7 +87,7 @@ h1.pagetitle{
 	padding : 20px;
 	margin : 0px;
 	height: 160px;
-	width:1000px;
+	width:100%;
 	margin-left : -22px ;
 	
 

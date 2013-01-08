@@ -1,73 +1,43 @@
-#newthreadform *{
-	display : block ;
-}
+#newthreadform *{display : block ;}
 
-input[type=text], textarea{
-	margin : 5px;
-	padding : 7px;
-}
+input[type=text], textarea{ margin : 5px; padding : 7px;}
 
-textarea{
-	font-size : 12pt;
-}
+textarea{ font-size : 12pt;}
 
-input[type=text]{
-	font-size: 15pt;
-	width : 400px;
-}
+input[type=text]{ font-size: 15pt; width : 400px;}
 
-a.buttonlink{
-	text-decoration: none ;
-}
+a.buttonlink{ text-decoration: none ;}
 
-input[type=submit],button{
-	padding : 4px;
-	margin : 5px;
-	font-size: 12pt;
-	border : 1px solid gray;
-	border-radius: 7px;
-	background: #EBFFFF;
-}
+input[type=submit],button{      padding : 4px;
+				margin : 5px;
+				font-size: 12pt;
+				border : 1px solid gray;
+				border-radius: 7px;
+				background: #EBFFFF; }
 
-input[type=submit]{
-	background :  #C6FFBF;
-}
+input[type=submit]{ background :  #C6FFBF;}
 
-button{
-	background: #FF6666;
-}
+button{	background: #FF6666;}
 
-p#serverResponse{
-	margin-bottom : 10px;
-}
+p#serverResponse{ margin-bottom : 10px;}
 
-p.error{
-	border : 1px solid #FF0000;
+p.error{border : 1px solid #FF0000;
 	background: #FF8080;
 	border-radius : 10px;
 	width  : auto ;
-	padding : 10px;
-}
+	padding : 10px;}
 
-p.success{
-	border : 1px solid #47D147;
-	background: #C6FFBF;
-	border-radius : 10px;
-	width  : auto ;
-	padding : 10px;
-}
+p.success{border : 1px solid #47D147;
+	  background: #C6FFBF;
+	  border-radius : 10px;
+	  width  : auto ;
+	  padding : 10px;}
 
-span#close{
-	font-weight: bold;
-	position : relative;
-	float : right;
-	cursor : pointer;
-}
+span#close{ font-weight: bold;
+	    position : relative;
+	    float : right;
+	    cursor : pointer; }
 
-span#close.error{
-	color : red;
-}
+span#close.error{ color : red;}
 
-span#close.success{
-	color : green;
-}
+span#close.success{ color : green;}

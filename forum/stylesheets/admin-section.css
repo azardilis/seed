@@ -1,158 +1,103 @@
 /*CSS for styling the modules administration accordion*/
-section.admin-container{
-	width:340px;
-	float:left;
-	padding : 8px ;
-	margin-bottom : 2px ;
-	border : 1px solid #88ccff ;
+section.admin-container{width:340px;
+			float:left;
+			padding : 8px ;
+			margin-bottom : 2px ;
+			border : 1px solid #88ccff ;
+			border-radius : 5px ;}
+
+#plus{ width:24px; float: right;}
+
+#_new_module{float:left; width:267px;}
+
+
+
+section.admin-container:hover{ background:#eeffff;}
+
+
+section.admin-container-new{ width:340px;
+			     float:left;
+			     padding : 8px ;
+			     margin-bottom : 2px ;
+			     border : 1px solid #88ccff ;
 	
-	border-radius : 5px ;
+			     border-radius : 5px ;
+			     background-color:#C6FFBF;
 }
-#plus{
-	width:24px;
-	float: right;
-}
-#_new_module{
-float:left;
-width:267px;
-}
+
+p.admin-handler{cursor : pointer ; color : #02527d ; font-size : 17px ;}
+
+
+section.admin-handlercontent{ width:330px; margin:4px; display: none ; /* this will hide the content*/}
 
 
 
-section.admin-container:hover{
-	background:#eeffff;
-}
-section.admin-container-new{
-	width:340px;
-	float:left;
-	padding : 8px ;
-	margin-bottom : 2px ;
-	border : 1px solid #88ccff ;
-	
-	border-radius : 5px ;
-	background-color:#C6FFBF;
-}
+a{ text-decoration : underline ; color : #02527d ;}
 
-p.admin-handler{				
-	cursor : pointer ;
-	color : #02527d ;
-	font-size : 17px ;
-}
+a:hover { color : #003366 ;}
+
+#admin-left-column{width:350px;
+		   float:left;
+		   margin-right:7px;}
 
 
-section.admin-handlercontent{
-	/*this is funny business as well*/
-	width:330px;
-	margin:4px;
-	display: none ; /* this will hide the content*/
-}
-
-
-
-a{
-	text-decoration : underline ;
-	color : #02527d ;
-}
-
-a:hover {
-	color : #003366 ;
-}
-
-#admin-left-column{
-	width:350px;
-	float:left;
-	margin-right:7px;
-}
-#admin-right-column{
-	width:350px;
-	float:left;
-	margin-left:7px;
-}
+#admin-right-column{width:350px;
+		    float:left;
+	            margin-left:7px;}
 
 
 
 /*Form elements*/
-#apply_button{
-	padding:3px;
-	color:green;
-}
-#remove_module_button{
-	color:red;
-	font-size:85%;
-	margin-top:10px;
-	padding:3px;
-}
-input, select{
-	margin-bottom:7px;
+#apply_button{padding:3px;  color:green;}
 
-}
+#remove_module_button{	color:red;
+			font-size:85%;
+			margin-top:10px;
+			padding:3px;  }
+
+input, select{	margin-bottom:7px;}
 
 
 /*success and error message css*/
 
- .success,  .error {
-    border: 1px solid;
-    margin: 10px 0px;
-    padding:15px 10px 15px 50px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-}
+ .success,  .error {    border: 1px solid;
+    			margin: 10px 0px;
+    			padding:15px 10px 15px 50px;
+    			background-repeat: no-repeat;
+    			background-position: 10px center; }
 
-.success {
-	
-    color: #4F8A10;
-    background-color: #DFF2BF;
-    background-image:url('success.png');
-}
+.success {   color: #4F8A10; background-color: #DFF2BF;  background-image:url('success.png');}
 
-.error {
-    color: #D8000C;
-    background-color: #FFBABA;
-    background-image: url('error.png');
-}
+
+.error {    color: #D8000C; background-color: #FFBABA;   background-image: url('error.png');}
 
 /*Users administration*/
-#horizontal-menu{
-	width:95%;
-	float:left;
-	height:10px;
-	padding:2px 5px 15px 5px;
-	margin:3px 0 0 10px;
-	background: #007275;
-	border : 1px solid #005355;
-	
-	border-radius : 5px ;
-}
-#horizontal-menu-item,#horizontal-menu-search{
-	float:left;
-	color:white;
-	padding:2px;
-	margin-right:15px;
-	display : inline ;
-}
+#horizontal-menu{ width:95%;
+		  float:left;
+		  height:10px;
+		  padding:2px 5px 15px 5px;
+		  margin:3px 0 0 10px;
+		  background: #007275;
+		  border : 1px solid #005355;
+	          border-radius : 5px ; }
 
-#horizontal-menu-item a{
-	color:white;
-	text-decoration:none;
-}
-#horizontal-menu-item:hover{
-	float:left;
-	color:white;
-	padding:2px;
-	background:#005355;
-	border-radius : 5px ;
-	border : 1px ;
-}
-#admin-user-creation-form{
-	width:350px;
-	float:left;
-	margin:15px 5px 0 10px;
-}
-.user{
-	float:left;
-	margin: 3px 10px 3px 10px;
-}
+#horizontal-menu-item,#horizontal-menu-search{ 	float:left;
+						color:white;
+						padding:2px;
+						margin-right:15px;
+						display : inline ; }
 
-input{
-	width:70%;
-}
+
+#horizontal-menu-item a{ color:white; 	text-decoration:none; }
+
+#horizontal-menu-item:hover{ 	float:left;
+				color:white;
+				padding:2px;
+				background:#005355;
+				border-radius : 5px ;
+				border : 1px ; }
+#admin-user-creation-form{ width:350px; float:left; margin:15px 5px 0 10px; }
+
+.user{	float:left; margin: 3px 10px 3px 10px;}
+
+input{ width:70%;}
