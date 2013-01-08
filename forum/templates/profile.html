@@ -4,8 +4,7 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/forum_subs.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/profile.css" />
-	     
-<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<script src="js/jq-1.8.3.js"></script>	
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
@@ -28,20 +27,13 @@
 				<form action="/profile"
 					enctype="multipart/form-data" method="post">
 					
-					<h2>New Name</h2>
-					<br>
-					<input type="text" name="fullname" value="{{user.full_name}}" size="30">
-					<br>
-					<br>
+					<h2>New Name</h2><br>
+					<input type="text" name="fullname" value="{{user.full_name}}" size="30"><br><br>
 					<h2>Upload new avatar picture</h2><br>
-					<input type="file" name="img" size="15">
-					<br>
-					<br>
+					<input type="file" name="img" size="15"><br><br>
 					<div>
-					<input type="submit" value="Save">
-					</div>
+					<input type="submit" value="Save"></div>
 				</form>
-			
 			</div>
 		{%endif%}	
 			<div id="profile_header">
@@ -51,23 +43,14 @@
 				<img src="/profileimage?usr={{user.key()}}" width="180" height="180">
 				<div id="col1">
 					<p id="name">{{user.full_name}}</p>
-					<p class="course">{{user.course}} {{user.year}}</p>
-					<br>
-					<br>
+					<p class="course">{{user.course}} {{user.year}}</p><br><br>
 					<h2 class="figures">{{user.karma}}</h2><h2 class="desc">Accepted Answers</h2>
 				</div>
 				<div id="col2">
-					<br>
-					<h2 class="figures">{{user_threads}}</h2><h2 class="desc">Created Topics</h2>
-					<br>
-					<br>
-					<br>
-					<br>
+					<br><h2 class="figures">{{user_threads}}</h2><h2 class="desc">Created Topics</h2><br><br><br><br>
 					<h2 class="figures">{{user_posts}}</h2><h2 class="desc">Comments Posted</h2> 
-				</div>	
-					
-			</div>
-			<br>
+				</div>		
+			</div><br>
 			<h1><p><b>Modules you are subscribed to</b></p></h1>
 			<div id="allsubs">
 			{% for sub in mod_info%}
@@ -78,8 +61,7 @@
 					<br>
 					{%endif%}
 					<b><p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_code.upper() }}</a></p></b>
-					<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p>
-					<b><p class="box">Lecturers</p></b>
+					<p class="box"><a href="/categories?mid={{sub.sub_code }}">{{ sub.sub_name }}</a></p><b><p class="box">Lecturers</p></b>
 					{% for lect in sub.mod_lecturers %}
 					<u><font color="#02527d"><a href={{lect.home_page}}>{{lect.full_name}}</a></font></u>
 					{% endfor %}
@@ -91,11 +73,8 @@
 			<div class="subs" width = "300">
 				<b><p class="box">Add a Module</p></b>
 				<a href="modules">
-					<img id="plus"  src="/stylesheets/resources/plus.png" alt="Add image" height="100" width="100">
-				</a>
-			</div>
-			{%endif%}
-			
+					<img id="plus"  src="/stylesheets/resources/plus.png" alt="Add image" height="100" width="100"></a></div>
+			{%endif%}	
 		</section> 	
 	</div>
 		

@@ -21,8 +21,7 @@
 				{%endif%}
 
 		<section id="pagecontent" class="cleared">
-			<h1 class="pagetitle">All the modules for your course!</h1>
-			<p>To subscribe to a module simply click on its name and toggle your subscription on or off!</p>
+			<h1 class="pagetitle">All the modules for your course!</h1><p>To subscribe to a module simply click on its name and toggle your subscription on or off!</p>
 
 			<section class="container">
 				<h3 class="trigger" year="1"><a > Year 1 </a></h3>
@@ -58,8 +57,7 @@
 					<ul class="mods">
 						{% for module in y2s1 %}
 						<li>
-							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
-						</li>
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
@@ -69,8 +67,7 @@
 					<ul class="mods">
 						{% for module in y2s2 %}
 						<li>
-							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
-						</li>
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
@@ -85,8 +82,7 @@
 					<ul class="mods">
 						{% for module in y3s1 %}
 						<li>
-							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
-						</li>
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a> [<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
@@ -96,8 +92,7 @@
 					<ul class="mods">
 						{% for module in y3s2 %}
 						<li>
-							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a>[<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]
-						</li>
+							<b>{{module.key().name()}}</b>: <a href="categories?mid={{module.key().name()}}">{{module.title}}</a>[<a href="{{module.ecs_page}}" class="modulelink">ECS page</a>]</li>
 						{% endfor %}
 					</ul>
 					{% endif %}
