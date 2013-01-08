@@ -447,11 +447,11 @@ class MainPage(BaseHandler):
                 for cat in categs:
                     threads = cat.threads
                     threads = threads.order('-timestamp').fetch(2)
-                    for thread in threads: 
-						recent_threads.append(thread)
-						if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
-						template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
+                    for thread in threads: recent_threads.append(thread)
 
+            if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
+
+            template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
 
