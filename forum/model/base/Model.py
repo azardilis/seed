@@ -1,12 +1,4 @@
 from google.appengine.ext import db
-import Thread
-import User
-import Post
-import Module 
-import Assessment
-import YearCourseSemester
-from SchoolYear import SchoolYear
-import Lecturer
 
 class Post(db.Model) :
 	body = db.StringProperty(required=True,multiline=True)
@@ -106,3 +98,32 @@ class Vote(db.Model):
 	user = db.ReferenceProperty(User.User,required=True,collection_name='votes')
 	post = db.ReferenceProperty(Post.Post, required=True, collection_name='voters')
 	value= db.IntegerProperty(required=True,choices=set([1,-1]))
+
+
+class Rating(db.Model) : 
+	lecturer = db.ReferenceProperty(Lecturer.Lecturer, collection_name='modules',required=True)
+	module = db.ReferenceProperty(Module.Module, collection_name='lecturers',required=True)
+	teach_sum = db.IntegerProperty(default=0)
+	teach_count = db.IntegerProperty(default=0)
+	overall_sum = db.IntegerProperty(default=0) #promptness TODO:correct in every file used
+	overall_count = db.IntegerProperty(default=0)
+class YearCourseSemester(db.Model):
+	year = db.IntegerProperty(required=True)
+	semester = db.IntegerProperty(required=True)
+	course = db.StringProperty(required=True)
+	prettyName=db.StringProperty(required=False)
+
+class Category(db.Model) :
+	name = db.StringProperty(required=True)
+	description = db.StringProperty(required=True)
+	module = db.ReferenceProperty(Module.Module, collection_name='categories',required=True)
+
+class Thread(db.Model) :
+	category = db.ReferenceProperty(Category.Category,required=True, collection_name='threads')
+	tags = db.ListProperty(str, required=True)
+	subject = db.StringProperty(required=True,)
+        body = db.StringProperty(required=True,multiline=True)
+	answered = db.BooleanProperty(default=False)
+        answers = db.IntegerProperty(default=0)
+        poster = db.ReferenceProperty(User.User, collection_name='threads', required=True)
+        timestamp = db.DateTimeProperty(auto_now_add=True) 

@@ -29,6 +29,11 @@ div#login {
        visibility: visible;
    }
 
+   label.bl {
+	position:relative;
+	float:right;
+   }
+
    div.forum-pic{
 	position:relative;
 	float:left;

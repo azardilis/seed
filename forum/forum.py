@@ -78,17 +78,27 @@ def cloneEntity(e, **extra_args):
 	return klass(**props)
 
 def search_success(thread, search_term):
-    return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()	
+    success = 0
+    search_places = []
+    search_places.append(thread.tags)
+    search_places.append(thread.poster.full_name)
+    search_places.append(thread.subject)
+    search_places.append(thread.poster.key().name())
+    for search_place in search_places:
+	    if search_term in search_place: success += 1
+    return success
+    #return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()	
 
 def search_thread_tags(search_terms):
     results = {}
     threads = Thread.all()
     for thread in threads:
         for search_term in search_terms:
-            if search_success(thread, search_term) and thread in results:
-		    results[thread] += 1
-	    elif search_success(thread, search_term) and not (thread in results):
-		    results[thread] = 1
+	    succ = search_success(thread, search_term)	
+            if succ > 0 and thread in results:
+		    results[thread] += succ
+	    elif succ > 0 and not (thread in results):
+		    results[thread] = succ
     #sort the results dict by the occurences of search_terms in tags
     sorted_results = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
     return sorted_results
@@ -225,6 +235,93 @@ class AdminModules(BaseHandler):
 			template_values = {
 						'current_user':current_user,
 						'subscriptions':subscribed_modules,
+						'message':"The changes have been successfully submited to the datastore"
+					}
+			template = jinja_environment.get_template('templates/message-page.html')
+			self.response.out.write(template.render(template_values))
+				
+			
+		else:
+			#proper error message should be displayed (some javascript or something)
+			self.redirect("/")
+
+#Assessments administration page
+class AdminAssessment(BaseHandler):
+    def get(self):
+        #passing variables to template
+		global current_user
+		firsthalf=[]
+		secondhalf=[]
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		if self.session.get('type')==1:
+				cwks=Assessment.all().run()
+				count=Assessment.all().count()
+				#splitting the assessments array in half to be able to display it nicely on two columns in the template
+				i=1
+				if count%2 is 0:
+					for cwk in cwks:
+						if i<=count/2:
+							firsthalf.append(cwk)
+						else:
+							secondhalf.append(cwk)
+						i=i+1
+				else:
+					for cwk in cwks:
+						if i<=count/2+1:
+							firsthalf.append(cwk)
+						else:
+							secondhalf.append(cwk)
+						i=i+1
+				template_values = {
+					'current_user':current_user,
+					'firsthalf':firsthalf,
+					'secondhalf':secondhalf
+				}
+				template = jinja_environment.get_template('templates/admin-assessments.html')
+				self.response.out.write(template.render(template_values))
+		else:
+				self.redirect("/")
+    def post(self):
+		global current_user
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		if self.session.get('type')==1:
+			is_delete = self.request.POST.get('remove_module_button', None)
+			is_apply = self.request.POST.get('apply_button', None)
+			is_add = self.request.POST.get('add_button', None)
+			if is_apply:
+				#get the assessment object from the datastore
+				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+				if cgi.escape(self.request.get('cwk_title')) is not None:
+					cwkObject.title=cgi.escape(self.request.get('cwk_title'))
+				if cgi.escape(self.request.get('cwk_duedate')) is not None:
+					cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
+				if cgi.escape(self.request.get('cwk_speclink')) is not None:
+					cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
+				if cgi.escape(self.request.get('cwk_handin')) is not None:
+					cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
+				if cgi.escape(self.request.get('cwk_modulecode')) is not None:
+					cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+				cwkObject.put()
+			if is_delete:
+				#get the assessment object from the datastore
+				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+				cwkObject.delete()
+			if is_add:
+				if cgi.escape(self.request.get('cwk_title')) is not None and cgi.escape(self.request.get('cwk_duedate')) is not None and cgi.escape(self.request.get('cwk_modulecode')) is not None:
+					cwk_title=cgi.escape(self.request.get('cwk_title'))
+					cwk_duedate=cgi.escape(self.request.get('cwk_duedate'))
+					cwk_speclink=cgi.escape(self.request.get('cwk_speclink'))
+					cwk_handin=cgi.escape(self.request.get('cwk_handin'))
+					cwkObject=Assessment(title=cwk_title,
+									dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'),
+									specLink=cwk_speclink, 
+									handin=cwk_handin,
+									module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+									)
+				
+					cwkObject.put()
+			template_values = {
+						'current_user':current_user,
 						'message':"The changes have been successfully submited to the datastore"
 					}
 			template = jinja_environment.get_template('templates/message-page.html')
@@ -384,7 +481,7 @@ class SignInPage(BaseHandler):
     def get(self):
                 if  self.session.get('type') is None or self.session.get('type')==-1:
 	            template = jinja_environment.get_template('templates/signin.html')
-	            self.response.out.write(template.render())
+	            self.response.out.write(template.render({'bad_login':self.request.get('bad_login')}))
 		    self.session['type']=-1
 		    global url
 		    url=self.request.url
@@ -414,26 +511,26 @@ class SignInPage(BaseHandler):
 				year=0
 		
 			if fname is None or fname=='Full Name' or fname=='':
-				fname=' '
+				fname=pot_user 
 
 			if course is None or course=='Course' or course=='':
-				course=' '
+				course='compsci'
 			
 			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,)
 			user.put()
 	else:
+		username = self.request.get('user')
+		password = self.request.get('password')
 		potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
 		if potential_user is not None and potential_user.password==self.request.get('password'):
-	       	    current_user=potential_user
-		    self.session['name']=self.request.get('user')
-		    self.session['type']=potential_user.user_type
-		    #if self.session.get('type')==1:
-		    #	self.redirect('/admin')
-		    #else:
-		    self.redirect("/main")
-	       	else:
+			current_user=potential_user
+			self.session['name']=self.request.get('user')
+			self.session['type']=potential_user.user_type
+			self.redirect("/main")
+		else:
        		    #proper error message should be displayed (some javascript or something)
-		    print "The username and password do not match, please try again!"
+			#print "The username and password do not match, please try again!"
+			self.redirect("/?bad_login=1")
 
 class MainPage(BaseHandler):
     def get(self):
@@ -696,14 +793,15 @@ class ThreadPage(BaseHandler):
             }
             self.response.out.write(template.render(template_params))
         else :
-            self.response.out.write('Unable to find thread '+str(self.request.get('ti'))+'<')
+            logging.error('Unable to find thread '+str(self.request.get('ti'))+'<')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Unable to find the specified thread.'}))
 
 class ViewAllThreadsPage(BaseHandler):
     def get(self):
         if self.session.get('type')==-1:
 		self.redirect('/403')
 		return
-	category = retrieve_category(self.request.get('cid'))
+    	category = retrieve_category(self.request.get('cid'))
         current_user = db.get(Key.from_path('User',self.session.get('name')))
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 
@@ -719,8 +817,7 @@ class ViewAllThreadsPage(BaseHandler):
             template = jinja_environment.get_template('templates/forum_category_all.html')
             self.response.out.write(template.render(template_vars))
         else :
-            logging.error('no category found '+str(cid))
-            self.response.out.write('Couldn\'t get category')
+            logging.error('no category found '+str(self.request.get('cid')))
             self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 			
 class removeThread(BaseHandler):
@@ -728,15 +825,23 @@ class removeThread(BaseHandler):
         if self.session.get('type')!=1:
 		self.redirect('/')
 		return
-	tid= self.request.get('tid')
+    	tid= self.request.get('tid')
 
         if tid :
 			thread=Thread.get(tid)
 			thread.delete()
-			self.redirect("javascript:history.go(-1)")
+			template_values = {
+						'current_user':current_user,
+						'message':"The changes have been saved!"
+			}
+			template = jinja_environment.get_template('templates/message-page.html')
+			self.response.out.write(template.render(template_values))
+			self.response.headers.add_header("Expires","0")
+			self.response.headers.add_header("Pragma","no-cache")
+			self.response.headers.add_header("Cache-Control","no-cache, no-store, must-revalidate")
         else :
             logging.error('no category found '+str(cid))
-            self.response.out.write('Couldn\'t get category')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class NewThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -757,7 +862,9 @@ class NewThread(BaseHandler):
                     'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
-        else : logging.error('newthread : empty cid >'+str(cid)+'<')
+        else :
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
+            logging.error('newthread : empty cid >'+str(cid)+'<')
 
 class CreateNewThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -778,7 +885,7 @@ class CreateNewThread(BaseHandler):
             t.put()
             self.response.out.write(t.key().id())
         else :
-            self.response.out.write('category not found')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class ReplyToThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -940,9 +1047,12 @@ class ProfilePage(BaseHandler):
 		user_key = current_user.key()
 		user = db.get(user_key)
 		if len(avatar) >0:
-			avatar=images.resize(avatar, 200, 200)
-			user.avatar = db.Blob(avatar)
-			
+			try:
+				avatar=images.resize(avatar, 200, 200)
+				user.avatar = db.Blob(avatar)
+			except Exception, err:
+				self.redirect('/403')
+				
 		if len(fullname) >0:	
 			user.full_name = fullname
 			
@@ -1081,14 +1191,16 @@ class EmailSent(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         self.request.get('subject')
+	subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         template = jinja_environment.get_template('templates/something.html')
-        subject = self.response.write(self.request.get('subject'))
-        message = self.response.write(self.request.get('message'))
-        mail.send_mail(sender='alex.pana.oikonomou@gmail.com',#user google email
+        subject = self.request.get('subject')
+        message = self.request.get('message')
+        mail.send_mail(sender="scriptingteamk@gmail.com",
                        to='scriptingteamk@gmail.com',
                        subject=subject,
                        body=message)
-        self.response.out.write(template.render({}))
+	self.redirect("/contact")
+        #self.response.out.write(template.render({'current_user':current_user,'subscriptions':subscribed_modules }))
 
 class ModuleInfo:
 	def __init__(self,sub_key,sub_code,sub_name,mod_lecturers,mod_assessments):
@@ -1215,5 +1327,6 @@ app = webapp2.WSGIApplication([
 	('/403',FourOThree),
 	('/removeThread',removeThread),
 	('/search', SearchPage),
-	('/results',SearchResults)
+	('/results',SearchResults),
+	('/admin-assessment',AdminAssessment)
 ], debug=True,config=session_dic)
