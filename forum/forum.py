@@ -1151,17 +1151,18 @@ class RssPage(BaseHandler):
 
 class SearchPage(BaseHandler):
     def get(self):
+        subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         template = jinja_environment.get_template('templates/search_page.html')
-	self.response.out.write(template.render({'current_user':current_user}))
+	self.response.out.write(template.render({'current_user':current_user, 'subscriptions':subscribed_modules}))
 
 class SearchResults(BaseHandler):
     def get(self):
-	    
+	subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]    
         query = self.request.get("search_terms")
 	search_terms = query.split()
 	results = search_thread_tags(search_terms)
         template = jinja_environment.get_template('templates/search_results.html')
-	self.response.out.write(template.render({'current_user':current_user, 'results':results}))
+	self.response.out.write(template.render({'current_user':current_user, 'results':results, 'subscriptions':subscribed_modules}))
         
 class Logout(BaseHandler):
 	def get(self):

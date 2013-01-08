@@ -18,7 +18,7 @@
 		{%endif%}
 		<section id="pagecontent" class="cleared">
 		  <h1 class="pagetitle">Results</h1>
-		  <ul>
+		  <ul class="mods">
 		    {%for result in results %}
 		    <li> <a href="showthread?tid={{result[0].key().id()}}"> {{result[0].category.module.key().name()}}: {{result[0].subject}}</a> </li>
 		    {% endfor %}
