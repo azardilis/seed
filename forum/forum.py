@@ -733,7 +733,15 @@ class removeThread(BaseHandler):
         if tid :
 			thread=Thread.get(tid)
 			thread.delete()
-			self.redirect("javascript:history.go(-1)")
+			template_values = {
+						'current_user':current_user,
+						'message':"The changes have been saved!"
+			}
+			template = jinja_environment.get_template('templates/message-page.html')
+			self.response.out.write(template.render(template_values))
+			self.response.headers.add_header("Expires","0")
+			self.response.headers.add_header("Pragma","no-cache")
+			self.response.headers.add_header("Cache-Control","no-cache, no-store, must-revalidate")
         else :
             logging.error('no category found '+str(cid))
             self.response.out.write('Couldn\'t get category')
@@ -1084,14 +1092,16 @@ class EmailSent(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         self.request.get('subject')
+	subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         template = jinja_environment.get_template('templates/something.html')
-        subject = self.response.write(self.request.get('subject'))
-        message = self.response.write(self.request.get('message'))
-        mail.send_mail(sender='alex.pana.oikonomou@gmail.com',#user google email
+        subject = self.request.get('subject')
+        message = self.request.get('message')
+        mail.send_mail(sender="scriptingteamk@gmail.com",
                        to='scriptingteamk@gmail.com',
                        subject=subject,
                        body=message)
-        self.response.out.write(template.render({}))
+	self.redirect("/contact")
+        #self.response.out.write(template.render({'current_user':current_user,'subscriptions':subscribed_modules }))
 
 class ModuleInfo:
 	def __init__(self,sub_key,sub_code,sub_name,mod_lecturers,mod_assessments):
