@@ -77,14 +77,17 @@ def cloneEntity(e, **extra_args):
 	props.update(extra_args)
 	return klass(**props)
 
+def search_success(thread, search_term):
+    return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()	
+
 def search_thread_tags(search_terms):
     results = {}
     threads = Thread.all()
     for thread in threads:
         for search_term in search_terms:
-            if search_term in thread.tags and thread in results:
+            if search_success(thread, search_term) and thread in results:
 		    results[thread] += 1
-	    elif search_term in thread.tags and not (thread in results):
+	    elif search_success(thread, search_term) and not (thread in results):
 		    results[thread] = 1
     #sort the results dict by the occurences of search_terms in tags
     sorted_results = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
@@ -1102,7 +1105,8 @@ class ModulesPage(BaseHandler):
         
         homepage_subs = subscribed_modules
 
-        course = "compsci"
+        #course = "compsci"
+	course = current_user.course
         y1s1 = getYCS(1, course, 1)
         y1s2 = getYCS(1, course, 2)
         y2s1 = getYCS(2, course, 1)
