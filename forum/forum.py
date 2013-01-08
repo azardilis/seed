@@ -1259,11 +1259,11 @@ class RssPage(BaseHandler):
 				    link="http://localhost:9999/showthread?tid="+str(thread.key().id()),
 				    description=mod.key().name(),
 				    category=cat.name,
-				    pub_date=date)
+				    pub_date=thread.timestamp.strftime('%a, %d %b %Y %X %Z'))
 		    items.append(item)
 	    template_values = {'name':name,
-			   'items':items,
-			   'date':date}
+			       'items':items,
+			       'date':date}
 	    template = jinja_environment.get_template('templates/news.rss')
 	    self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
