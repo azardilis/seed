@@ -14,16 +14,12 @@
 
 		a.newth{
 			position : relative ;
-			float : right ;
-		}
+			float : right ;}
 
 		section.handlercontent{
 			/*this is funny business as well*/
-			margin : 30px ;
-			margin-top : 0px;
-			margin-bottom : 0px;
-			display: block ; /* this will hide the content*/
-		}
+			margin : 30px ;margin-top : 0px;margin-bottom : 0px;
+			display: block ; /* this will hide the content*/}
 
 	</style>           	    
 </head>
@@ -38,15 +34,12 @@
 		<section id="pagecontent" class="cleared">
 			<section class="category">			
 				<section class="container">
-					<p class="handler">{{  category.name }}</p>	
-					<a href="/newthread?catid={{ category.key().id()}}" class="newth">Create new...</a>
+					<p class="handler">{{  category.name }}</p><a href="/newthread?catid={{ category.key().id()}}" class="newth">Create new...</a>
 				</section>
 				<section class="handlercontent">
 					{% for th in threads %}
 					<article class="thread">
-						<a href="/showthread?tid={{ th.key().id() }}" class="thtitle">
-							<b>{{th.subject}}</b>
-						</a>
+						<a href="/showthread?tid={{ th.key().id() }}" class="thtitle"><b>{{th.subject}}</b></a>
 						<p class="details">Posted by {{th.poster.key().name()}} on {{th.timestamp.date()}}</p>							
 						<p class="thbody">{{th.body[0:50]}}...</p>
 						{%if current_user.user_type==1%}
