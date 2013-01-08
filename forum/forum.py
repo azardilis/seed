@@ -940,9 +940,12 @@ class ProfilePage(BaseHandler):
 		user_key = current_user.key()
 		user = db.get(user_key)
 		if len(avatar) >0:
-			avatar=images.resize(avatar, 200, 200)
-			user.avatar = db.Blob(avatar)
-			
+			try:
+				avatar=images.resize(avatar, 200, 200)
+				user.avatar = db.Blob(avatar)
+			except Exception, err:
+				self.redirect('/403')
+				
 		if len(fullname) >0:	
 			user.full_name = fullname
 			
