@@ -18,23 +18,19 @@
 			
 		<div id="horizontal-menu">
 			<div id="horizontal-menu-item">
-				<span><a href="/admin-users">Edit an existing user</a></span>
-			</div>
+				<span><a href="/admin-users">Edit an existing user</a></span></div>
 			<div id="horizontal-menu-item">
-				<span><a href="/admin-user-creation">Add a new user</a></span>
-			</div>
+				<span><a href="/admin-user-creation">Add a new user</a></span></div>
 			<div id="horizontal-menu-search">
 				<form id="search" name="search" action="/admin-users">
-					<label for="filter-username">username:</label>
+					<label for="filter-username">Search:</label>
 					<input type="text" name="filter-username" value="" id="filter"  size="20">
-					<input type="submit" name="filter-button" id="filter-button" value="Filter" >
+					<input type="submit" name="filter-button" id="filter-button" value="Go" >
 				</form>
-			</div>
-		</div>
+			</div></div>
 			{%for user in users%}
 			<div class="user"><a href="/admin-edit-user?user={{user.key().name()}}">{{user.full_name}} ({{user.key().name()}})</a></div>
-			{%endfor%}
-		</section>
+			{%endfor%}</section>
 		<div style="margin:10px;float:left">{{message}}</div>
 </body>
 </html>

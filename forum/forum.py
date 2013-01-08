@@ -84,10 +84,10 @@ def search_thread_tags(search_terms):
     results = {}
     threads = Thread.all()
     for thread in threads:
-        succ = search_success(thread, search_term)
         for search_term in search_terms:
-            if succ > 0 and thread in results: results[thread] += succ
-            elif succ > 0 and not (thread in results): results[thread] = succ
+			succ = search_success(thread, search_term)	
+			if succ > 0 and thread in results: results[thread] += succ
+			elif succ > 0 and not (thread in results): results[thread] = succ
     #sort the results dict by the occurences of search_terms in tags
     sorted_results = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
     return sorted_results
@@ -157,62 +157,121 @@ class AdminModules(BaseHandler):
         else:
             self.redirect("/")
     def post(self):
-        global current_user
-        current_user = db.get(Key.from_path('User',self.session.get('name')))
-        subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-        if self.session.get('type')==1:
-            is_delete = self.request.POST.get('remove_module_button', None)
-            is_apply = self.request.POST.get('apply_button', None)
-            is_add = self.request.POST.get('add_button', None)
-            if is_apply:
-            #get the module object from the datastore
-                moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
-                if cgi.escape(self.request.get('module_title')) is not None:
-                    moduleObject.title=cgi.escape(self.request.get('module_title'))
-                if cgi.escape(self.request.get('module_code')) is not None:
-                    moduleObject.ecs_page=cgi.escape(self.request.get('module_page'))
-                if cgi.escape(self.request.get('ycs')) is not None:
-                    ycs=cgi.escape(self.request.get('ycs'))
-                    #get the course, year and semester out of the value that comes in
-                    course=ycs.split('-')[0]
-                    year=ycs.split('-')[1]
-                    semester=ycs.split('-')[2]
-                    #get all YCS values and then filter to get only the right one
-                    ycs_list = YearCourseSemester.all()
-                    ycs_list.filter('year =', int(year))
-                    ycs_list.filter('course =', course)
-                    ycs_list.filter('semester =', int(semester))
-                    ycs=ycs_list.get()
-                    moduleObject.yearCourseSemester=ycs
-                moduleObject.put()
-            if is_delete:
-                #get the module object from the datastore
-                moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
-                moduleObject.delete()
-            if is_add:
-                if cgi.escape(self.request.get('ycs')) is not None and cgi.escape(self.request.get('module_code')) is not None and cgi.escape(self.request.get('module_title')) is not None:
-                    ycs=cgi.escape(self.request.get('ycs'))
-                    #get the course, year and semester out of the value that comes in
-                    course=ycs.split('-')[0]
-                    year=ycs.split('-')[1]
-                    semester=ycs.split('-')[2]
-                    #get all YCS values and then filter to get only the right one
-                    ycs_list = YearCourseSemester.all()
-                    ycs_list.filter('year =', int(year))
-                    ycs_list.filter('course =', course)
-                    ycs_list.filter('semester =', int(semester))
-                    ycs=ycs_list.get()
+		global current_user
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+		if self.session.get('type')==1:
+			is_delete = self.request.POST.get('remove_module_button', None)
+			is_apply = self.request.POST.get('apply_button', None)
+			is_add = self.request.POST.get('add_button', None)
+			if is_apply:
+				#get the module object from the datastore
+				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
+				if cgi.escape(self.request.get('module_title')) is not None: moduleObject.title=cgi.escape(self.request.get('module_title'))
+				if cgi.escape(self.request.get('module_code')) is not None: moduleObject.ecs_page=cgi.escape(self.request.get('module_page'))
+				if cgi.escape(self.request.get('ycs')) is not None:
+					ycs=cgi.escape(self.request.get('ycs'))
+					#get the course, year and semester out of the value that comes in
+					course=ycs.split('-')[0]
+					year=ycs.split('-')[1]
+					semester=ycs.split('-')[2]
+					#get all YCS values and then filter to get only the right one
+					ycs_list = YearCourseSemester.all()
+					ycs_list.filter('year =', int(year))
+					ycs_list.filter('course =', course)
+					ycs_list.filter('semester =', int(semester))
+					ycs=ycs_list.get()
+					moduleObject.yearCourseSemester=ycs
+				moduleObject.put()
+			if is_delete:
+				#get the module object from the datastore
+				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
+				moduleObject.delete()
+			if is_add:
+				if cgi.escape(self.request.get('ycs')) is not None and cgi.escape(self.request.get('module_code')) is not None and cgi.escape(self.request.get('module_title')) is not None:
+					ycs=cgi.escape(self.request.get('ycs'))
+					#get the course, year and semester out of the value that comes in
+					course=ycs.split('-')[0]
+					year=ycs.split('-')[1]
+					semester=ycs.split('-')[2]
+					#get all YCS values and then filter to get only the right one
+					ycs_list = YearCourseSemester.all()
+					ycs_list.filter('year =', int(year))
+					ycs_list.filter('course =', course)
+					ycs_list.filter('semester =', int(semester))
+					ycs=ycs_list.get()
+					
+					moduleObject=Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs)
+				
+				moduleObject.put()
+			template_values = { 'current_user':current_user,
+						'subscriptions':subscribed_modules,
+						'message':"The changes have been successfully submited to the datastore" }
+			template = jinja_environment.get_template('templates/message-page.html')
+			self.response.out.write(template.render(template_values))
+				
+		else: self.redirect("/")
 
-                    Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs).put()
+#Assessments administration page
+class AdminAssessment(BaseHandler):
+    def get(self):
+        #passing variables to template
+		global current_user
+		firsthalf, secondhalf=[], []
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		if self.session.get('type')==1:
+				cwks=Assessment.all().run()
+				count=Assessment.all().count()
+				#splitting the assessments array in half to be able to display it nicely on two columns in the template
+				i=1
+				if count%2 is 0:
+					for cwk in cwks:
+						if i<=count/2: firsthalf.append(cwk)
+						else: secondhalf.append(cwk)
+						i=i+1
+				else:
+					for cwk in cwks:
+						if i<=count/2+1: firsthalf.append(cwk)
+						else: secondhalf.append(cwk)
+						i=i+1
+				template_values = { 'current_user':current_user, 'firsthalf':firsthalf, 'secondhalf':secondhalf }
+				template = jinja_environment.get_template('templates/admin-assessments.html')
+				self.response.out.write(template.render(template_values))
 
-            template_values = { 'current_user':current_user,
-                                'subscriptions':subscribed_modules,
-                                'message':"The changes have been successfully submited to the datastore" }
-            template = jinja_environment.get_template('templates/message-page.html')
-            self.response.out.write(template.render(template_values))
+		else: self.redirect("/")
 
-
-        else: self.redirect("/") 
+    def post(self):
+		global current_user
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		if self.session.get('type')==1:
+			is_delete,is_apply,is_add = self.request.POST.get('remove_module_button', None),self.request.POST.get('apply_button', None), self.request.POST.get('add_button', None)
+			if is_apply:
+				#get the assessment object from the datastore
+				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+				if cgi.escape(self.request.get('cwk_title')) is not None: cwkObject.title=cgi.escape(self.request.get('cwk_title'))
+				if cgi.escape(self.request.get('cwk_duedate')) is not None: cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
+				if cgi.escape(self.request.get('cwk_speclink')) is not None: cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
+				if cgi.escape(self.request.get('cwk_handin')) is not None: cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
+				if cgi.escape(self.request.get('cwk_modulecode')) is not None: cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+				cwkObject.put()
+			if is_delete:
+				#get the assessment object from the datastore
+				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+				cwkObject.delete()
+			if is_add:
+				if cgi.escape(self.request.get('cwk_title')) is not None and cgi.escape(self.request.get('cwk_duedate')) is not None and cgi.escape(self.request.get('cwk_modulecode')) is not None:
+					cwk_title=cgi.escape(self.request.get('cwk_title'))
+					cwk_duedate=cgi.escape(self.request.get('cwk_duedate'))
+					cwk_speclink=cgi.escape(self.request.get('cwk_speclink'))
+					cwk_handin=cgi.escape(self.request.get('cwk_handin'))
+					cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
+				
+					cwkObject.put()
+			template_values = { 'current_user':current_user, 'message':"The changes have been successfully submited to the datastore" }
+			template = jinja_environment.get_template('templates/message-page.html')
+			self.response.out.write(template.render(template_values))
+			
+		else: self.redirect("/")
 
 #Existing user accounts administration page
 class AdminUsers(BaseHandler):
@@ -342,49 +401,41 @@ class AdminEditUser(BaseHandler):
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(BaseHandler):
     def get(self):
-        if  self.session.get('type') is None or self.session.get('type')==-1:
-            template = jinja_environment.get_template('templates/signin.html')
-            self.response.out.write(template.render())
-            self.session['type']=-1
-            global url
-            url=self.request.url
-        else: self.redirect("/main")
+		if  self.session.get('type') is None or self.session.get('type')==-1:
+			template = jinja_environment.get_template('templates/signin.html')
+			self.response.out.write(template.render({'bad_login':self.request.get('bad_login')}))
+			self.session['type']=-1
+			global url
+			url=self.request.url
+		else:self.redirect("/main")
 
     def post(self): #authenticate the user
         global current_user
-
-        if self.request.url==url+'?reg=yes':
-            pot_user=self.request.get('email')
-            if pot_user[pot_user.index('@'):]!='@soton.ac.uk': return 'This is not a University email'
-
-            pot_user=pot_user[:pot_user.index('@')]
-            pot_user_rev=pot_user[::-1]
-            if User.get_by_key_name(pot_user) is not None: return 'User already exists'
-            elif pot_user_rev[2]!='g': return 'This is not a University email'
-            elif self.request.get('password')!=self.request.get('retype'): return 'Your passwords do not match'
-            else:
-                fname=self.request.get('full_name')
-                course=self.request.get('course')
-                if self.request.get('year') is not int: year=0
-                if fname is None or fname=='Full Name' or fname=='': fname=' '
-                if course is None or course=='Course' or course=='': course=' '
-
-                User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,).put()
-                
+		
+        if self.request.url==url+'?reg=yes': 
+			pot_user=self.request.get('email') 
+			if pot_user[pot_user.index('@'):]!='@soton.ac.uk': return 'This is not a University email' 
+			pot_user=pot_user[:pot_user.index('@')] 
+			pot_user_rev=pot_user[::-1] 
+			if User.get_by_key_name(pot_user) is not None: return 'User already exists' 
+			elif pot_user_rev[2]!='g': return 'This is not a University email' 
+			elif self.request.get('password')!=self.request.get('retype'): return 'Your passwords do not match' 
+			else: 
+				fname=self.request.get('full_name') 
+				course=self.request.get('course') 
+				if self.request.get('year') is not int: year=0 
+				if fname is None or fname=='Full Name' or fname=='': fname=pot_user 
+				if course is None or course=='Course' or course=='': course='compsci'
+				User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,).put()
         else:
-            username = self.request.get('user')
-            password = self.request.get('password')
-            potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
-            if potential_user is not None and potential_user.password==self.request.get('password'):
-                current_user=potential_user
-                self.session['name']=self.request.get('user')
-                self.session['type']=potential_user.user_type
-            #if self.session.get('type')==1:
-            #   self.redirect('/admin')
-            #else:
-                self.redirect("/main")
-            else: print "The username and password do not match, please try again!"
-                #self.redirect("/")
+			username, password = self.request.get('user'),self.request.get('password')
+			potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
+			if potential_user is not None and potential_user.password==self.request.get('password'):
+				current_user=potential_user
+				self.session['name'],self.session['type'] = self.request.get('user'),potential_user.user_type
+				self.redirect("/main")
+
+			else: self.redirect("/?bad_login=1")
 
 class MainPage(BaseHandler):
     def get(self):
@@ -408,15 +459,14 @@ class MainPage(BaseHandler):
                 for cat in categs:
                     threads = cat.threads
                     threads = threads.order('-timestamp').fetch(2)
-                    for thread in threads: recent_threads.append(thread)
+                    for thread in threads: 
+						recent_threads.append(thread)
+						if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
+						template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
 
-            if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
-
-            template_values = { 'current_user':current_user,
-               'subscriptions':homepage_subs,
-               'threads':recent_threads }
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
+
         else: self.redirect("/")
 
 class ForumPage(BaseHandler):
@@ -1038,20 +1088,18 @@ class RssPage(BaseHandler):
             self.redirect('/403')
             return
 
-        subs = current_user.subscriptions
+        name, subs = current_user.full_name, current_user.subscriptions
         subs.filter('receive_notifications =', True)
         modules = [sub.module for sub in subs]
-        name = current_user.full_name
         date = time.strftime("%a, %d %b %Y %X %Z")
         items =  []
         for mod in modules:
             for cat in mod.categories:
                 for thread in cat.threads:
-                    item = rss_item(title=thread.subject, link="http://localhost:9999/showthread?tid="+str(thread.key().id()), description=mod.key().name(), category=cat.name, pub_date=date)
-                    items.append(item)
-            template_values = {'name':name, 'items':items, 'date':date}
-            template = jinja_environment.get_template('templates/news.rss')
-            self.response.headers['Content-Type'] = 'application/rss+xml'
+		            items.append(rss_item(title=thread.subject, link="http://localhost:9999/showthread?tid="+str(thread.key().id()), description=mod.key().name(), category=cat.name, pub_date=thread.timestamp.strftime('%a, %d %b %Y %X %Z')))
+	    template_values = {'name':name, 'items':items, 'date':date}
+	    template = jinja_environment.get_template('templates/news.rss')
+	    self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
 class SearchPage(BaseHandler):
@@ -1073,8 +1121,11 @@ class Logout(BaseHandler):
     def get(self):
         self.session.clear()
         self.redirect('/')
+
 class FourOThree(BaseHandler):
     def get(self): self.response.out.write(""" <h1>403 Access is Forbiden</h1> <p>You are not allowed to access this webpage</p> """)
 
 populate.populate_db()
-app = webapp2.WSGIApplication([ ('/'     , SignInPage), ('/main' , MainPage), ('/forum', ForumPage), ('/'+CATEGORIES,CategoriesPage), ('/threads',ViewAllThreadsPage), ('/showthread',ThreadPage), ('/newthread',NewThread), ('/createnewthread',CreateNewThread), ('/replythread',ReplyToThread), ('/replypost',ReplyToPost), ('/vup',VoteUpPost), ('/vdown',VoteDownPost), ('/solution',ToggleSolution), ('/subscriptions',ToggleSubscription ), ('/about', AboutPage), ('/notes', NotesPage), ('/contact',ContactPage), ('/something',EmailSent), ('/admin',AdminPage), ('/modules', ModulesPage), ('/admin-modules',AdminModules), ('/admin-users',AdminUsers), ('/profile',ProfilePage), ('/admin-user-creation',AdminUserCreation), ('/news.rss', RssPage), ('/profileimage',GetImage), ('/admin-edit-user', AdminEditUser), ('/logout',Logout), ('/403',FourOThree), ('/removeThread',removeThread), ('/search', SearchPage), ('/results',SearchResults) ], debug=True,config=session_dic)
+
+#associate pages with classes in this file
+app = webapp2.WSGIApplication([ ('/', SignInPage), ('/main', MainPage), ('/forum', ForumPage), ('/'+CATEGORIES,CategoriesPage), ('/threads',ViewAllThreadsPage), ('/showthread',ThreadPage), ('/newthread',NewThread), ('/createnewthread',CreateNewThread), ('/replythread',ReplyToThread), ('/replypost',ReplyToPost), ('/vup',VoteUpPost), ('/vdown',VoteDownPost), ('/solution',ToggleSolution), ('/subscriptions',ToggleSubscription ), ('/about', AboutPage), ('/notes', NotesPage), ('/contact',ContactPage), ('/something',EmailSent), ('/admin',AdminPage), ('/modules', ModulesPage), ('/admin-modules',AdminModules), ('/admin-users',AdminUsers), ('/profile',ProfilePage), ('/admin-user-creation',AdminUserCreation), ('/news.rss', RssPage), ('/profileimage',GetImage), ('/admin-edit-user', AdminEditUser), ('/logout',Logout), ('/403',FourOThree), ('/removeThread',removeThread), ('/search', SearchPage), ('/results',SearchResults), ('/admin-assessment',AdminAssessment) ], debug=True,config=session_dic)

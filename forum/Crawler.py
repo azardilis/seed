@@ -5,15 +5,18 @@ import urllib2
 import cookielib
 import urlparse
 #need import things
-tocrawl = set([sys.argv[1]])
+tocrawl = set([])
 crawled = set([])
 #regular expressions for you to endulge
 keywordregex = re.compile('<meta\sname=["\']keywords["\']\scontent=["\'](.*?)["\']\s/>')
 linkregex = re.compile('<a\s*href=[\'|"](.*?)[\'"].*?>')
-lecturer_regex = re.compile('<a href=\'(https://secure\.ecs\.soton\.ac\.uk/people/[a-zA-Z0-9]{0,5})\'>([a-zA-Z. ]*)</a></div><div>(Moderator|Module Leader|Lecturer)')
-cw_regex = re.compile('(Mon|Tue|Wed|Thu|Fri)&nbsp;([0-9]{1,2})&nbsp;(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec),&nbsp;[0-9]{1,2}:[0-9]{2}(?:,&nbsp;(20[1-2][0-9]))?</td><td><a href=\'([A-Za-z:/\. \w#_-]*)\'>([a-zA-Z\ 0-9:_\w]*)</a></td><td>:&nbsp;<a href=\'(https://handin.ecs.soton.ac.uk/handin/1213/[\w/]*)\'')
+lecturer_regex = re.compile('<a href=\'(https://secure\.ecs\.soton\.ac\.uk/people/[a-zA-Z0-9]{0,5})\'>([a-zA-Z. ]*)</a></div><div>(Module Leader|Lecturer)')
+cw_regex = re.compile('(Mon|Tue|Wed|Thu|Fri)&nbsp;([0-9]{1,2})&nbsp;(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep)(Oct|Nov|Dec),&nbsp;([0-9]{1,2}:[0-9]{2})(?:,&nbsp;(20[1-2][0-9]))?</td><td><a href=\'([A-Za-z:/\. \w#_-]*)\'>([a-zA-Z\ 0-9:_\w]*)</a></td><td>:&nbsp;<a href=\'(https://handin.ecs.soton.ac.uk/handin/1213/[\w/]*)\'')
 title_regex = re.compile('(?:<title>ECS - ([\w: \-&,\._/\\!@#$^+=]*)[\w ()-]*</title>)')
 semester_regex = re.compile('(?:Semester:(?:</strong> )?([1-3]))')
+programme_regex = re.compile('([GHE][0-9GHR]{3})')
+keyname_regex = re.compile('.*/(.*)$')
+year_regex = re.compile('List of all modules in the ([0-9]{4}) session')
 count = 0 #useless
 
 #
@@ -26,6 +29,8 @@ count = 0 #useless
 alllecturers = {}
 allmodules = {}
 modulename = ""
+yearstart = 0
+yearend = 0
 #do not need to document these functions
 def parse_modulepage(page,url):
     global modulename
@@ -44,8 +49,14 @@ def parse_modulepage(page,url):
     _module = TModule(modulename,url)
     allmodules[modulename] = _module
 
-    semester = get_module_semester(_module.code)
+    
+    semesterurl = "http://www.ecs.soton.ac.uk/module/" + _module.code
+    resp = opener.open(semesterurl).read()
+    
+    semester = get_module_semester(resp)
+    year = get_module_year(_module.code)
     _module.add_semester(semester)
+    _module.add_year(year)
 
 #    msg = page
     startPos = msg.find('<!-- Main Page Begins -->')
@@ -57,13 +68,25 @@ def parse_modulepage(page,url):
     find_lecturers(title)
     find_cw(title)
 
-def get_module_semester(modulecode):
-    semesterurl = "http://www.ecs.soton.ac.uk/module/" + modulecode
-    resp = opener.open(semesterurl).read()
+def get_module_year(module_code):
+    year = module_code[4]
+    if year > 3:
+        year = 4
+    return year
+
+def set_module_preogrammes(_module,resp):
+    msg = resp
+    result = re.search(programme_regex,msg)
+    while result:
+        _module.append_programme(result.group(1))
+        msg = msg[result.end():]
+        result = re.search(programme_regex,msg)
+
+def get_module_semester(resp):
     result = re.search(semester_regex,resp)
     if result:
         return result.group(1)
-    return 0 #if here, something is wrong with the thing, or old module
+    return 3 #if here, something is wrong with the thing, or old module or msc project
 
 def find_lecturers(text):
     #    regexp = 
@@ -101,20 +124,34 @@ def parse_lecturer(lect):
 def parse_cw(cw):
     global modulename
     global allmodules
-    handin = cw.group(7)
-    spec = cw.group(5)
-    title = cw.group(6)
-    date = cw.group(2)+"/"+cw.group(3)
-    if(cw.group(4)):
-        date = date+"/"+cw.group(4)
+    global yearend
+    global yearstart
+    handin = cw.group(9)
+    spec = cw.group(7)
+    title = cw.group(8)
+    year = yearstart 
+    # 2 = date 3 = month 4 = time
+    date = cw.group(2)
+    if cw.group(3):
+        month = cw.group(3)
+        year = yearend
+    else:
+        month = cw.group(4)
+        year = yearstart
+    
+    formated_date = str(month) + " " + str(date) + " " + str(year) + " " str(time)
+#    if(cw.group(5)):
+#        date = date+"/"+cw.group(4)
     module = allmodules[modulename]
-    module.append_cw(title,date,handin,spec)
+    module.append_cw(title,formated_date,handin,spec)
 
 class TModule:
     title = ""
     code = ""
     semester = ""
     page = ""
+    year = 0
+    programmes = []
     cw = []
     lecturers = []
 
@@ -122,14 +159,16 @@ class TModule:
         self.page = page
         self.code = title[0:8]
         tmp = title[8:]
-        if (tmp[0]== ':'):
-            tmp = tmp[1:]
-        if (tmp[0]== ' '):
-            tmp = tmp[1:]
+        if (tmp[0]== ':'): tmp = tmp[1:]
+        if (tmp[0]== ' '): tmp = tmp[1:]
         self.title = tmp
-        
+        self.programmes = []
         self.cw = []
         self.lecturers = []
+        self.year = 0;
+        
+    def add_year(self,year):
+        self.year = year
 
     def add_code(self,argcode):
         self.code = argcode
@@ -139,19 +178,38 @@ class TModule:
 
     def append_lecturer(self,lecturer,role):
         self.lecturers.append((lecturer,role))
-    
+
+    def append_programme(self,programme):
+        #look at http://www.ecs.soton.ac.uk/undergraduate/find_a_programme
+        compsci = re.compile('(?:G4G6|G400|G401|G421|G450|G4GR|G600|G4G5)')#Computer Science and Software Engineering
+        ito = re.compile('(?:G560|G500)')#Information Technology in Organisations LOL
+        ee = re.compile('(?:H610|H611|H641|H603|H6G7|H6G4|H691)') #Electronic Engineering
+        eme = re.compile('(?:H620|HH36|HHH6|H601)') #Electrical and Electromechanical Engineering
+        eee = re.compile('(?:H600|H602)') #Electrical and Electronic Engineering
+        course = ""
+        if programme[0] is 'G':
+            if re.search(compsci,programme): course = "compsci"
+            else if re.search(ito,programme): course = "ito"
+        else:
+            if re.search(ee,programme): course = "ee"
+            else if re.search(eme,programme):course = "eme"
+        if course not in self.programmes:
+            self.programmes.append(course)
+        
     def append_cw(self,cw,deadline,handin,desc):
         self.cw.append((cw,deadline,handin,desc))
-
-
 
 class Lecturer:
     name = ""
     page = ""
+    keyname = ""
     modules = []
     def __init__(self,name,page):
         self.name = name
         self.page = page
+        result = re.search(keyname_regex,page).group(1)
+        if result: self.keyname = result
+        else: self.keyname = self.name
         self.modules = []
         
     def append_class(self,module,role):
@@ -159,15 +217,16 @@ class Lecturer:
 
 
 
-for i in range(1):
+def open_link(link):
+    tocrawl.put(link)
     try:
         crawling = tocrawl.pop()
 #		print "try"+crawling
     except KeyError:
             raise StopIteration
-        break
+    
     username = 'ks6g10'
-    password = 'your mother is so fat she causes stack overflow'
+    password = 'Dr4g0nfly'
     cj = cookielib.CookieJar() #we love cookies
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
     login_data = urllib.urlencode({'ecslogin_username' : username, 'ecslogin_password' : password})
@@ -195,9 +254,16 @@ for i in range(1):
         if endPos != -1:
             title = msg[startPos+7:endPos]
             
-
+    result = re.search(year_regex,msg)
+    if result:
+        print "hellssso"
+        yearstart = 2000+int(result.group(1)[0:2])
+        yearend = 2000+int(result.group(1)[2:])
+        
+    print str(yearstart) + " " + str(yearend) + "\n"
     links = linkregex.findall(msg)
     crawled.add(crawling)
+    i = 0
     for link in (links.pop(0) for _ in xrange(len(links))):
             #        for link in (links.pop(0) for _ in range(100)): #only parse 100
         if not "https://secure.ecs.soton.ac.uk/module/" in link:
@@ -210,40 +276,44 @@ for i in range(1):
             link = 'http://' + purl[1] + '/' + link
         if link not in crawled:
             parse_modulepage(opener.open(link),link)
-            crawled.add(link)
-            break
+            crawled.add(link)       
+            if i > 10:
+                return
+            i++
                 
+            
+                 
             #finished
-    sys.stdout.write("\n")
-    while len(alllecturers):
-        (key, val) = alllecturers.popitem()
-        if len(val.modules) > 1:
-            sys.stdout.write(" "+str(len(val.modules))) #some output of module
-            sys.stdout.write(val.name)
-            sys.stdout.write(val.modules[0][0])
-            sys.stdout.write("\n")
+ #   sys.stdout.write("\n")
+ #   while len(alllecturers):
+ #       (key, val) = alllecturers.popitem()
+#        if len(val.modules) > 1:
+#            sys.stdout.write(" "+str(len(val.modules))) #some output of module
+#            sys.stdout.write(val.name)
+#            sys.stdout.write(val.modules[0][0])
+#            sys.stdout.write("\n")
 
-    while len(allmodules):
-        (key, val) = allmodules.popitem()
-        print val.name +" " + val.code + " " + str(val.semester) + "\n"
+#    while len(allmodules):
+#        (key, val) = allmodules.popitem()
+#        print val.title +" " + val.code + " " + str(val.semester) + "\n"
 #need finish these
 #def Populate_lecturers():
 #    global alllecturers
 #    while len(alllecturers):
 #        (key, val) = alllecturers.popitem()
-#        temp = Lecturer(key_name=val.name, full_name=val.name,home_page=va#l.page)
+#        temp = Lecturer(key_name=val.name, full_name=val.name,home_page=val.page)
 #        temp.put()
 #def Populate_modules():
 #    global allmodules
 #    while len(allmodules):
 #        (key, val) = allmodules.popitem()
-#        temp = Module(key_name=val.code, title=val.title,ecs_page=val.page#,yearCourseSemester=compsci31)
+#        temp = Module(key_name=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=compsci31)
 #        temp.put()
 #        cw = val.cw
 #        while len(cw):
 #            #title date handin spec
 #            (ttitle, tdate,thandin,tspec) = cw.popitem()
-#            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime('No#v 1 2005  1:33PM', '%b %d %Y %I:%M%p'), specLink=db.link(tspec),handin=db.#link(thandin),module=temp)
+#            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'), specLink=db.link(tspec),handin=db.#link(thandin),module=temp)
 #            tempcw.put()
 #            
 #                tocrawl.add(link)

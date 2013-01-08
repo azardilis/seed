@@ -22,6 +22,7 @@ from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from itertools import izip
 from datetime import datetime
+from Crawler import *
 
 def reset_db():
     for user in User.all():
@@ -73,6 +74,9 @@ def populate_db():
 
     ###### POPULATE ######
 
+    print "opens link"
+    open_link('https://secure.ecs.soton.ac.uk/notes/')
+    print "crawler finished"
     # create admins (course should match course in YearCourseSemester objects)
     current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type=1, year=3, signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
@@ -81,6 +85,8 @@ def populate_db():
     user = User(key_name='dpm3g10',full_name='dio',password='1234',course='compsci',year=3,user_type=0)
     user.put()
     #end_temp
+
+    
 
     # create yearCourseSemester objects (how about semester 3 - individual project for masters ??)
     compsci11 = YearCourseSemester(year=int(1), semester=int(1), course="compsci",prettyName="Computer Science Year 1, Semester 1")
@@ -98,8 +104,27 @@ def populate_db():
     # +year 4 
 
     #temp:
+    years = SchoolYear(start=int(yearstart), end=int(yearend))
+    years.put()
     y1213 = SchoolYear(start=int(2012), end=int(2013))
     y1213.put()
+    
+
+
+global allmodules
+while len(allmodules):
+    (key, val) = allmodules.popitem()
+
+    temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=compsci31,schoolYear=years)
+    temp.put()
+    cw = val.cw
+    while len(cw):
+            #title date handin spec
+        (ttitle, tdate,thandin,tspec) = cw.popitem()
+        tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.link(tspec),handin=db.link(thandin),module=temp)
+        tempcw.put()
+                                
+
 
     y1112 = SchoolYear(start=int(2011), end=int(2012))
     y1112.put()
@@ -163,18 +188,18 @@ def populate_db():
     cwk2_3001.put()
 
     #temp: 
-    put_mark(current_user, cwk1_3001, 83)
-    put_difficulty(current_user, cwk1_3001, 3)
-    put_interest(current_user, cwk1_3001, 3)
-    put_mark(user, cwk1_3001, 56)
-    put_difficulty(user, cwk1_3001, 2)
-    put_interest(user, cwk1_3001, 2)
-    put_mark(current_user, cwk2_3001, 40)
-    put_difficulty(current_user, cwk2_3001, 4)
-    put_interest(current_user, cwk2_3001, 4)
-    put_mark(user, cwk2_3001, 65)
-    put_difficulty(user, cwk2_3001, 5)
-    put_interest(user, cwk2_3001, 5)
+#    put_mark(current_user, cwk1_3001, 83)
+#    put_difficulty(current_user, cwk1_3001, 3)
+#    put_interest(current_user, cwk1_3001, 3)
+#    put_mark(user, cwk1_3001, 56)
+#    put_difficulty(user, cwk1_3001, 2)
+#    put_interest(user, cwk1_3001, 2)
+#    put_mark(current_user, cwk2_3001, 40)
+#    put_difficulty(current_user, cwk2_3001, 4)
+#    put_interest(current_user, cwk2_3001, 4)
+#    put_mark(user, cwk2_3001, 65)
+#    put_difficulty(user, cwk2_3001, 5)
+#    put_interest(user, cwk2_3001, 5)
     #end_temp
 
     # create lecturers
