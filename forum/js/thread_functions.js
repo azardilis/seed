@@ -165,7 +165,10 @@ function makePostSection(arr){
 
 	var uname = document.createElement('p');
 	uname.setAttribute('class','username');
-	uname.appendChild(document.createTextNode(poster));
+	var uhref =  document.createElement('a');
+	uhref.setAttribute('href','/profile?usr='+poster)
+	uhref.appendChild(document.createTextNode(poster));
+	uname.appendChild(uhref);
 	
 	var ud = document.createElement('p');
 	ud.setAttribute('class','degree');
