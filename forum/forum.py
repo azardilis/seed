@@ -156,11 +156,12 @@ class AdminModules(BaseHandler):
 			is_add = self.request.POST.get('add_button', None)
 			if is_apply:
 				#get the module object from the datastore
-				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
-				if cgi.escape(self.request.get('module_title')) is not None: moduleObject.title=cgi.escape(self.request.get('module_title'))
-				if cgi.escape(self.request.get('module_code')) is not None: moduleObject.ecs_page=cgi.escape(self.request.get('module_page'))
-				if cgi.escape(self.request.get('ycs')) is not None:
-					ycs=cgi.escape(self.request.get('ycs'))
+                                try:
+				    moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
+                                    if cgi.escape(self.request.get('module_title')) is not None: moduleObject.title=cgi.escape(self.request.get('module_title'))
+                                    if cgi.escape(self.request.get('module_code')) is not None: moduleObject.ecs_page=cgi.escape(self.request.get('module_page'))
+                                    if cgi.escape(self.request.get('ycs')) is not None:
+                                        ycs=cgi.escape(self.request.get('ycs'))
 					#get the course, year and semester out of the value that comes in
 					course=ycs.split('-')[0]
 					year=ycs.split('-')[1]
@@ -172,7 +173,9 @@ class AdminModules(BaseHandler):
 					ycs_list.filter('semester =', int(semester))
 					ycs=ycs_list.get()
 					moduleObject.yearCourseSemester=ycs
-				moduleObject.put()
+                                except:
+                                    success = False
+				    if moduleObject: moduleObject.put()
 			if is_delete:
 				#get the module object from the datastore
 				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
