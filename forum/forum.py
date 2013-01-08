@@ -78,17 +78,27 @@ def cloneEntity(e, **extra_args):
 	return klass(**props)
 
 def search_success(thread, search_term):
-    return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()	
+    success = 0
+    search_places = []
+    search_places.append(thread.tags)
+    search_places.append(thread.poster.full_name)
+    search_places.append(thread.subject)
+    search_places.append(thread.poster.key().name())
+    for search_place in search_places:
+	    if search_term in search_place: success += 1
+    return success
+    #return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()	
 
 def search_thread_tags(search_terms):
     results = {}
     threads = Thread.all()
     for thread in threads:
+        succ = search_success(thread, search_term)
         for search_term in search_terms:
-            if search_success(thread, search_term) and thread in results:
-		    results[thread] += 1
-	    elif search_success(thread, search_term) and not (thread in results):
-		    results[thread] = 1
+            if succ > 0 and thread in results:
+		    results[thread] += succ
+	    elif succ > 0 and not (thread in results):
+		    results[thread] = succ
     #sort the results dict by the occurences of search_terms in tags
     sorted_results = sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
     return sorted_results
@@ -422,18 +432,21 @@ class SignInPage(BaseHandler):
 			user=User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,)
 			user.put()
 	else:
+		username = self.request.get('user')
+		password = self.request.get('password')
 		potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
 		if potential_user is not None and potential_user.password==self.request.get('password'):
-	       	    current_user=potential_user
-		    self.session['name']=self.request.get('user')
-		    self.session['type']=potential_user.user_type
+			current_user=potential_user
+			self.session['name']=self.request.get('user')
+			self.session['type']=potential_user.user_type
 		    #if self.session.get('type')==1:
 		    #	self.redirect('/admin')
 		    #else:
-		    self.redirect("/main")
-	       	else:
+			self.redirect("/main")
+		else:
        		    #proper error message should be displayed (some javascript or something)
-		    print "The username and password do not match, please try again!"
+			print "The username and password do not match, please try again!"
+			#self.redirect("/")
 
 class MainPage(BaseHandler):
     def get(self):
