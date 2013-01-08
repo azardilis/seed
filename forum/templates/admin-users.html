@@ -22,10 +22,12 @@
 			<div id="horizontal-menu-item">
 				<span><a href="/admin-user-creation">Add a new user</a></span></div>
 			<div id="horizontal-menu-search">
+				
 				<form id="search" name="search" action="/admin-users">
 					<label for="filter-username">Search:</label>
-					<input type="text" name="filter-username" value="" id="filter"  size="20">
-					<input type="submit" name="filter-button" id="filter-button" value="Go" >
+					<input type="search" name="filter-username" value="" id="filter-username"  size="20">
+					<input type="submit" name="filter-button" id="filter-button" value="Go" size="10">
+					
 				</form>
 			</div></div>
 			{%for user in users%}
