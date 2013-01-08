@@ -244,6 +244,93 @@ class AdminModules(BaseHandler):
 		else:
 			#proper error message should be displayed (some javascript or something)
 			self.redirect("/")
+
+#Assessments administration page
+class AdminAssessment(BaseHandler):
+    def get(self):
+        #passing variables to template
+		global current_user
+		firsthalf=[]
+		secondhalf=[]
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		if self.session.get('type')==1:
+				cwks=Assessment.all().run()
+				count=Assessment.all().count()
+				#splitting the assessments array in half to be able to display it nicely on two columns in the template
+				i=1
+				if count%2 is 0:
+					for cwk in cwks:
+						if i<=count/2:
+							firsthalf.append(cwk)
+						else:
+							secondhalf.append(cwk)
+						i=i+1
+				else:
+					for cwk in cwks:
+						if i<=count/2+1:
+							firsthalf.append(cwk)
+						else:
+							secondhalf.append(cwk)
+						i=i+1
+				template_values = {
+					'current_user':current_user,
+					'firsthalf':firsthalf,
+					'secondhalf':secondhalf
+				}
+				template = jinja_environment.get_template('templates/admin-assessments.html')
+				self.response.out.write(template.render(template_values))
+		else:
+				self.redirect("/")
+    def post(self):
+		global current_user
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		if self.session.get('type')==1:
+			is_delete = self.request.POST.get('remove_module_button', None)
+			is_apply = self.request.POST.get('apply_button', None)
+			is_add = self.request.POST.get('add_button', None)
+			if is_apply:
+				#get the assessment object from the datastore
+				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+				if cgi.escape(self.request.get('cwk_title')) is not None:
+					cwkObject.title=cgi.escape(self.request.get('cwk_title'))
+				if cgi.escape(self.request.get('cwk_duedate')) is not None:
+					cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
+				if cgi.escape(self.request.get('cwk_speclink')) is not None:
+					cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
+				if cgi.escape(self.request.get('cwk_handin')) is not None:
+					cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
+				if cgi.escape(self.request.get('cwk_modulecode')) is not None:
+					cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+				cwkObject.put()
+			if is_delete:
+				#get the assessment object from the datastore
+				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+				cwkObject.delete()
+			if is_add:
+				if cgi.escape(self.request.get('cwk_title')) is not None and cgi.escape(self.request.get('cwk_duedate')) is not None and cgi.escape(self.request.get('cwk_modulecode')) is not None:
+					cwk_title=cgi.escape(self.request.get('cwk_title'))
+					cwk_duedate=cgi.escape(self.request.get('cwk_duedate'))
+					cwk_speclink=cgi.escape(self.request.get('cwk_speclink'))
+					cwk_handin=cgi.escape(self.request.get('cwk_handin'))
+					cwkObject=Assessment(title=cwk_title,
+									dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'),
+									specLink=cwk_speclink, 
+									handin=cwk_handin,
+									module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+									)
+				
+					cwkObject.put()
+			template_values = {
+						'current_user':current_user,
+						'message':"The changes have been successfully submited to the datastore"
+					}
+			template = jinja_environment.get_template('templates/message-page.html')
+			self.response.out.write(template.render(template_values))
+				
+			
+		else:
+			#proper error message should be displayed (some javascript or something)
+			self.redirect("/")
 		
 #Existing user accounts administration page
 class AdminUsers(BaseHandler):
@@ -1243,5 +1330,6 @@ app = webapp2.WSGIApplication([
 	('/403',FourOThree),
 	('/removeThread',removeThread),
 	('/search', SearchPage),
-	('/results',SearchResults)
+	('/results',SearchResults),
+	('/admin-assessment',AdminAssessment)
 ], debug=True,config=session_dic)
