@@ -1,201 +1,119 @@
 
 /*CSS for styling the thread*/
-section.thread{
-	padding : 10px ;
-	margin : 5px ;
-	overflow : auto;
+section.thread{	padding : 10px ;
+		margin : 5px ;
+		overflow : auto;
 
-	border : 1px solid #99dd88;
-	overflow : auto ;
-	padding : 1%;
-	border-radius : 10px ;
-}
+		border : 1px solid #99dd88;
+		overflow : auto ;
+		padding : 1%;
+		border-radius : 10px ;}
 
-h1{
-	font-size: 18pt;
-}
+h1{ font-size: 18pt;}
 
 section.thread .userDetails,.threaddetails , section.signature {
 	position : relative;
 	display: inline;
 	float :left ;
 	margin : 0px ;
-	padding : 4px ;
-}
+	padding : 4px ; }
 
-section.threaddetails{
-	width : 75%;
-}
+section.threaddetails{	width : 75%;}
 
-section.userDetails{
-	width : 20%;
-	text-align: center;
-	color: #005566;
-}
+section.userDetails{ width : 20%; text-align: center; color: #005566; }
 
-p.username{
-	font-weight: bold;
-}
+p.username{ font-weight: bold; }
 
-section.signature {
-	border-top: 1px dotted gray ;
-	overflow : auto ;
-	width : 98%;
-}
+section.signature { border-top: 1px dotted gray ; overflow : auto ; width : 98%; }
 
-article.signature{
-	text-align: center;
-	font-style: italic;
-	color : gray;
-}
+article.signature{ text-align: center; font-style: italic; color : gray;}
 
 
 
 /*End thread CSS*/
 
 /*CSS for the reply form */
-#reply{
-	position: relative ;
+#reply{	position: relative ;
 	float : left ;
 	display : block;
 	margin-top: 10px ;
-	margin-bottom: 10px ;
-}
+	margin-bottom: 10px ;}
 
-#replyform{
-	padding :  2%;
-	margin : 1%;
-}
+#replyform{ padding :  2%; margin : 1%;}
 
-#replyform *{
-	display : block ;
-}
+#replyform *{ display : block ;}
 
-#replyform input, textarea{
-	padding : 10px;
-	border :1px solid gray;
-	border-radius: 10px;
-	margin : 2px;
-}
+#replyform input, textarea{	padding : 10px;
+				border :1px solid gray;
+				border-radius: 10px;
+				margin : 2px;}
 
-#replyform input[type=submit]{
-	font-size: 15pt;	
-	border : 1px solid white;
-	background-color: #eeffff;
-	border : 1px solid gray;	
-}
+#replyform input[type=submit]{	font-size: 15pt;	
+				border : 1px solid white;
+				background-color: #eeffff;
+				border : 1px solid gray;}
 
-#replyform input[type=submit]:hover{
-	cursor: pointer;
-	background-color: #B8DBFF; 
-	border : 1px solid	 #003366;
-}
+#replyform input[type=submit]:hover{	cursor: pointer;
+					background-color: #B8DBFF; 
+					border : 1px solid	 #003366;}
 /*end reply form*/
 
 
 /*CSS for handling the posts */
-#responses{
-	position :relative;
-	float : left ;
-	width : 100%;
-}
+#responses{ position :relative; float : left ;	width : 100%;}
 
-section.post , section.ans{
-	margin : 0%;
-	border : 1px dotted #88ccff;
-	border-radius : 5px;
-	padding :  1%;
-	padding-right : 0% ;
-	margin-bottom: 1%;
-	overflow: auto;
-}
+section.post , section.ans{	margin : 0%;
+				border : 1px dotted #88ccff;
+				border-radius : 5px;
+				padding :  1%;
+				padding-right : 0% ;
+				margin-bottom: 1%;
+				overflow: auto;}
 
-section.post{
-	background: white;
-}
+section.post{	background: white;}
 
-section.ans{
-	background : #ccffcc;
-}
+section.ans{	background : #ccffcc;}
 
-.userDetails,.pstbd	{
-	position : relative;
-	display: inline ;
-	float : left ;
-}
+.userDetails,.pstbd{ position : relative; display: inline ; float : left ;}
 
-.pstbd{
-	width: 75%;
-}
+.pstbd{	width: 75%;}
 
-img.pstimg{
-	border-radius : 10px;
-	width : 80px;
-	height : 80px ;
-}
+img.pstimg{ border-radius : 10px; width : 80px; height : 80px ;}
 
-section.posts{
-	width : 95%;
-	margin : 0% ;
-	padding : 0%;
-	padding-right : 0% ;
-	margin-top : 2%;
-	margin-bottom: 1%;
-	margin-left: 5%;
-	position : relative;
-	float : left ;
-	overflow : auto ;
-}
+section.posts{	width : 95%;
+		margin : 0% ;
+		padding : 0%;
+		padding-right : 0% ;
+		margin-top : 2%;
+		margin-bottom: 1%;
+		margin-left: 5%;
+		position : relative;
+		float : left ;
+		overflow : auto ; }
 /*end posts css*/
 
 /*CSS for the user controls*/
-#controls{
-	position: relative;
-	width : 100%;	
-	float : left ;
-}
+#controls{ position: relative; 	width : 100%; float : left ;}
 
-section.controlButtons *{
-	display : inline;
-	color : #005566;
-	font-size : 9pt;
-}
+section.controlButtons *{ display : inline; color : #005566; font-size : 9pt;}
 
-section.controlButtons p:hover{
-	cursor : pointer ;
-	text-decoration : underline;
-}
+section.controlButtons p:hover{	cursor : pointer ; text-decoration : underline;}
 
-section.controlButtons p.score {
-	text-decoration : none ;
-	cursor : default ;
-	font-size : 13pt ;
-}
+section.controlButtons p.score { text-decoration : none ; cursor : default ; font-size : 13pt ;}
 
-form.psreplyform{
-	display : none ;
-}
+form.psreplyform{display : none ;}
 
-form.psreplyform *{
-	display : block 
-}
+form.psreplyform *{display : block}
 /*end css for controls */
 
 /*CSS for quoting*/
-blockquote{
-	background : #88bbcc ;
-	margin : 5px;
-	border : 3px solid #aaaaff ;
-	border-radius : 10px ;
-	padding : 5px;
-}
+blockquote{	background : #88bbcc ;
+		margin : 5px;
+		border : 3px solid #aaaaff ;
+		border-radius : 10px ;
+		padding : 5px;}
 
-blockquote p.details{
-	color : white ;
-}
+blockquote p.details{	color : white ; }
 
-blockquote p.quotext{
-	color : white ;
-	font-style: italic;
-}	
+blockquote p.quotext{ color : white ; font-style: italic;}	
 /*end quoting css*/

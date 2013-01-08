@@ -1,88 +1,57 @@
 
 /* CSS for Profile Page Header*/
-#edit_profile_header{
-	display:none;
-}
-a.edit_button{
-	background: #ccc url(/stylesheets/resources/button_edit.gif);
-	background-repeat: no-repeat;
-	background-position: 3px center;
-	display: block;
-	-moz-border-radius: 12px;
-	-webkit-border-radius: 12px;
+#edit_profile_header{ display:none;}
+a.edit_button{	background: #ccc url(/stylesheets/resources/button_edit.gif);
+		background-repeat: no-repeat;
+		background-position: 3px center;
+		display: block;
+		-moz-border-radius: 12px;
+		-webkit-border-radius: 12px;
 	
-	padding: 1px;
-	width:62px;
-	height:20px;
-}
+		padding: 1px;
+		width:62px;
+		height:20px;}
 
-#profile_header{
-	background-color: white;
-	width: 760px;
-	height: 200px;
-	margin: 0 0 0 20px; /* top right bottom left */
-	padding: 0;	
-}
+#profile_header{ background-color: white;
+		 width: 760px;
+		 height: 200px;
+		 margin: 0 0 0 20px; /* top right bottom left */
+		 padding: 0;	}
 
-#profile_header img{ 
-	float: left;
-}
-#pagecontent{
-	position : relative;
-	float:left;	
-	display : block ;
-}
-#profile_header #col1{
-	margin: 10 0 0 10px;
-	width: 240px;
-	height: 170px;
-	float: left;
-}
+#profile_header img{ float: left;}
 
-#profile_header #col2{
-	margin: 20 0 0 0px;
-	width: 260px;
-	height: 160px;
-	float: right;
-	padding: 0;
-}
+#pagecontent{ position : relative; float:left; display : block ; }
 
-#profile_header .figures{
-	font-size: 55px;
-	float:left;
-}
+#profile_header #col1{	margin: 10 0 0 10px;
+			width: 240px;
+			height: 170px;
+			float: left; }
 
-#profile_header #col1 #name{
-	font-size: 30px;
-	width: 20px;
-}
+#profile_header #col2{	margin: 20 0 0 0px;
+			width: 260px;
+			height: 160px;
+			float: right;
+			padding: 0; }
 
-#profile_header .course{
-	font-size: 20px;
-	float:left;
-}
+#profile_header .figures{font-size: 55px; float:left;}
 
-#profile_header .desc{
-	margin: 5 0 0 10px;
-	float:left;
-	font-size: 15px;
-	width:15px;
-}
+#profile_header #col1 #name{ font-size: 30px; width: 20px;}
+
+#profile_header .course{ font-size: 20px; float:left;}
+
+#profile_header .desc{	margin: 5 0 0 10px;
+			float:left;
+			font-size: 15px;
+			width:15px; }
 /*----------------------------------*/
-p.box{
-		text-align:center;
-		font-size:12pt;
-	}
+p.box{	text-align:center; font-size:12pt;}
 
-	h1{
-		color:#1E90FF;
+	h1{	color:#1E90FF;
 		text-align:left;
 		font-size:16pt;
-		margin : 10px;
-	}
+		margin : 10px;	}
 
-	div.subs{
-		position:relative;
+div.subs{	position:relative;
 		float:left;
 		width:300px;
 		margin:4px;
@@ -90,17 +59,8 @@ p.box{
 		height:100px;
 		padding:10px;
 		border:5px solid black;
-		border-style:inset;
-		}
+		border-style:inset;}
 
-	div img.pos{
-		position:relative;
-		
-	}
-	div #plus{
-				
-		display: block;
-		margin-left: auto;
-		margin-right: auto;
-		
-	}
+div img.pos{position:relative;	}
+
+div #plus{  display: block;	margin-left: auto;  margin-right: auto;	}
