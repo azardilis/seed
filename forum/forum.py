@@ -458,9 +458,7 @@ class MainPage(BaseHandler):
                         recent_threads.append(thread) 
             
 	    if homepage_subs.__len__()==0 or recent_threads.__len__()==0:
-	    	homepage_subs=[]
-		recent_threads=[]
-	    
+	    	recent_threads=[]
                 
 	    template_values = {
                'current_user':current_user,
