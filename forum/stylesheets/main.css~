@@ -1,75 +1,48 @@
-/*clear everything up*/
+@font-face {
+	font-family: 'Segan-Light';
+	font-style: normal;
+	src: local('fonts/Segan-Light-ttf');
+}
 
-span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, h1,h2,h3{
-	margin : 0 px;
+/*clear everything up*/
+span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, h1,h2,h3,article{
+	margin : 0px;
 	padding:0px;	
 }
 
+/*making links not underlined*/
+a:visited, a:active, a {
+	text-decoration: none;
+	color : #007275;
+}
+
+a:hover{
+	text-decoration: underline;
+}
+
 body{
-position : relative ;
-width : 100% ;
-
-padding : 10px ;
-background-image: url("resources/bg1.jpg");
-height : auto;
+	background-image: url("resources/bg1.jpg");
+	font-family : 'Segan-Light',sans-serif ;
 }
 
-a:active ,a:visited , a:link ,a:hover{
-	text-decoration: none ;	
-	color : white ;
-	text-align: left;
-	font-size: 18px;
+h1.pagetitle{
+	color : #02527d;
+	font-size :24pt;
+	font-weight: lighter;
+	margin : 10px;
+	margin-left : 0px;
+	display: block ;
 }
+/*-----*/
 
-#content {
-  font-family:Georgia, serif;
-  margin : 10px ;
-  background-color: white;
-  max-width: 1000px ;
-  border : 1px solid white ;
-  border-radius : 20px ;
-  position : relative ;
-  left : 50% ;  
-  margin-left : -500px ;
-  height : 98%;
-}
-
-
-#header p , #header img{
-	display : inline ;	
-	}
-
-#test{
-	 	width : 50px;
-	 	}
-
-#header ul {
-	display: inline;
-	list-style: none;
-
- 	overflow: hidden;
-	}
-
-#header ul  li{
-	display: inline;	
-	}
-
-#modulebar li a {
-	color: white;	
-	font-size : 18px;
-	background-color: green;
-	line-height: 32px ;
-	padding :5px;
-	margin : 3px; 
-	}		
-
+/*CSS for the sidebar*/
 #sidebar{
-	width : 150px;	
+	width : 16%;	
 	background-color: 	#DDD;
 	display : block;
 	border-radius : 10px ;
-	padding : 1px ;
-	margin : 3px;
+	margin-left: 2%;
+	padding : 2px ;
 	position : relative;
 	float : left;
 }
@@ -77,45 +50,85 @@ a:active ,a:visited , a:link ,a:hover{
 #sidebar .first {
 	border-top-left-radius : 10px ;
 	border-top-right-radius : 10px ;	
-	}
-	
-	#sidebar .last {
+}
+
+#sidebar .last {
 	border-bottom-left-radius : 10px ;
 	border-bottom-right-radius : 10px ;	
-	}
+}
 
 #sidebar li{
 	line-height: 35px;
 	display :block ;
 	margin-bottom : 1px ;	
-	width : 150px ;
 	background-color:#007275 ;
-	opacity : 0.8 ;	
-	}
-	
-	#sidebar li span{
-		padding-left: 5px ;	
-		line-height: 40px ;	
-		}
-	
+	opacity : 0.8 ;
+}
+
+#sidebar li span{
+	padding-left: 5px ;	
+	line-height: 40px ;	
+}
+
 #sidebar li:hover{
-		background-color : #005355;
-		opacity : 1;
-	}
+	background-color : #005355;
+	opacity : 1;
+}
+
+#sidebar a:active ,#sidebar a:visited ,#sidebar  a:link ,#sidebar a:hover{
+	text-decoration: none ;	
+	color : white ;
+	text-align: left;
+	font-size: 15pt;
+}
+/*---*/
+#banner_image{
+	padding : 10px;
+	margin : 0px;
+	height: 15%;
+	width:80%;
+	margin-left : -30px ;
 	
-	
+
+}
+/*CSS for styiling the container of the content of each page*/
 #pagecontent{
-	
-	border:1px solid red;
 	position : relative;
 	float:right;	
-	display : block ;
-	margin : 10px;
-	padding : 10px;
-	}	
+	padding : 1%;
+	width : 78% ;
+}
+/*----*/
+
+/*Just some general styling for the content section*/
+#content {
+	position : relative ; 
+	width : 80% ;
+	margin-left : 10%;
+	margin-top : 12px;
+	margin-bottom : 12px ;
+
+	background-color: white;
+	border-radius : 20px ;
 	
-	#thread{
-	width : 500px;; 			
-		}
+	overflow: hidden;
+	padding-bottom: 1%;
+	padding-top: 1%;
 	
-	
+	-webkit-box-shadow:0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
+    -moz-box-shadow:0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
+    box-shadow: 0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
+}
+/**/
+
+#wlcmmsg{
+	margin : 1%;
+	position : relative ;
+	float : left ;
+}
+
+#lgout{
+	margin : 1%;
+	position : relative ;
+	float : right ;
+}
