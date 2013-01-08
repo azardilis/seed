@@ -10,21 +10,9 @@ from ratings import *
 import populate
 from google.appengine.api import mail
 from functions.ForumFunctions import * # functions to handle posts and shit # "posts and shit" lol!
-from model.base.Module import Module
-from model.base.User import User
-from model.base.Post import Post
+from model import *
 from webapp2_extras import sessions
-from model.base.Thread import Thread
-from model.base.Vote import Vote
-from model.base.YearCourseSemester import YearCourseSemester
-from model.base.Lecturer import Lecturer
-from model.base.Rating import Rating
-from model.base.Assessment import Assessment
-from model.base.Grade import Grade
-from model.base.Category import Category
-from model.base.Subscription import Subscription
 from google.appengine.api import images
-from model.base.LecturerRating import LecturerRating
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from google.appengine.api import images
