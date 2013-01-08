@@ -145,6 +145,8 @@ class AdminModules(BaseHandler):
         else:
             self.redirect("/")
     def post(self):
+                success = True
+                moduleObject = None
 		global current_user
 		current_user = db.get(Key.from_path('User',self.session.get('name')))
 		subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
@@ -188,15 +190,21 @@ class AdminModules(BaseHandler):
 					ycs_list.filter('course =', course)
 					ycs_list.filter('semester =', int(semester))
 					ycs=ycs_list.get()
-					
-					moduleObject=Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs)
-				
-				moduleObject.put()
-			template_values = { 'current_user':current_user,
-						'subscriptions':subscribed_modules,
-						'message':"The changes have been successfully submited to the datastore" }
-			template = jinja_environment.get_template('templates/message-page.html')
-			self.response.out.write(template.render(template_values))
+					try:
+                                            moduleObject=Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs)
+                                        except:
+                                            success = False
+                                            
+				if moduleObject: moduleObject.put()
+                        if success:
+                            template_values = { 'current_user':current_user,
+                                                'subscriptions':subscribed_modules,
+                                                'message':"The changes have been successfully submited to the datastore" }
+                            template = jinja_environment.get_template('templates/message-page.html')
+                            self.response.out.write(template.render(template_values))
+                        else:
+                            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Bad Value!','current_user':current_user, 'subscriptions':subscribed_modules }))
+                            
 				
 		else: self.redirect("/")
 
