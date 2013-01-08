@@ -18,11 +18,19 @@
 		{%endif%}
 		<section id="pagecontent" class="cleared">
 		  <h1 class="pagetitle">Results</h1>
+		  
+		    {%if results%}
 		  <ul class="mods">
 		    {%for result in results %}
 		    <li> <a href="showthread?tid={{result[0].key().id()}}"> {{result[0].category.module.key().name()}}: {{result[0].subject}}</a> </li>
 		    {% endfor %}
-		  </ul>
+
+		    </ul>
+		  <a href="/search"> Search again</a>
+		    {%else%}
+		    No results found for your search. <a href="/search"> Have another go!</a>
+		    {%endif%}
+		  
 </body>
 
 </section>
