@@ -7,12 +7,11 @@
 
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
+
    </head>
    <body>
    
    <section id="content" class="content"> 
-   		<section id="header">
-					<p id="wlcmmsg">Logged in as <a href='/profile'>{{current_user.full_name}}</a></p> 
 				{% include "/templates/mbar.html" %}
 				{%if current_user.user_type==1%}
 				{% include "/templates/admin-sidebar.html"%}
@@ -33,9 +32,6 @@
 			<input type="submit" value="Send">
 		</form>
 	</section>
-	<section class="cleared">	</section>
-	</section>
-
    </body>
 </html>
 	                   

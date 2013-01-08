@@ -83,7 +83,7 @@ def make_post(p,posts) :
 		<section class="userDetails">
 		<img src="/profileimage?usr='''+str(p.poster.key())+'''" class="pstimg" >
 		<p class="username">'''+p.poster.key().name()+'''</p>
-		<p class="degree">'''+p.poster.course+'''</p>
+		<p class="degree">'''+str(p.poster.course)+'''</p>
 		<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
 		<p class="replydate">'''+str(p.timestamp.date())+'''</p>
 		</section>
@@ -94,7 +94,7 @@ def make_post(p,posts) :
 	pst_bd +='''
 		<section class="signature">
 			<article class="signature">
-				'''+p.poster.signature+'''
+				'''+str(p.poster.signature)+'''
 			</article>
 		</section>
 	'''

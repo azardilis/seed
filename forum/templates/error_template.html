@@ -3,15 +3,19 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<script src="js/jq-1.8.3.js"></script>
 	<script src="js/jqui-1.9.2.js"></script>
+	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
+	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
+	<script type="text/javascript" src="js/modulebar_functions.js"></script>
 </head>
 <body>
-	
+
 	<section id="content" class="content"> 
-		
+
+		{% include "/templates/mbar.html" %}
 		{% include "/templates/sidebar.html"%}
 
 		<section id="pagecontent" class="cleared">
-			<h1 class="error">An error occurred :/</h1>
+			<h1 class="error">An error occurred :</h1>
 			<p class="error">{{error_details}}</p>
 		</section>
 	</section>

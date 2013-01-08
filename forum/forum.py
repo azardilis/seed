@@ -55,7 +55,6 @@ session_dic={}
 session_dic['webapp2_extras.sessions'] = {'secret_key': 'my-super-secret-key',
 }
 global current_user
-global subscribed_modules
 CATEGORIES = 'categories'
 MID = 'mid'
 EXTRA_TIME= 40*24*60*60 # ask to contribute mark 40 days after the assessment's deadline
@@ -97,9 +96,12 @@ class AdminPage(BaseHandler):
         #passing variables to template
         global current_user
         if self.session.get('type')==1:
-			
+            current_user = db.get(Key.from_path('User',self.session.get('name')))
+            subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
             template_values = {
+            'subscriptions':subscribed_modules,
 				'current_user':current_user
+
 			}
             template = jinja_environment.get_template('templates/admin.html')
             self.response.out.write(template.render(template_values))
@@ -114,6 +116,8 @@ class AdminModules(BaseHandler):
 		firsthalf=[]
 		secondhalf=[]
 		allYcsArray=[]
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		if self.session.get('type')==1:
 				modules=Module.all().run()
 				allYcs=YearCourseSemester.all().run()
@@ -139,6 +143,7 @@ class AdminModules(BaseHandler):
 					allYcsArray.append(ycs)
 				template_values = {
 					'current_user':current_user,
+					'subscriptions':subscribed_modules,
 					'firsthalf':firsthalf,
 					'secondhalf':secondhalf,
 					'allYcs':allYcsArray
@@ -149,6 +154,8 @@ class AdminModules(BaseHandler):
 				self.redirect("/")
     def post(self):
 		global current_user
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		if self.session.get('type')==1:
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
@@ -201,6 +208,7 @@ class AdminModules(BaseHandler):
 				moduleObject.put()
 			template_values = {
 						'current_user':current_user,
+						'subscriptions':subscribed_modules,
 						'message':"The changes have been successfully submited to the datastore"
 					}
 			template = jinja_environment.get_template('templates/message-page.html')
@@ -216,6 +224,7 @@ class AdminUsers(BaseHandler):
     def get(self):
         #passing variables to template
 		global current_user
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
 		message=""
 		if self.session.get('type')==1:
 				users=User.all()
@@ -228,9 +237,10 @@ class AdminUsers(BaseHandler):
 					else:
 						message="There are no users with that username, please try again!"
 						users=[]
-				
+				subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 				template_values = {
 					'current_user':current_user,
+					'subscriptions':subscribed_modules,
 					'users':users,
 					'message':message
 				}
@@ -244,9 +254,12 @@ class AdminUserCreation(BaseHandler):
 	def get(self):
         #passing variables to template
 		global current_user
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
 		if 'current_user' in globals() and self.session.get('type')==1:
 			if self.session.get('type')==1:
+				subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 				template_values = {
+				'subscriptions':subscribed_modules,
 					'current_user':current_user
 				}
 				template = jinja_environment.get_template('templates/admin-user-creation.html')
@@ -256,6 +269,7 @@ class AdminUserCreation(BaseHandler):
 	def post(self):
 		#passing variables to template
 		global current_user
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
 		if 'current_user' in globals() and self.session.get('type')==1:
 				new_user_fullname=self.request.get('user-fullname')
 				new_user_ecsid=self.request.get('user-username')
@@ -275,9 +289,10 @@ class AdminUserCreation(BaseHandler):
 								)
 				new_user.put()
 				
-				
+				subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 				template_values = {
 						'current_user':current_user,
+						'subscriptions':subscribed_modules,
 						'message':"The user has been added to the user list."
 					}
 				template = jinja_environment.get_template('templates/message-page.html')
@@ -289,9 +304,11 @@ class AdminEditUser(BaseHandler):
 		def get(self):
 			#passing variables to template
 			global current_user
+			current_user = db.get(Key.from_path('User',self.session.get('name')))
 			message=""
 			if 'current_user' in globals() and self.session.get('type')==1:
 					#first check that the user parameter is set
+					subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 					if self.request.get('user') is not "":
 						if User.get_by_key_name(self.request.get('user')) is not None:
 							filter=self.request.get('user')
@@ -300,14 +317,17 @@ class AdminEditUser(BaseHandler):
 							template_values = {
 								'current_user':current_user,
 								'user':users[0],
+								'subscriptions':subscribed_modules,
 								'message':message
 							}
 						else:
 							message="There are no users with that username, please try again!"
 							users=[]
+
 							template_values = {
 								'current_user':current_user,
 								'user':None,
+								'subscriptions':subscribed_modules,
 								'message':message
 							}
 					template = jinja_environment.get_template('templates/admin-edit-user.html')
@@ -316,6 +336,7 @@ class AdminEditUser(BaseHandler):
 				self.redirect("/")
 		def post(self):
 			global current_user
+			current_user = db.get(Key.from_path('User',self.session.get('name')))
 			if 'current_user' in globals() and self.session.get('type')==1:
 				#get the module object from the datastore
 				userObject=User.get_by_key_name(self.request.get('user-username'))
@@ -330,8 +351,10 @@ class AdminEditUser(BaseHandler):
 				userObject.alternative_email=cgi.escape(self.request.get('user-email'))
 				userObject.karma=int(cgi.escape(self.request.get('user-karma')))
 				userObject.put()
+				subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 				template_values = {
 						'current_user':current_user,
+						'subscriptions':subscribed_modules,
 						'message':"The changes have been saved!"
 					}
 				template = jinja_environment.get_template('templates/message-page.html')
@@ -402,11 +425,12 @@ class MainPage(BaseHandler):
         #to be displayed in the homepage
 
         global current_user
-        global subscribed_modules
 		#stop removing "if 'current_user' in globals()"from below. if you remove it, the main page returns an error if a non logged in user tries to acces it instead of redirecting
 		#them to the registration page!
         if 'current_user' in globals() and (self.session.get('type')==0 or self.session.get('type')==1):
+	    
 	    homepage_subs=[]
+	    current_user = db.get(Key.from_path('User',self.session.get('name')))
             homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
             subscribed_modules = homepage_subs
 
@@ -443,6 +467,8 @@ class ForumPage(BaseHandler):
 			return
 
 		sub_to_delete=cgi.escape(self.request.get('mod'))
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
+		subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		template = jinja_environment.get_template('templates/forum_subscriptions.html')
 		subs = 	current_user.subscriptions
 		self.response.write(sub_to_delete)
@@ -493,6 +519,7 @@ class CategoriesPage(BaseHandler):
     def getDueAssessments(self,current_user,extraTime=0):
             mcode = self.getModuleCode()
 	    module = retrieve_module_name(mcode)
+	    current_user = db.get(Key.from_path('User',self.session.get('name')))
             dueAssessments = {}
             correspGrades = {}
 
@@ -538,6 +565,8 @@ class CategoriesPage(BaseHandler):
             template = jinja_environment.get_template('templates/forum_categories.html')
             mcode = self.getModuleCode()
 	    module = retrieve_module_name(mcode)
+	    current_user = db.get(Key.from_path('User',self.session.get('name')))
+	    subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 
             categs = module.categories
             complete = list()
@@ -641,6 +670,7 @@ class ThreadPage(BaseHandler):
             l1p = get_posts(int(cgi.escape(self.request.get('tid'))))
             posts = ''
             posts = get_children(l1p,posts,1,(t.poster.key() == current_user.key()),current_user)
+            subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 
             template_params = {
 	    	'user' : t.poster,
@@ -661,6 +691,7 @@ class ViewAllThreadsPage(BaseHandler):
 		return
 	category = retrieve_category(self.request.get('cid'))
         current_user = db.get(Key.from_path('User',self.session.get('name')))
+        subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 
         if category :
             threads = category.threads.order('-timestamp')
@@ -702,6 +733,8 @@ class NewThread(BaseHandler):
 
         cid = cgi.escape(self.request.get('catid'))
         template = jinja_environment.get_template('templates/newthread.html')
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
+        subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 
         if cid :
             template_params = {
@@ -721,6 +754,8 @@ class CreateNewThread(BaseHandler):
         bd = cgi.escape(self.request.get('body'))
         sbj = cgi.escape(self.request.get('subject'))
         tgs = cgi.escape(self.request.get('tags'))
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
+
 
         cat = retrieve_category(self.request.get('cid'))
 
@@ -738,7 +773,7 @@ class ReplyToThread(BaseHandler):
 		self.redirect('/403')	
 		return
         thrd = retrieve_thread(self.request.get('tid'))
-
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
         if thrd :
             bd = cgi.escape(self.request.get('bd'))
             sbj = cgi.escape(self.request.get('sbj'))
@@ -762,6 +797,7 @@ class ReplyToPost(BaseHandler):
 		return
 
         pst =retrieve_post(self.request.get('r2pid'))
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
         if pst :
             bd = cgi.escape(self.request.get('bd'))
             p = Post(reply=pst,poster=current_user,body=bd)
@@ -779,6 +815,7 @@ class VoteUpPost(BaseHandler):
 		return
 
 	pst =retrieve_post(self.request.get('pid'))
+	current_user = db.get(Key.from_path('User',self.session.get('name')))
 
         if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
             pst.votes = pst.votes +1
@@ -799,6 +836,7 @@ class VoteDownPost(BaseHandler):
 		return
 
 	pst = retrieve_post(self.request.get('pid'))
+	current_user = db.get(Key.from_path('User',self.session.get('name')))
 
         if pst and not (pst.key() in [v.post.key() for v in current_user.votes]):
             pst.votes = pst.votes-1
@@ -818,6 +856,7 @@ class ToggleSolution(BaseHandler) :
 		return
         thrd = retrieve_thread(self.request.get('tid'))
         pst = retrieve_post(self.request.get('pid'))
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
         if thrd and pst  :
             if str(thrd.poster.key()) == str(current_user.key())  and (pst.key() in [p.key() for p in thrd.posts]):
 
@@ -854,6 +893,7 @@ class ToggleSubscription(BaseHandler):
 		return
 
         mod = db.get(Key.from_path('Module', cgi.escape(self.request.get('mcode'))))
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
         if mod :
             sub = Subscription.all()
             sub.filter('subscribed_user =', current_user)
@@ -879,6 +919,7 @@ class ProfilePage(BaseHandler):
 
 		avatar = self.request.get('img')
 		fullname = self.request.get('fullname')
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
 		user_key = current_user.key()
 		user = db.get(user_key)
 		if len(avatar) >0:
@@ -897,6 +938,7 @@ class ProfilePage(BaseHandler):
 			return
 
 		template = jinja_environment.get_template('templates/profile.html')
+		current_user = db.get(Key.from_path('User',self.session.get('name')))
 		subs = 	current_user.subscriptions
 		sub_to_delete=cgi.escape(self.request.get('mod'))
 		self.response.write(sub_to_delete)
@@ -936,6 +978,7 @@ class ProfilePage(BaseHandler):
 			
 			
 			lecturers=[]
+		subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		template_params = {
 			'current_user':current_user,
 			'user':user,
@@ -958,20 +1001,24 @@ class GetImage(BaseHandler):
 			self.response.headers['Content-Type'] = 'image/jpeg'
 			self.response.out.write(user.avatar)
        
-class AboutPage(webapp2.RequestHandler):
+class AboutPage(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/about.html')
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
+        subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         parms = {
 			'current_user':current_user,
              'subscriptions':subscribed_modules
         }
         self.response.out.write(template.render(parms))
 
-class NotesPage(webapp2.RequestHandler):
+class NotesPage(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         template = jinja_environment.get_template('templates/notes.html')
+        current_user = db.get(Key.from_path('User',self.session.get('name')))
+        subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 
         parms = {
 			'current_user':current_user,
@@ -985,12 +1032,14 @@ class ContactPage(BaseHandler):
 		self.redirect('/403')
 		return
 	subject=''
+	current_user = db.get(Key.from_path('User',self.session.get('name')))
+	subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         message=''
         template = jinja_environment.get_template('templates/contact.html')
         template_values = {
 							'current_user':current_user,
-                           subject:'subject',
-                           message:'message',
+                           'subject':'subject',
+                           'message':'message',
                            'subscriptions':subscribed_modules
                            }
         self.response.out.write(template.render(template_values))
@@ -1022,7 +1071,7 @@ class ModulesPage(BaseHandler):
 		self.redirect('/403')
 		return
 
-        homepage_subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+        subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         
         course = "compsci"
         y1s1 = getYCS(1, course, 1)
