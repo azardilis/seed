@@ -83,11 +83,12 @@ h1.pagetitle{
 }
 /*---*/
 #banner_image{
-	padding : 10px;
+	
+	padding : 20px;
 	margin : 0px;
-	height: 40%;
-	width:105%;
-	margin-left : -30px ;
+	height: 15%;
+	width:77%;
+	margin-left : -22% ;
 	
 
 }

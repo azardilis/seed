@@ -176,7 +176,7 @@ function makePostSection(arr){
 
 	var uk = document.createElement('p');
 	uk.setAttribute('class','karma');
-	uk.appendChild(document.createTextNode('Karma : '+usrkarma));
+	uk.appendChild(document.createTextNode('Accepted Answers : '+usrkarma));
 	
 	var urd = document.createElement('p');
 	urd.setAttribute('class','replydate');
