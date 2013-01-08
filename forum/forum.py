@@ -873,7 +873,6 @@ class ToggleSolution(BaseHandler) :
         current_user = db.get(Key.from_path('User',self.session.get('name')))
         if thrd and pst  :
             if str(thrd.poster.key()) == str(current_user.key())  and (pst.key() in [p.key() for p in thrd.posts]):
-
                 for ps in thrd.posts: #reset all current answers
                     if not (str(ps.key()) is str(pst.key())) :
                         ps.answer = False
@@ -882,15 +881,19 @@ class ToggleSolution(BaseHandler) :
                 pst.answer = not pst.answer
                 pst.put()
 
-		if pst.answer :
-			thrd.answered  = True
-			if not thrd.subject[:8] == '[SOLVED]':
-				thrd.subject = '[SOLVED]'+thrd.subject
-		else :
-			thrd.answered = False
-			if thrd.subject[:8] == '[SOLVED]' :
-				thrd.subject = thrd.subject[8:]
-		thrd.put()
+                pst_poster = pst.poster
+                if pst.answer :
+                    pst_poster.karma = pst_poster.karma +1 
+                    thrd.answered  = True
+                    if not thrd.subject[:8] == '[SOLVED]':
+                        thrd.subject = '[SOLVED]'+thrd.subject
+                else :
+                    thrd.answered = False
+                    pst_poster.karma = pst_poster.karma - 1 
+                    if thrd.subject[:8] == '[SOLVED]' :
+                        thrd.subject = thrd.subject[8:]
+                thrd.put()
+                pst_poster.put()
 
                 self.response.out.write('ok')
                 logging.info('toggled state')
