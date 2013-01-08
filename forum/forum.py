@@ -1081,6 +1081,7 @@ class EmailSent(webapp2.RequestHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def post(self):
         self.request.get('subject')
+	subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         template = jinja_environment.get_template('templates/something.html')
         subject = self.request.get('subject')
         message = self.request.get('message')
@@ -1088,7 +1089,8 @@ class EmailSent(webapp2.RequestHandler):
                        to='scriptingteamk@gmail.com',
                        subject=subject,
                        body=message)
-        self.response.out.write(template.render({}))
+	self.redirect("/contact")
+        #self.response.out.write(template.render({'current_user':current_user,'subscriptions':subscribed_modules }))
 
 class ModuleInfo:
 	def __init__(self,sub_key,sub_code,sub_name,mod_lecturers,mod_assessments):
