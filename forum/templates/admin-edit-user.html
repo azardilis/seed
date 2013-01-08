@@ -3,7 +3,6 @@
 	<link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
 	<link type="text/css" rel="stylesheet" href="/stylesheets/admin-section.css" />
 	<script type="text/javascript" src="js/jq-1.8.3.js"></script>
-
 	<link type="text/css" rel="stylesheet" href="/stylesheets/modulebar.css" />
 	<script type="text/javascript" src="js/jqscrollTo-1.4.3.1.js"></script>
 	<script type="text/javascript" src="js/modulebar_functions.js"></script>
@@ -18,40 +17,29 @@
 			<section id="header">
 				<div id="horizontal-menu">
 					<div id="horizontal-menu-item">
-						<span><a href="/admin-users">Edit an existing user</a></span>
-					</div>
+						<span><a href="/admin-users">Edit an existing user</a></span></div>
 					<div id="horizontal-menu-item">
-						<span><a href="/admin-user-creation">Add a new user</a></span>
-					</div>
+						<span><a href="/admin-user-creation">Add a new user</a></span></div>
 
 				</div>
 				<form method="post" action="/admin-edit-user" id="admin-user-creation-form">
 
-					<label for="user-fullname">Full name:</label>
-					<input type="text" name="user-fullname" id="user-fullname" value="{{user.full_name}}" size=50>
+					<label for="user-fullname">Full name:</label><input type="text" name="user-fullname" id="user-fullname" value="{{user.full_name}}" size=50>
 
-					<label for="user-username">ECS Username:</label>
-					<input type="text" name="user-username" id="user-username" value="{{user.key().name()}}" size=50 readonly>
+					<label for="user-username">ECS Username:</label><input type="text" name="user-username" id="user-username" value="{{user.key().name()}}" size=50 readonly>
+					<label for="user-email">Alternate E-mail address:</label><input type="text" name="user-email" id="user-email" value="{{user.alternative_email}}"size=50>
 					
-
-					<label for="user-email">Alternate E-mail address:</label>
-					<input type="text" name="user-email" id="user-email" value="{{user.alternative_email}}"size=50>
-					
-					<label for="user-website">Personal web site:</label>
-					<input type="text" name="user-website" id="user-website" value="{{user.home_page}}" size=50>
+					<label for="user-website">Personal web site:</label><input type="text" name="user-website" id="user-website" value="{{user.home_page}}" size=50>
 					
 					
-					<label for="user-karma">Karma level:</label>
-					<input type="text" name="user-karma" id="user-karma" value="{{user.karma}}"size=50>
+					<label for="user-karma">Karma level:</label><input type="text" name="user-karma" id="user-karma" value="{{user.karma}}"size=50>
 					
-					<label for="user-signature">Signature:</label>
-					<input type="text" name="user-signature" id="user-signature" value="{{user.signature}}"size=50>
+					<label for="user-signature">Signature:</label><input type="text" name="user-signature" id="user-signature" value="{{user.signature}}"size=50>
 
 					<label for="user-course">Course:</label>
 					<select name="user-course">
 						<option {%if user.course=="compsci" %} selected="selected"{%endif%} value="compsci">Computer Science</option>
-						<option {%if user.course=="elec" %} selected="selected"{%endif%} value="elec">Electronics</option>
-					</select>
+						<option {%if user.course=="elec" %} selected="selected"{%endif%} value="elec">Electronics</option></select>
 
 					<label for="user-year">Year:</label>
 					<select name="user-year">
@@ -66,8 +54,7 @@
 					<select name="user-type" >
 						<option {%if user.user_type==0 %} selected="selected"{%endif%} value="0">Normal user</option>
 						<option {%if user.user_type==1 %} selected="selected"{%endif%} value="1">Moderator</option>
-					</select>
-					<p>
+					</select><p>
 						<input type="submit" name="apply_button" id="apply_button" value="Apply changes" >
 					</form>
 				</section>

@@ -22,15 +22,11 @@
 				<section class="userDetails">
 					<img class="pstimg" src="/profileimage?usr={{user.key()}}">
 					<a href="profile?usr={{user.key().name()}}"><p class="username">{{user.key().name()}}</p></a>
-					<p class="degree"></p>
-					<p class="karma"></p>
-					<p class="noofposts">Posts : {{nop}}</p>
-					<p class="joindate">On {{thread.timestamp.date()}}</p>
+					<p class="degree"></p><p class="karma"></p><p class="noofposts">Posts : {{nop}}</p><p class="joindate">On {{thread.timestamp.date()}}</p>
 				</section>
 				<section class="threaddetails">
 					<article id='thread' tid={{thread.key().id()}}>
-						<h1>{{ thread.subject }}</h1>
-						<p>{{ thread.body }}</p>
+						<h1>{{ thread.subject }}</h1><p>{{ thread.body }}</p>
 					</article>
 				</section>
 				<section class="signature">
@@ -49,7 +45,6 @@
 			<section id='responses'>
 				{{posts}}		
 			</section>
-		</section>
-	</section>
+		</section></section>
 </body>
 </html>
