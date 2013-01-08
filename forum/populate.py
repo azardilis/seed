@@ -106,7 +106,8 @@ def populate_db():
     #temp:
     years = SchoolYear(start=int(yearstart), end=int(yearend))
     years.put()
-
+    y1213 = SchoolYear(start=int(2012), end=int(2013))
+    y1213.put()
     
 
 
@@ -114,7 +115,7 @@ global allmodules
 while len(allmodules):
     (key, val) = allmodules.popitem()
 
-    temp = Module(key_name=val.code, title=val.title, ecs_page=val.page,yearCourseSemester=compsci31,years)
+    temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=compsci31,schoolYear=years)
     temp.put()
     cw = val.cw
     while len(cw):
@@ -125,8 +126,8 @@ while len(allmodules):
                                 
 
 
- #   y1112 = SchoolYear(start=int(2011), end=int(2012))
- #   y1112.put()
+    y1112 = SchoolYear(start=int(2011), end=int(2012))
+    y1112.put()
     #end_temp
 
     # create modules (schoolYear, ecsCode ??)
