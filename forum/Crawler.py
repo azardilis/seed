@@ -139,7 +139,7 @@ def parse_cw(cw):
         month = cw.group(4)
         year = yearstart
     
-    formated_date = month + " " + date + " " + year + " " time
+    formated_date = str(month) + " " + str(date) + " " + str(year) + " " str(time)
 #    if(cw.group(5)):
 #        date = date+"/"+cw.group(4)
     module = allmodules[modulename]
