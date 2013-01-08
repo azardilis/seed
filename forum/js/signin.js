@@ -50,5 +50,4 @@ function register_info(){
 
 
 	});
-//	window.location="http://localhost:8080"+url;
 }
