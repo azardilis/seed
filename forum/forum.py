@@ -696,14 +696,15 @@ class ThreadPage(BaseHandler):
             }
             self.response.out.write(template.render(template_params))
         else :
-            self.response.out.write('Unable to find thread '+str(self.request.get('ti'))+'<')
+            logging.error('Unable to find thread '+str(self.request.get('ti'))+'<')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Unable to find the specified thread.'}))
 
 class ViewAllThreadsPage(BaseHandler):
     def get(self):
         if self.session.get('type')==-1:
 		self.redirect('/403')
 		return
-	category = retrieve_category(self.request.get('cid'))
+    	category = retrieve_category(self.request.get('cid'))
         current_user = db.get(Key.from_path('User',self.session.get('name')))
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 
@@ -719,8 +720,7 @@ class ViewAllThreadsPage(BaseHandler):
             template = jinja_environment.get_template('templates/forum_category_all.html')
             self.response.out.write(template.render(template_vars))
         else :
-            logging.error('no category found '+str(cid))
-            self.response.out.write('Couldn\'t get category')
+            logging.error('no category found '+str(self.request.get('cid')))
             self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 			
 class removeThread(BaseHandler):
@@ -728,7 +728,7 @@ class removeThread(BaseHandler):
         if self.session.get('type')!=1:
 		self.redirect('/')
 		return
-	tid= self.request.get('tid')
+    	tid= self.request.get('tid')
 
         if tid :
 			thread=Thread.get(tid)
@@ -744,7 +744,7 @@ class removeThread(BaseHandler):
 			self.response.headers.add_header("Cache-Control","no-cache, no-store, must-revalidate")
         else :
             logging.error('no category found '+str(cid))
-            self.response.out.write('Couldn\'t get category')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class NewThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -765,7 +765,9 @@ class NewThread(BaseHandler):
                     'subscriptions':subscribed_modules
             }
             self.response.out.write(template.render(template_params))
-        else : logging.error('newthread : empty cid >'+str(cid)+'<')
+        else :
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
+            logging.error('newthread : empty cid >'+str(cid)+'<')
 
 class CreateNewThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
@@ -786,7 +788,7 @@ class CreateNewThread(BaseHandler):
             t.put()
             self.response.out.write(t.key().id())
         else :
-            self.response.out.write('category not found')
+            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class ReplyToThread(BaseHandler):
 #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
