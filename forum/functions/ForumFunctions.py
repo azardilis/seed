@@ -82,7 +82,7 @@ def make_post(p,posts) :
 	html = '''
 		<section class="userDetails">
 		<img src="/profileimage?usr='''+str(p.poster.key())+'''" class="pstimg" >
-		<p class="username">'''+p.poster.key().name()+'''</p>
+		<a href="profile?usr='''+p.poster.key().name()+'''"><p class="username">'''+p.poster.key().name()+'''</p></a>
 		<p class="degree">'''+p.poster.course+'''</p>
 		<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
 		<p class="replydate">'''+str(p.timestamp.date())+'''</p>
