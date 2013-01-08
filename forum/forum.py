@@ -1079,9 +1079,9 @@ class EmailSent(webapp2.RequestHandler):
     def post(self):
         self.request.get('subject')
         template = jinja_environment.get_template('templates/something.html')
-        subject = self.response.write(self.request.get('subject'))
-        message = self.response.write(self.request.get('message'))
-        mail.send_mail(sender='alex.pana.oikonomou@gmail.com',#user google email
+        subject = self.request.get('subject')
+        message = self.request.get('message')
+        mail.send_mail(sender="scriptingteamk@gmail.com",
                        to='scriptingteamk@gmail.com',
                        subject=subject,
                        body=message)
