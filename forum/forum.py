@@ -93,8 +93,8 @@ def search_thread_tags(search_terms):
     results = {}
     threads = Thread.all()
     for thread in threads:
-        succ = search_success(thread, search_term)
         for search_term in search_terms:
+	    succ = search_success(thread, search_term)	
             if succ > 0 and thread in results:
 		    results[thread] += succ
 	    elif succ > 0 and not (thread in results):
@@ -394,7 +394,7 @@ class SignInPage(BaseHandler):
     def get(self):
                 if  self.session.get('type') is None or self.session.get('type')==-1:
 	            template = jinja_environment.get_template('templates/signin.html')
-	            self.response.out.write(template.render())
+	            self.response.out.write(template.render({'bad_login':self.request.get('bad_login')}))
 		    self.session['type']=-1
 		    global url
 		    url=self.request.url
@@ -445,8 +445,8 @@ class SignInPage(BaseHandler):
 			self.redirect("/main")
 		else:
        		    #proper error message should be displayed (some javascript or something)
-			print "The username and password do not match, please try again!"
-			#self.redirect("/")
+			#print "The username and password do not match, please try again!"
+			self.redirect("/?bad_login=1")
 
 class MainPage(BaseHandler):
     def get(self):
