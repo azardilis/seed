@@ -147,11 +147,11 @@ def populate_db():
         temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
         temp.put()
         tcw = val.cw
-        while len(tcw):
+        #while len(tcw):
             #title date handin spec
-            (ttitle, tdate,thandin,tspec) = tcw.pop()
-            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.Link(tspec),handin=db.Link(thandin),module=temp)
-            tempcw.put()
+            #(ttitle, tdate,thandin,tspec) = tcw.pop()
+            #tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.Link(tspec),handin=db.Link(thandin),module=temp)
+            #tempcw.put()
                                 
 
 
