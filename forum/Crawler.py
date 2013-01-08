@@ -296,7 +296,7 @@ def open_link(link):
         if link not in crawled:
             parse_modulepage(opener.open(link),link,opener)
             crawled.add(link)       
-            if i > 3:
+            if i > 5:
                return
             i += 1
                 
