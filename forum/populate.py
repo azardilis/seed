@@ -58,8 +58,8 @@ def reset_db():
     for i in Grade.all():
         i.delete()
 
-    for i in Lecturer.all():
-        i.delete()
+    #for i in Lecturer.all():
+    #    i.delete()
 
     for i in Vote.all():
         i.delete()
@@ -74,9 +74,7 @@ def populate_db():
 
     ###### POPULATE ######
 
-    print "opens link"
-    open_link('https://secure.ecs.soton.ac.uk/notes/')
-    print "crawler finished"
+
     # create admins (course should match course in YearCourseSemester objects)
     current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type=1, year=3, signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
@@ -104,30 +102,34 @@ def populate_db():
     # +year 4 
 
     #temp:
-    years = SchoolYear(start=int(yearstart), end=int(yearend))
-    years.put()
     y1213 = SchoolYear(start=int(2012), end=int(2013))
     y1213.put()
     
 
 
-global allmodules
-while len(allmodules):
-    (key, val) = allmodules.popitem()
 
-    temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=compsci31,schoolYear=years)
-    temp.put()
-    cw = val.cw
-    while len(cw):
-            #title date handin spec
-        (ttitle, tdate,thandin,tspec) = cw.popitem()
-        tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.link(tspec),handin=db.link(thandin),module=temp)
-        tempcw.put()
+
+#    open_link('https://secure.ecs.soton.ac.uk/notes/')
+#    yearstart = ret_yearstart()
+#    yearend =   ret_yearend()
+#    years = SchoolYear(start=int(yearstart), end=int(yearend))
+#    years.put()
+
+#    modules = ret_allmodule() 
+#    while len(modules):
+#        (key, val) = modules.popitem()
+
+#        temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=compsci31,schoolYear=years)
+#        temp.put()
+#        cw = val.cw
+#        while len(cw):
+#            #title date handin spec
+#            (ttitle, tdate,thandin,tspec) = cw.popitem()
+#            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.link(tspec),handin=db.link(thandin),module=temp)
+#            tempcw.put()
                                 
 
 
-    y1112 = SchoolYear(start=int(2011), end=int(2012))
-    y1112.put()
     #end_temp
 
     # create modules (schoolYear, ecsCode ??)
