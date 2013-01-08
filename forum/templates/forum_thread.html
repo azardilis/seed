@@ -15,7 +15,12 @@
 	<section id="content" class="content"> 
 
 		{% include "/templates/mbar.html" %}
-		{% include "/templates/sidebar.html"%}
+		{%if current_user.user_type==1%}
+				{% include "/templates/admin-sidebar.html"%}
+				{%else%}
+				{% include "/templates/sidebar.html"%}
+				{%endif%}
+
 
 		<section id="pagecontent">
 			<section class="thread">

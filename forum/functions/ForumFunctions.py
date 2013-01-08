@@ -1,4 +1,5 @@
 import re
+from google.appengine.ext import db
 from model.base.Thread import Thread
 from model.base.User import User
 from model.base.Post import Post
@@ -145,3 +146,16 @@ def serialize_ajax_info(u , p,r2pid ):
 	resp += 'newID=='+str(p.key().id())
 
 	return resp
+
+def deleteThread(tid) :
+    for p in db.get(tid).posts :
+        if len(p.replies.fetch(1)) > 0 :
+            deletePosts(p.key())
+        p.delete()
+
+def deletePosts(pid) :
+    pst = Post.get(pid)
+    for p in pst.replies :
+        if len(p.replies.fetch(1)) > 0 :
+            deletePosts(p.key())
+        p.delete()
