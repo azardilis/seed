@@ -379,7 +379,7 @@ class AdminEditUser(BaseHandler):
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(BaseHandler):
     def get(self):
-		if self.session.get('type') is None or self.session.get('type')==-1:
+                if  self.session.get('type') is None or self.session.get('type')==-1:
 	            template = jinja_environment.get_template('templates/signin.html')
 	            self.response.out.write(template.render())
 		    self.session['type']=-1

@@ -84,7 +84,7 @@ def make_post(p,posts) :
 		<img src="/profileimage?usr='''+str(p.poster.key())+'''" class="pstimg" >
 		<a href="profile?usr='''+p.poster.key().name()+'''"><p class="username">'''+p.poster.key().name()+'''</p></a>
 		<p class="degree">'''+str(p.poster.course)+'''</p>
-		<p class="karma">Karma : '''+str(p.poster.karma)+'''</p>
+		<p class="karma">Accepted Answers: '''+str(p.poster.karma)+'''</p>
 		<p class="replydate">'''+str(p.timestamp.date())+'''</p>
 		</section>
 	''' #the count fo posts is a performance drawback I think
