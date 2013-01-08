@@ -99,6 +99,12 @@ def populate_db():
     compsci31.put()
     compsci32 = YearCourseSemester(year=int(3), semester=int(2), course="compsci",prettyName="Computer Science Year 3, Semester 2")
     compsci32.put()
+    
+    compsci41 = YearCourseSemester(year=int(4), semester=int(1), course="compsci",prettyName="Computer Science Year 4, Semester 1")
+    compsci41.put()
+    compsci42 = YearCourseSemester(year=int(4), semester=int(2), course="compsci",prettyName="Computer Science Year 4, Semester 2")
+    compsci42.put()
+
     # +year 4 
 
     #temp:
@@ -109,24 +115,43 @@ def populate_db():
 
 
 
-#    open_link('https://secure.ecs.soton.ac.uk/notes/')
-#    yearstart = ret_yearstart()
-#    yearend =   ret_yearend()
-#    years = SchoolYear(start=int(yearstart), end=int(yearend))
-#    years.put()
+    open_link('https://secure.ecs.soton.ac.uk/notes/')
+    yearstart = ret_yearstart()
+    yearend =   ret_yearend()
+    years = SchoolYear(start=int(yearstart), end=int(yearend))
+    years.put()
 
-#    modules = ret_allmodule() 
-#    while len(modules):
-#        (key, val) = modules.popitem()
+    modules = ret_allmodule() 
+    while len(modules):
+        (key, val) = modules.popitem()
+        ycs = compsci31
+        if val.semester == 1:
+            if val.year == 1:
+                ycs = compsci11
+            elif val.year == 2:
+                ycs = compsci21
+            elif val.year == 3:
+                ycs = compsci31
+            elif val.year == 4:
+                ycs = compsci41
+        elif val.semester == 2:
+            if val.year == 1:
+                ycs = compsci12
+            elif val.year == 2:
+                ycs = compsci22
+            elif val.year == 3:
+                ycs = compsci32
+            elif val.year == 4:
+                ycs = compsci42
 
-#        temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=compsci31,schoolYear=years)
-#        temp.put()
-#        cw = val.cw
-#        while len(cw):
-#            #title date handin spec
-#            (ttitle, tdate,thandin,tspec) = cw.popitem()
-#            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.link(tspec),handin=db.link(thandin),module=temp)
-#            tempcw.put()
+        temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
+        temp.put()
+        tcw = val.cw
+        while len(tcw):
+            #title date handin spec
+            (ttitle, tdate,thandin,tspec) = tcw.pop()
+            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.Link(tspec),handin=db.Link(thandin),module=temp)
+            tempcw.put()
                                 
 
 

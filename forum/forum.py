@@ -695,14 +695,17 @@ class removeThread(BaseHandler):
 
         if tid :
             thread=Thread.get(tid)
+            deleteThread(cgi.escape(tid))
             thread.delete()
-            template_values = { 'current_user':current_user,
-                                'message':"The changes have been saved!" }
+            template_values = {
+						'current_user':current_user,
+						'message':"The changes have been saved!"
+			}
             template = jinja_environment.get_template('templates/message-page.html')
-            self.response.out.write(template.render(template_values))
             self.response.headers.add_header("Expires","0")
             self.response.headers.add_header("Pragma","no-cache")
             self.response.headers.add_header("Cache-Control","no-cache, no-store, must-revalidate")
+            self.response.out.write(template.render(template_values))
         else :
             logging.error('no category found '+str(cid))
             self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))

@@ -11,7 +11,7 @@ crawled = set([])
 keywordregex = re.compile('<meta\sname=["\']keywords["\']\scontent=["\'](.*?)["\']\s/>')
 linkregex = re.compile('<a\s*href=[\'|"](.*?)[\'"].*?>')
 lecturer_regex = re.compile('<a href=\'(https://secure\.ecs\.soton\.ac\.uk/people/[a-zA-Z0-9]{0,5})\'>([a-zA-Z. ]*)</a></div><div>(Module Leader|Lecturer)')
-cw_regex = re.compile('(Mon|Tue|Wed|Thu|Fri)&nbsp;([0-9]{1,2})&nbsp;(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep)(Oct|Nov|Dec),&nbsp;([0-9]{1,2}:[0-9]{2})(?:,&nbsp;(20[1-2][0-9]))?</td><td><a href=\'([A-Za-z:/\. \w#_-]*)\'>([a-zA-Z\ 0-9:_\w]*)</a></td><td>:&nbsp;<a href=\'(https://handin.ecs.soton.ac.uk/handin/1213/[\w/]*)\'')
+cw_regex = re.compile('(Mon|Tue|Wed|Thu|Fri)&nbsp;([0-9]{1,2})&nbsp;(?:(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep)|(Oct|Nov|Dec)),&nbsp;([0-9]{1,2}:[0-9]{2})(?:,&nbsp;(20[1-2][0-9]))?</td><td><a href=\'([A-Za-z:/\. \w#_-]*)\'>([a-zA-Z\ 0-9:_\w\-]*)</a></td><td>:&nbsp;<a href=\'(https://handin.ecs.soton.ac.uk/handin/1213/[\w/]*)\'')
 title_regex = re.compile('(?:<title>ECS - ([\w: \-&,\._/\\!@#$^+=]*)[\w ()-]*</title>)')
 semester_regex = re.compile('(?:Semester:(?:</strong> )?([1-3]))')
 programme_regex = re.compile('([GHE][0-9GHR]{3})')
@@ -79,7 +79,7 @@ def parse_modulepage(page,url,opener):
     find_cw(title)
 
 def get_module_year(module_code):
-    year = module_code[4]
+    year = int(module_code[4])
     if year > 3:
         year = 4
     return year
@@ -95,7 +95,7 @@ def set_module_preogrammes(_module,resp):
 def get_module_semester(resp):
     result = re.search(semester_regex,resp)
     if result:
-        return result.group(1)
+        return int(result.group(1))
     return 3 #if here, something is wrong with the thing, or old module or msc project
 
 def find_lecturers(text):
@@ -149,7 +149,6 @@ def parse_cw(cw):
     else:
         month = cw.group(4)
         year = yearstart
-    
     formated_date = str(month) + " " + str(date) + " " + str(year) + " " + str(ttime)
 #    if(cw.group(5)):
 #        date = date+"/"+cw.group(4)
@@ -159,7 +158,7 @@ def parse_cw(cw):
 class TModule:
     title = ""
     code = ""
-    semester = ""
+    semester = 0
     page = ""
     year = 0
     programmes = []
@@ -173,6 +172,7 @@ class TModule:
         if (tmp[0]== ':'): tmp = tmp[1:]
         if (tmp[0]== ' '): tmp = tmp[1:]
         self.title = tmp
+        self.semester = 0
         self.programmes = []
         self.cw = []
         self.lecturers = []
@@ -207,7 +207,7 @@ class TModule:
         if course not in self.programmes:
             self.programmes.append(course)
         
-    def append_cw(self,cw,deadline,handin,desc):
+    def append_cw(self,cw,deadline,handin,desc):        
         self.cw.append((cw,deadline,handin,desc))
 
 class TLecturer:
@@ -296,8 +296,8 @@ def open_link(link):
         if link not in crawled:
             parse_modulepage(opener.open(link),link,opener)
             crawled.add(link)       
-            if i > 2:
-                return
+            if i > 3:
+               return
             i += 1
                 
             
