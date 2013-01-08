@@ -16,10 +16,10 @@
       <input type="submit" id="submit" value="Submit" >
  </form>
     
- </div></div><br></br>
+ </div></div>
  {% if bad_login%}
-  <label class="bl"> Bad login </label>
-  {% endif %} 
+ <label class='bl'>Bad Login</label>
+ {% endif %}
  <br></br><br></br><br></br><br></br>
   <section id="content" class="content">
   <div id="pic" class="forum-pic">
@@ -30,9 +30,14 @@
   <p><input type="email" name="email" class="info" value="University Email" onfocus="fade()" onblur="rewrite()" id="email"></p><br>
   <p><input type="text" name="ps" class="info" value="Password" onfocus="fade()" onblur="rewrite()" id="ps"></p><br>
   <p><input type="text" name="retype" class="info" value="Retype Password" onfocus="fade()" onblur="rewrite()" id="retype"></p><br>
+  <font color="#808080">Select Course:</font>
+  <br><select>
+  	<option value="compsci">Comspci</option>
+	<option value="elecEng">Electric Engineering</option>
+	<option value="ito">Information Technology</option>
+  </select></br><br>
+  <p><input type="number" name="year" class="info" value="Year" onfocus="fade()" onblur="rewrite()" id="year"></p><br>
   <p><input type="text" name="fn" class="info" value="Full Name" onfocus="fade()" onblur="rewrite()" id="fn"><font color="red">*</font></p><br>
-  <p><input type="text" name="course" class="info" value="Course" onfocus="fade()" onblur="rewrite()" id="course"><font color="red">*</font></p><br>
-  <p><input type="number" name="year" class="info" value="Year" onfocus="fade()" onblur="rewrite()" id="year"><font color="red">*</font></p><br>
   <input type="submit" name="reg" id="reg" value="Register Now"><br><br>
   <font color="red">*</font> <font size="1px">are optional fields. You can also edit them at the profile page once you have logged in.</font>
 

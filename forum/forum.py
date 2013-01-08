@@ -416,6 +416,10 @@ class SignInPage(BaseHandler):
 				if course is None or course=='Course' or course=='': course='compsci'
 				User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,).put()
         else:
+			if len(self.request.get('user'))==0 or len(self.request.get('password'))==0:
+				self.redirect('?bad_login=1')
+				return
+
 			username, password = self.request.get('user'),self.request.get('password')
 			potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
 			if potential_user is not None and potential_user.password==self.request.get('password'):
