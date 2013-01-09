@@ -9,10 +9,12 @@
 </head>
 <body>
 	<section id="content" class="content"> 
-
-		{% include "/templates/mbar.html" %}
+	  {% include "/templates/mbar.html" %}
+		{%if current_user.user_type==1%}
+		{% include "/templates/admin-sidebar.html"%}
+		{%else%}
 		{% include "/templates/sidebar.html"%}
-
+		{%endif%}
 		<section id="pagecontent" class="cleared">
 			<h1 class="error">An error occurred :</h1>
 			<p class="error">{{error_details}}</p>
