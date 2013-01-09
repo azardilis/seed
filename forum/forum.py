@@ -134,12 +134,7 @@ class AdminModules(BaseHandler):
             #copying allYcs into an array to be able to use it properly in the template
             for ycs in allYcs:
                 allYcsArray.append(ycs)
-            template_values = {
-                    'current_user':current_user,
-                    'subscriptions':subscribed_modules,
-                    'firsthalf':firsthalf,
-                    'secondhalf':secondhalf,
-                    'allYcs':allYcsArray }
+            template_values={'current_user':current_user,'subscriptions':subscribed_modules,'firsthalf':firsthalf,'secondhalf':secondhalf,'allYcs':allYcsArray}
             template = jinja_environment.get_template('templates/admin-modules.html')
             self.response.out.write(template.render(template_values))
         else:
@@ -147,11 +142,11 @@ class AdminModules(BaseHandler):
     def post(self):
 		global current_user
 		current_user = db.get(Key.from_path('User',self.session.get('name')))
-		subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		if self.session.get('type')==1:
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
 			is_add = self.request.POST.get('add_button', None)
+			self.response.out.write(is_delete)
 			if is_apply:
 				#get the module object from the datastore
 				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
@@ -174,6 +169,16 @@ class AdminModules(BaseHandler):
 			if is_delete:
 				#get the module object from the datastore
 				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
+				for rating in moduleObject.lecturers: rating.delete()
+				for sub in moduleObject.registered_students: sub.delete()
+				for category in moduleObject.categories:
+					for thread in category.threads: 
+						deleteThread(thread.key())
+						thread.delete()
+					category.delete()
+				for assess in moduleObject.assessments:
+					for grade in assess.grades: grade.delete()
+					assess.delete()
 				moduleObject.delete()
 			if is_add:
 				if cgi.escape(self.request.get('ycs')) is not None and cgi.escape(self.request.get('module_code')) is not None and cgi.escape(self.request.get('module_title')) is not None:
@@ -192,9 +197,9 @@ class AdminModules(BaseHandler):
 					moduleObject=Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs)
 				
 				moduleObject.put()
-			template_values = { 'current_user':current_user,
-						'subscriptions':subscribed_modules,
-						'message':"The changes have been successfully submited to the datastore" }
+			subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+			template_values = { 'current_user':current_user,'subscriptions':subscribed_modules,
+					'message':"The changes have been successfully submited to the datastore" }
 			template = jinja_environment.get_template('templates/message-page.html')
 			self.response.out.write(template.render(template_values))
 				
@@ -222,7 +227,8 @@ class AdminAssessment(BaseHandler):
 						if i<=count/2+1: firsthalf.append(cwk)
 						else: secondhalf.append(cwk)
 						i=i+1
-				template_values = { 'current_user':current_user, 'firsthalf':firsthalf, 'secondhalf':secondhalf }
+				subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+				template_values = { 'current_user':current_user, 'firsthalf':firsthalf, 'secondhalf':secondhalf, 'subscriptions':subs }
 				template = jinja_environment.get_template('templates/admin-assessments.html')
 				self.response.out.write(template.render(template_values))
 
@@ -244,8 +250,13 @@ class AdminAssessment(BaseHandler):
 				cwkObject.put()
 			if is_delete:
 				#get the assessment object from the datastore
-				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
-				cwkObject.delete()
+				cwkObj=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+				cwkObj.module.sum_marks -= cwkObj.sum_marks; cwkObj.module.count_marks -= cwkObj.count_marks;
+				cwkObj.module.sum_difficulty -= cwkObj.sum_difficulty; cwkObj.module.count_difficulty -= cwkObj.count_difficulty;
+				cwkObj.module.sum_interest -= cwkObj.sum_interest; cwkObj.module.count_interest -= cwkObj.count_interest;
+				cwkObj.module.put()
+				for grade in cwkObj.grades: grade.delete()
+				cwkObj.delete()
 			if is_add:
 				if cgi.escape(self.request.get('cwk_title')) is not None and cgi.escape(self.request.get('cwk_duedate')) is not None and cgi.escape(self.request.get('cwk_modulecode')) is not None:
 					cwk_title=cgi.escape(self.request.get('cwk_title'))
@@ -280,10 +291,7 @@ class AdminUsers(BaseHandler):
                     message="There are no users with that username, please try again!"
                     users=[]
             subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-            template_values = { 'current_user':current_user,
-                                'subscriptions':subscribed_modules,
-                                'users':users,
-                                'message':message }
+            template_values = { 'current_user':current_user, 'subscriptions':subscribed_modules, 'users':users, 'message':message }
             template = jinja_environment.get_template('templates/admin-users.html')
             self.response.out.write(template.render(template_values))
         else: self.redirect("/")
@@ -314,19 +322,10 @@ class AdminUserCreation(BaseHandler):
             new_user_year=self.request.get('user-year')
             new_user_type=self.request.get('user-type')
 
-            new_user=User(  password=new_user_password,
-                                            key_name=new_user_ecsid,
-                                            user_type=int(new_user_type),
-                                            course=new_user_course,
-                                            year=int(new_user_year),
-                                            full_name=new_user_fullname,
-                                            alternative_email=new_user_email )
-            new_user.put()
+            User(  password=new_user_password, key_name=new_user_ecsid, user_type=int(new_user_type), course=new_user_course, year=int(new_user_year), full_name=new_user_fullname, alternative_email=new_user_email ).put()
 
             subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-            template_values = { 'current_user':current_user,
-                                'subscriptions':subscribed_modules,
-                                'message':"The user has been added to the user list." }
+            template_values = { 'current_user':current_user, 'subscriptions':subscribed_modules, 'message':"The user has been added to the user list." }
             template = jinja_environment.get_template('templates/message-page.html')
             self.response.out.write(template.render(template_values))
         else: self.redirect("/")
@@ -345,18 +344,12 @@ class AdminEditUser(BaseHandler):
                     filter=self.request.get('user')
                     users=[User.get_by_key_name(filter)]
 
-                    template_values = { 'current_user':current_user,
-                            'user':users[0],
-                            'subscriptions':subscribed_modules,
-                            'message':message }
+                    template_values = { 'current_user':current_user, 'user':users[0], 'subscriptions':subscribed_modules, 'message':message }
                 else:
                     message="There are no users with that username, please try again!"
                     users=[]
 
-                    template_values = { 'current_user':current_user,
-                            'user':None,
-                            'subscriptions':subscribed_modules,
-                            'message':message }
+                    template_values = { 'current_user':current_user, 'user':None, 'subscriptions':subscribed_modules, 'message':message }
             template = jinja_environment.get_template('templates/admin-edit-user.html')
             self.response.out.write(template.render(template_values))
         else: self.redirect("/")
@@ -379,9 +372,7 @@ class AdminEditUser(BaseHandler):
             userObject.karma=int(cgi.escape(self.request.get('user-karma')))
             userObject.put()
             subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-            template_values = { 'current_user':current_user,
-                            'subscriptions':subscribed_modules,
-                            'message':"The changes have been saved!" }
+            template_values = { 'current_user':current_user, 'subscriptions':subscribed_modules, 'message':"The changes have been saved!" }
             template = jinja_environment.get_template('templates/message-page.html')
             self.response.out.write(template.render(template_values))
         else: self.redirect("/")
@@ -452,9 +443,9 @@ class MainPage(BaseHandler):
                     threads = cat.threads
                     threads = threads.order('-timestamp').fetch(2)
                     for thread in threads: 
-						recent_threads.append(thread)
-						if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
-						template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
+			recent_threads.append(thread)
+            if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
+            template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
 
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
@@ -462,7 +453,6 @@ class MainPage(BaseHandler):
         else: self.redirect("/")
 
 class ForumPage(BaseHandler):
-        #TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
     def get(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
