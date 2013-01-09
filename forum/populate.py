@@ -113,7 +113,7 @@ def populate_db():
     
 
 
-    if 1 == 2:
+    if 1 == 1:
 
         open_link('https://secure.ecs.soton.ac.uk/notes/')
         yearstart = ret_yearstart()
@@ -125,7 +125,8 @@ def populate_db():
         alllect = ret_alllecurers()
         while len(modules):
             (key, val) = modules.popitem()
-
+            if val.compsci == 0:                
+                continue
             ycs = compsci31
             if val.semester == 1:
                 if val.year == 1:
@@ -156,9 +157,13 @@ def populate_db():
                 (ttitle, tdate,thandin,tspec) = tcw.pop()
                 if len(tspec) <4:
                     tspec = val.page
+                if re.search("edshare",tspec):
+                    tspec = val.page
+
+#                tspec = "http://www.edshare.soton.ac.uk/9937/"
                 tempcw = Assessment(title=str(ttitle),
                                     dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'),
-                                    specLink=db.Link(""+str(tspec)),
+                                    specLink=db.Link(str(tspec)),
                                     handin=db.Link(""+str(thandin)),
                                     module=temp)
                 tempcw.put()
@@ -169,9 +174,9 @@ def populate_db():
 
             lectlist = val.lecturers            
             while len(lectlist):
-                tlect = alllecturers[lectlist.pop()]
+                tlect = alllect[lectlist.pop()]
                 tlecto = Lecturer(key_name=tlect.keyname, full_name=tlect.name, home_page=tlect.page)
-                tlect.put()
+                tlecto.put()
                 # associate them to modules they teach
                 rating = associate(lecturer=tlecto, module=temp)
                 rating.put() 
@@ -251,29 +256,29 @@ def populate_db():
     #end_temp
 
     # create lecturers
-    ejz = Lecturer(key_name='ejz', full_name='Ed J Zaluska', home_page='http://google.com')
+    ejz = Lecturer(key_name='ejz1', full_name='Ed J Zaluska', home_page='http://google.com')
     ejz.put()
-    mjw = Lecturer(key_name='mjw', full_name='Mark J Weal', home_page='http://google.com')
+    mjw = Lecturer(key_name='mjw1', full_name='Mark J Weal', home_page='http://google.com')
     mjw.put()
-    apb = Lecturer(key_name='apb', full_name='Adam Prugel-Bennett', home_page='http://google.com')
+    apb = Lecturer(key_name='apb1', full_name='Adam Prugel-Bennett', home_page='http://google.com')
     apb.put()
-    mn = Lecturer(key_name='mn', full_name='Mahesan Niranjan', home_page='http://google.com')
+    mn = Lecturer(key_name='mn1', full_name='Mahesan Niranjan', home_page='http://google.com')
     mn.put()
-    mp3 = Lecturer(key_name='mp3', full_name='Maria Polukarov', home_page='http://google.com')
+    mp3 = Lecturer(key_name='mp31', full_name='Maria Polukarov', home_page='http://google.com')
     mp3.put()
-    msn = Lecturer(key_name='msn', full_name='Mark S Nixon', home_page='http://google.com')
+    msn = Lecturer(key_name='msn1', full_name='Mark S Nixon', home_page='http://google.com')
     msn.put()
-    srg = Lecturer(key_name='srg', full_name='Steve R Gunn', home_page='http://google.com')
+    srg = Lecturer(key_name='srg1', full_name='Steve R Gunn', home_page='http://google.com')
     srg.put()
-    bim = Lecturer(key_name='bim', full_name='B Iain McNally', home_page='http://google.com')
+    bim = Lecturer(key_name='bim1', full_name='B Iain McNally', home_page='http://google.com')
     bim.put()
-    mrp2 = Lecturer(key_name='mrp2', full_name='Michael R. Poppleton', home_page='http://google.com')
+    mrp2 = Lecturer(key_name='mrp21', full_name='Michael R. Poppleton', home_page='http://google.com')
     mrp2.put()
-    srinanda = Lecturer(key_name='srinanda', full_name='Srinandan Dasmahapatra', home_page='http://google.com')
+    srinanda = Lecturer(key_name='srinanda1', full_name='Srinandan Dasmahapatra', home_page='http://google.com')
     srinanda.put()
-    lac = Lecturer(key_name='lac', full_name='Leslie Carr', home_page='http://google.com')
+    lac = Lecturer(key_name='lac1', full_name='Leslie Carr', home_page='http://google.com')
     lac.put()
-    nmg = Lecturer(key_name='nmg', full_name='Nicholas Gibbins', home_page='http://google.com')
+    nmg = Lecturer(key_name='nmg1', full_name='Nicholas Gibbins', home_page='http://google.com')
     nmg.put()
 
     # associate them to modules they teach
