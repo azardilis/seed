@@ -19,6 +19,7 @@ from google.appengine.api import images
 from itertools import izip
 from datetime import datetime
 from functions.BaseHandler import BaseHandler
+from google.appengine.ext.db import BadValueError
 import time
 import operator
 
@@ -145,6 +146,7 @@ class AdminModules(BaseHandler):
         else:
             self.redirect("/")
     def post(self):
+                error_msg = ""
                 success = True
                 moduleObject = None
 		global current_user
@@ -206,7 +208,7 @@ class AdminModules(BaseHandler):
                             template = jinja_environment.get_template('templates/message-page.html')
                             self.response.out.write(template.render(template_values))
                         else:
-                            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Bad Value!','current_user':current_user, 'subscriptions':subscribed_modules }))
+                            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
                             
 				
 		else: self.redirect("/")
@@ -463,10 +465,10 @@ class MainPage(BaseHandler):
                     threads = cat.threads
                     threads = threads.order('-timestamp').fetch(2)
                     for thread in threads: 
-						recent_threads.append(thread)
-						if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
-						template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
-
+                        recent_threads.append(thread)
+                        if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
+                        
+            template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
 
@@ -1103,9 +1105,9 @@ class RssPage(BaseHandler):
             for cat in mod.categories:
                 for thread in cat.threads:
 		            items.append(rss_item(title=thread.subject, link="http://1.modulediscussionforum.appspot.com/showthread?tid="+str(thread.key().id()), description=mod.key().name(), category=cat.name, pub_date=thread.timestamp.strftime('%a, %d %b %Y %X %Z')))
-	    template_values = {'name':name, 'items':items, 'date':date}
-	    template = jinja_environment.get_template('templates/news.rss')
-	    self.response.headers['Content-Type'] = 'application/rss+xml'
+        template_values = {'name':name, 'items':items, 'date':date}
+        template = jinja_environment.get_template('templates/news.rss')
+        self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
 class SearchPage(BaseHandler):
