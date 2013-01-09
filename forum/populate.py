@@ -113,45 +113,57 @@ def populate_db():
     
 
 
+    if 1 == 2:
 
+        open_link('https://secure.ecs.soton.ac.uk/notes/')
+        yearstart = ret_yearstart()
+        yearend =   ret_yearend()
+        years = SchoolYear(start=int(yearstart), end=int(yearend))
+        years.put()
 
-    open_link('https://secure.ecs.soton.ac.uk/notes/')
-    yearstart = ret_yearstart()
-    yearend =   ret_yearend()
-    years = SchoolYear(start=int(yearstart), end=int(yearend))
-    years.put()
+        modules = ret_allmodule() 
+        while len(modules):
+            (key, val) = modules.popitem()
 
-    modules = ret_allmodule() 
-    while len(modules):
-        (key, val) = modules.popitem()
-        ycs = compsci31
-        if val.semester == 1:
-            if val.year == 1:
-                ycs = compsci11
-            elif val.year == 2:
-                ycs = compsci21
-            elif val.year == 3:
-                ycs = compsci31
-            elif val.year == 4:
-                ycs = compsci41
-        elif val.semester == 2:
-            if val.year == 1:
-                ycs = compsci12
-            elif val.year == 2:
-                ycs = compsci22
-            elif val.year == 3:
-                ycs = compsci32
-            elif val.year == 4:
-                ycs = compsci42
+            ycs = compsci31
+            if val.semester == 1:
+                if val.year == 1:
+                    ycs = compsci11
+                elif val.year == 2:
+                    ycs = compsci21
+                elif val.year == 3:
+                    ycs = compsci31
+                elif val.year == 4:
+                    ycs = compsci41
+            elif val.semester == 2:
+                if val.year == 1:
+                    ycs = compsci12
+                elif val.year == 2:
+                    ycs = compsci22
+                elif val.year == 3:
+                    ycs = compsci32
+                elif val.year == 4:
+                    ycs = compsci42
 
-        temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
-        temp.put()
-        tcw = val.cw
-        #while len(tcw):
+            temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
+            temp.put()
+            tcw = val.cw
+            while len(tcw):
             #title date handin spec
-            #(ttitle, tdate,thandin,tspec) = tcw.pop()
-            #tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.Link(tspec),handin=db.Link(thandin),module=temp)
-            #tempcw.put()
+                (ttitle, tdate,thandin,tspec) = tcw.pop()
+                if len(tspec) <4:
+                    tspec = val.page
+            #if len(tspec) > 0:
+#            print tspec 
+ #           print "fittta"
+##if len(thandin) > 0:
+  #          print thandin
+                tempcw = Assessment(title=str(ttitle),
+                                    dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'),
+                                    specLink=db.Link(""+str(tspec)),
+                                    handin=db.Link(""+str(thandin)),
+                                    module=temp)
+                tempcw.put()
                                 
 
 

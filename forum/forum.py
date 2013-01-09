@@ -19,6 +19,7 @@ from google.appengine.api import images
 from itertools import izip
 from datetime import datetime
 from functions.BaseHandler import BaseHandler
+from google.appengine.ext.db import BadValueError
 import time
 import operator
 
@@ -140,6 +141,9 @@ class AdminModules(BaseHandler):
         else:
             self.redirect("/")
     def post(self):
+                error_msg = ""
+                success = True
+                moduleObject = None
 		global current_user
 		current_user = db.get(Key.from_path('User',self.session.get('name')))
 		if self.session.get('type')==1:
@@ -149,11 +153,12 @@ class AdminModules(BaseHandler):
 			self.response.out.write(is_delete)
 			if is_apply:
 				#get the module object from the datastore
-				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
-				if cgi.escape(self.request.get('module_title')) is not None: moduleObject.title=cgi.escape(self.request.get('module_title'))
-				if cgi.escape(self.request.get('module_code')) is not None: moduleObject.ecs_page=cgi.escape(self.request.get('module_page'))
-				if cgi.escape(self.request.get('ycs')) is not None:
-					ycs=cgi.escape(self.request.get('ycs'))
+                                try:
+				    moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
+                                    if cgi.escape(self.request.get('module_title')) is not None: moduleObject.title=cgi.escape(self.request.get('module_title'))
+                                    if cgi.escape(self.request.get('module_code')) is not None: moduleObject.ecs_page=cgi.escape(self.request.get('module_page'))
+                                    if cgi.escape(self.request.get('ycs')) is not None:
+                                        ycs=cgi.escape(self.request.get('ycs'))
 					#get the course, year and semester out of the value that comes in
 					course=ycs.split('-')[0]
 					year=ycs.split('-')[1]
@@ -165,7 +170,9 @@ class AdminModules(BaseHandler):
 					ycs_list.filter('semester =', int(semester))
 					ycs=ycs_list.get()
 					moduleObject.yearCourseSemester=ycs
-				moduleObject.put()
+                                except:
+                                    success = False
+				    if moduleObject: moduleObject.put()
 			if is_delete:
 				#get the module object from the datastore
 				moduleObject=Module.get(cgi.escape(self.request.get('module_key')))
@@ -193,16 +200,22 @@ class AdminModules(BaseHandler):
 					ycs_list.filter('course =', course)
 					ycs_list.filter('semester =', int(semester))
 					ycs=ycs_list.get()
-					
-					moduleObject=Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs)
-				
-				moduleObject.put()
-			subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
-			template_values = { 'current_user':current_user,'subscriptions':subscribed_modules,
-					'message':"The changes have been successfully submited to the datastore" }
-			template = jinja_environment.get_template('templates/message-page.html')
-			self.response.out.write(template.render(template_values))
-				
+
+					try:
+                                            moduleObject=Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs)
+                                        except:
+                                            success = False
+                                            
+				if moduleObject: moduleObject.put()
+                        if success:
+                            subs = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
+                            template_values = { 'current_user':current_user, 'subscriptions':subs,
+                                                'message':"The changes have been successfully submited to the datastore" }
+                            template = jinja_environment.get_template('templates/message-page.html')
+                            self.response.out.write(template.render(template_values))
+                        else:
+                            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
+                            
 		else: self.redirect("/")
 
 #Assessments administration page
@@ -236,18 +249,24 @@ class AdminAssessment(BaseHandler):
 
     def post(self):
 		global current_user
+                cwkObject = None
+                success = True
 		current_user = db.get(Key.from_path('User',self.session.get('name')))
+                subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		if self.session.get('type')==1:
 			is_delete,is_apply,is_add = self.request.POST.get('remove_module_button', None),self.request.POST.get('apply_button', None), self.request.POST.get('add_button', None)
 			if is_apply:
-				#get the assessment object from the datastore
-				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
-				if cgi.escape(self.request.get('cwk_title')) is not None: cwkObject.title=cgi.escape(self.request.get('cwk_title'))
-				if cgi.escape(self.request.get('cwk_duedate')) is not None: cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
-				if cgi.escape(self.request.get('cwk_speclink')) is not None: cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
-				if cgi.escape(self.request.get('cwk_handin')) is not None: cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
-				if cgi.escape(self.request.get('cwk_modulecode')) is not None: cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
-				cwkObject.put()
+                                try:
+				    #get the assessment object from the datastore
+                                    cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+                                    if cgi.escape(self.request.get('cwk_title')) is not None: cwkObject.title=cgi.escape(self.request.get('cwk_title'))
+                                    if cgi.escape(self.request.get('cwk_duedate')) is not None: cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
+                                    if cgi.escape(self.request.get('cwk_speclink')) is not None: cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
+                                    if cgi.escape(self.request.get('cwk_handin')) is not None: cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
+                                    if cgi.escape(self.request.get('cwk_modulecode')) is not None: cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+                                except:
+                                    success = False
+                                if cwkObject: cwkObject.put()
 			if is_delete:
 				#get the assessment object from the datastore
 				cwkObj=Assessment.get(cgi.escape(self.request.get('cwk_key')))
@@ -263,12 +282,18 @@ class AdminAssessment(BaseHandler):
 					cwk_duedate=cgi.escape(self.request.get('cwk_duedate'))
 					cwk_speclink=cgi.escape(self.request.get('cwk_speclink'))
 					cwk_handin=cgi.escape(self.request.get('cwk_handin'))
-					cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
+                                        try:
+                                            cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
+                                        except:
+                                            success = False
 				
-					cwkObject.put()
-			template_values = { 'current_user':current_user, 'message':"The changes have been successfully submited to the datastore" }
-			template = jinja_environment.get_template('templates/message-page.html')
-			self.response.out.write(template.render(template_values))
+					if cwkObject: cwkObject.put()
+                        if success:
+                            template_values = { 'current_user':current_user, 'message':"The changes have been successfully submited to the datastore" }
+                            template = jinja_environment.get_template('templates/message-page.html')
+                            self.response.out.write(template.render(template_values))
+                        else:
+                            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
 			
 		else: self.redirect("/")
 
@@ -444,9 +469,10 @@ class MainPage(BaseHandler):
                     threads = threads.order('-timestamp').fetch(2)
                     for thread in threads: 
 			recent_threads.append(thread)
-            if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
-            template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
 
+            if homepage_subs.__len__()==0 or recent_threads.__len__()==0: recent_threads=[]
+
+            template_values = { 'current_user':current_user, 'subscriptions':homepage_subs, 'threads':recent_threads }
             template = jinja_environment.get_template('templates/index.html')
             self.response.out.write(template.render(template_values))
 
@@ -1082,9 +1108,9 @@ class RssPage(BaseHandler):
             for cat in mod.categories:
                 for thread in cat.threads:
 		            items.append(rss_item(title=thread.subject, link="http://1.modulediscussionforum.appspot.com/showthread?tid="+str(thread.key().id()), description=mod.key().name(), category=cat.name, pub_date=thread.timestamp.strftime('%a, %d %b %Y %X %Z')))
-	    template_values = {'name':name, 'items':items, 'date':date}
-	    template = jinja_environment.get_template('templates/news.rss')
-	    self.response.headers['Content-Type'] = 'application/rss+xml'
+        template_values = {'name':name, 'items':items, 'date':date}
+        template = jinja_environment.get_template('templates/news.rss')
+        self.response.headers['Content-Type'] = 'application/rss+xml'
         self.response.out.write(template.render(template_values))
 
 class SearchPage(BaseHandler):

@@ -89,7 +89,7 @@ input, select{	margin-bottom:7px;}
 
 
 #horizontal-menu-item a{ color:white; 	text-decoration:none; }
-
+#horizontal-menu-search {width:400px;height:50px;}
 #horizontal-menu-item:hover{ 	float:left;
 				color:white;
 				padding:2px;
@@ -100,4 +100,10 @@ input, select{	margin-bottom:7px;}
 
 .user{	float:left; margin: 3px 10px 3px 10px;}
 
-input{ width:70%;}
+input{ width:70%;display:block;}
+
+#filter-button{width:40px;display:inline;}
+#filter-username{width:150px;display:inline;}
+form {width:400px;}
+#searchbox{width:35%;display:inline;padding:0px;}
+#searchbutton{width:15%;display:inline;}
