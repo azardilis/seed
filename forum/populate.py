@@ -124,6 +124,7 @@ def populate_db():
     modules = ret_allmodule() 
     while len(modules):
         (key, val) = modules.popitem()
+
         ycs = compsci31
         if val.semester == 1:
             if val.year == 1:
@@ -147,11 +148,22 @@ def populate_db():
         temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
         temp.put()
         tcw = val.cw
-        #while len(tcw):
+        while len(tcw):
             #title date handin spec
-            #(ttitle, tdate,thandin,tspec) = tcw.pop()
-            #tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.Link(tspec),handin=db.Link(thandin),module=temp)
-            #tempcw.put()
+            (ttitle, tdate,thandin,tspec) = tcw.pop()
+            if len(tspec) <4:
+                tspec = val.page
+            #if len(tspec) > 0:
+#            print tspec 
+ #           print "fittta"
+##if len(thandin) > 0:
+  #          print thandin
+            tempcw = Assessment(title=str(ttitle),
+                                dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'),
+                                specLink=db.Link(""+str(tspec)),
+                                handin=db.Link(""+str(thandin)),
+                                module=temp)
+            tempcw.put()
                                 
 
 
