@@ -1,14 +1,7 @@
-from functions.RetrieveFunctions import *
-import os
-import cgi
-from populate import *
-from google.appengine.api import mail
-from functions.ForumFunctions import * # functions to handle posts and shit # "posts and shit" lol!
 from model.base.Module import Module
 from model.base.User import User
 from model.base.Post import Post
 from model.base.Thread import Thread
-from model.base.Vote import Vote
 from model.base.YearCourseSemester import YearCourseSemester
 from model.base.Lecturer import Lecturer
 from model.base.Rating import Rating
@@ -17,55 +10,34 @@ from model.base.Grade import Grade
 from model.base.Category import Category
 from model.base.Subscription import Subscription
 from model.base.LecturerRating import LecturerRating
-from model.base.SchoolYear import SchoolYear
-from google.appengine.ext.db import Key
 from google.appengine.ext import db
-from itertools import izip
+from google.appengine.ext.db import Key
 from datetime import datetime
-from Crawler import *
 
 def reset_db():
-    for user in User.all():
-        user.delete()
+    for user in User.all(): user.delete()
 
-    for ycs in YearCourseSemester.all():
-        ycs.delete()
+    for ycs in YearCourseSemester.all(): ycs.delete()
 
-    for i in SchoolYear.all():
-        i.delete()
+    for mod in Module.all(): mod.delete()
 
-    for mod in Module.all():
-        mod.delete()
+    for sub in Subscription.all(): sub.delete()
 
-    for sub in Subscription.all():
-        sub.delete()
+    for sub in Category.all(): sub.delete()
 
-    for sub in Category.all() :
-        sub.delete()
+    for i in Thread.all(): i.delete()
 
-    for i in Thread.all():
-        i.delete()
+    for i in Post.all(): i.delete()
 
-    for i in Post.all():
-        i.delete()
+    for i in Rating.all(): i.delete()
 
-    for i in Rating.all():
-        i.delete()
+    for i in Assessment.all(): i.delete()
 
-    for i in Assessment.all():
-        i.delete()
+    for i in Grade.all(): i.delete()
 
-    for i in Grade.all():
-        i.delete()
+    for i in Lecturer.all(): i.delete()
 
-    #for i in Lecturer.all():
-    #    i.delete()
-
-    for i in Vote.all():
-        i.delete()
-
-    for i in LecturerRating.all():
-        i.delete()
+    for i in LecturerRating.all(): i.delete()
 
 def populate_db():
 
@@ -73,20 +45,11 @@ def populate_db():
     reset_db()
 
     ###### POPULATE ######
-
-
     # create admins (course should match course in YearCourseSemester objects)
     current_user = User(key_name='az2g10', full_name='Argyris Zardilis', password='1234', course='compsci',user_type=1, year=3, signature="L33T 5UP4|-| H4X0|2")
     current_user.put()
 
-    #temp:
-    user = User(key_name='dpm3g10',full_name='dio',password='1234',course='compsci',year=3,user_type=0)
-    user.put()
-    #end_temp
-
-    
-
-    # create yearCourseSemester objects (how about semester 3 - individual project for masters ??)
+    # create yearCourseSemester objects
     compsci11 = YearCourseSemester(year=int(1), semester=int(1), course="compsci",prettyName="Computer Science Year 1, Semester 1")
     compsci11.put()
     compsci12 = YearCourseSemester(year=int(1), semester=int(2), course="compsci",prettyName="Computer Science Year 1, Semester 2")
@@ -99,254 +62,65 @@ def populate_db():
     compsci31.put()
     compsci32 = YearCourseSemester(year=int(3), semester=int(2), course="compsci",prettyName="Computer Science Year 3, Semester 2")
     compsci32.put()
-    
-    compsci41 = YearCourseSemester(year=int(4), semester=int(1), course="compsci",prettyName="Computer Science Year 4, Semester 1")
-    compsci41.put()
-    compsci42 = YearCourseSemester(year=int(4), semester=int(2), course="compsci",prettyName="Computer Science Year 4, Semester 2")
-    compsci42.put()
 
-    # +year 4 
-
-    #temp:
-    y1213 = SchoolYear(start=int(2012), end=int(2013))
-    y1213.put()
-    
-
-
-    if 1 == 1:
-
-        open_link('https://secure.ecs.soton.ac.uk/notes/')
-        yearstart = ret_yearstart()
-        yearend =   ret_yearend()
-        years = SchoolYear(start=int(yearstart), end=int(yearend))
-        years.put()
-
-        modules = ret_allmodule() 
-        alllect = ret_alllecurers()
-        while len(modules):
-            (key, val) = modules.popitem()
-            if val.compsci == 0:                
-                continue
-            ycs = compsci31
-            if val.semester == 1:
-                if val.year == 1:
-                    ycs = compsci11
-                elif val.year == 2:
-                    ycs = compsci21
-                elif val.year == 3:
-                    ycs = compsci31
-                elif val.year == 4:
-                    ycs = compsci41
-            elif val.semester == 2:
-                if val.year == 1:
-                    ycs = compsci12
-                elif val.year == 2:
-                    ycs = compsci22
-                elif val.year == 3:
-                    ycs = compsci32
-                elif val.year == 4:
-                    ycs = compsci42
-
-            temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
-            temp.put()
-            tcw = val.cw
-            categGeneral = Category(name='General Discussion', description='Vi som fiskar, fiskar inte i fotboll', module=temp)
-            categGeneral.put()
-            while len(tcw):
-            #title date handin spec
-                (ttitle, tdate,thandin,tspec) = tcw.pop()
-                if len(tspec) <4:
-                    tspec = val.page
-                if re.search("edshare",tspec):
-                    tspec = val.page
-
-#                tspec = "http://www.edshare.soton.ac.uk/9937/"
-                tempcw = Assessment(title=str(ttitle),
-                                    dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'),
-                                    specLink=db.Link(str(tspec)),
-                                    handin=db.Link(""+str(thandin)),
-                                    module=temp)
-                tempcw.put()
-
-                categCoursework = Category(name='Coursework Discussion '+str(ttitle), description='En hatt satt pa en katt en natt for att jag var matt', module=temp)
-                categCoursework.put()
-
-
-            lectlist = val.lecturers            
-            while len(lectlist):
-                tlect = alllect[lectlist.pop()]
-                tlecto = Lecturer(key_name=tlect.keyname, full_name=tlect.name, home_page=tlect.page)
-                tlecto.put()
-                # associate them to modules they teach
-                rating = associate(lecturer=tlecto, module=temp)
-                rating.put() 
-
-    #end_temp
-
-    # create modules (schoolYear, ecsCode ??)
+    # create modules
     comp3001 = Module(key_name = 'COMP3001', ecsCode='COMP3001', title='Scripting Languages',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/",
-                  yearCourseSemester=compsci31, schoolYear=y1213)
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3001/", yearCourseSemester=compsci31)
     comp3001.put()
-    comp3033 = Module(key_name = 'COMP3033', ecsCode='COMP3033', title='Computational Biology',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3033/",
-                  yearCourseSemester=compsci31, schoolYear=y1213)
-    comp3033.put()
-    comp3032 = Module(key_name = 'COMP3032', ecsCode='COMP3032', title='Intelligent Algorithms',
-                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP3032/",
-                  yearCourseSemester=compsci31, schoolYear=y1213)
-    comp3032.put()
-    comp3016 = Module(key_name = 'COMP3016', ecsCode='COMP3016', title='Hypertext and Web Technologies',
-                  ecs_page='http://www.google.com',
-                  yearCourseSemester=compsci31, schoolYear=y1213)
-    comp3016.put()
-    comp3020 = Module(key_name = 'COMP3020', ecsCode='COMP3020', title='Individual Project',
-                  ecs_page='http://www.google.com',
-                  yearCourseSemester=compsci31, schoolYear=y1213)
-    comp3020.put()
-    comp1314 = Module(key_name = 'COMP1314', ecsCode='COMP1314', title='Introduction to Everything',
-                  ecs_page='http://goo.gl/S0e62',
-                  yearCourseSemester=compsci11, schoolYear=y1213)
-    comp1314.put()
     info3005 = Module(key_name = 'INFO3005', ecsCode='INFO3005', title='Security & Information Technology',
-                  ecs_page='http://www.google.com',
-                  yearCourseSemester=compsci31, schoolYear=y1213)
+                  ecs_page='http://www.google.com',  yearCourseSemester=compsci31)
     info3005.put()
-
-# what happens if we put some modules for more than one years:
-#    old3001 = Module(key_name = 'other3001', ecsCode='COMP3001', title='Scripting Languages',
-#                  ecs_page="https://secure.ecs.soton.ac.uk/module/1112/COMP3001/",
-#                  yearCourseSemester=compsci31, schoolYear=y1112)
-#    old3001.put()
-#    old3033 = Module(key_name = 'other3033', ecsCode='COMP3033', title='Computational Biology',
-#                 ecs_page="https://secure.ecs.soton.ac.uk/module/1112/COMP3033/",
-#                  yearCourseSemester=compsci31, schoolYear=y1112)
-#    old3033.put()
-#    subscribe(current_user, old3001)
-#    subscribe(current_user, old3033)
-#############################################################
+    comp3033 = Module(key_name = 'COMP1202', ecsCode='COMP1202', title='Programming 1',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP1202/", yearCourseSemester=compsci11)
+    comp3033.put()
+    comp3033 = Module(key_name = 'COMP1201', ecsCode='COMP1201', title='Algorithmics',
+                  ecs_page="https://secure.ecs.soton.ac.uk/module/1213/COMP1201/", yearCourseSemester=compsci12)
+    comp3033.put()
 
     # put assessments on modules
-    cwk1_3001 = Assessment(title='Perl Coursework',
-                        dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'),
-                        specLink=db.Link("http://www.google.com/"),
-                        handin=db.Link("http://www.google.com/"),
-                        module=comp3001)
+    cwk1_3001 = Assessment(title='Perl Coursework',  module=comp3001,
+                        dueDate=datetime.strptime('Nov 1 2013  1:33PM', '%b %d %Y %I:%M%p'),
+                        specLink=db.Link("https://secure.ecs.soton.ac.uk/noteswiki/w/COMP3001-1213-cw1-spec"),
+                        handin=db.Link("https://handin.ecs.soton.ac.uk/handin/1213/COMP3001/1/"))
     cwk1_3001.put()
-    cwk2_3001 = Assessment(title='Python/JS Group',
-                        dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'),
-                        specLink=db.Link("http://www.google.com/"),
-                        handin=db.Link("http://www.google.com/"),
-                        module=comp3001)
+    cwk2_3001 = Assessment(title='Python/JS Group',  module=comp3001,
+                        dueDate=datetime.strptime('Nov 1 2013  2:00PM', '%b %d %Y %I:%M%p'),
+                        specLink=db.Link("https://secure.ecs.soton.ac.uk/noteswiki/w/COMP3001-1213-cw2-spec"),
+                        handin=db.Link("https://handin.ecs.soton.ac.uk/handin/1213/COMP3001/2/"))
     cwk2_3001.put()
-
-    #temp: 
-#    put_mark(current_user, cwk1_3001, 83)
-#    put_difficulty(current_user, cwk1_3001, 3)
-#    put_interest(current_user, cwk1_3001, 3)
-#    put_mark(user, cwk1_3001, 56)
-#    put_difficulty(user, cwk1_3001, 2)
-#    put_interest(user, cwk1_3001, 2)
-#    put_mark(current_user, cwk2_3001, 40)
-#    put_difficulty(current_user, cwk2_3001, 4)
-#    put_interest(current_user, cwk2_3001, 4)
-#    put_mark(user, cwk2_3001, 65)
-#    put_difficulty(user, cwk2_3001, 5)
-#    put_interest(user, cwk2_3001, 5)
-    #end_temp
+    infocwk = Assessment(title='Assignment',  module=info3005,
+                        dueDate=datetime.strptime('Nov 1 2012  2:00PM', '%b %d %Y %I:%M%p'),
+                        specLink=db.Link("https://secure.ecs.soton.ac.uk/noteswiki/w/INFO3005-1213-assign2"),
+                        handin=db.Link("https://handin.ecs.soton.ac.uk/handin/1213/INFO3005/2/"))
+    infocwk.put()
 
     # create lecturers
-    ejz = Lecturer(key_name='ejz1', full_name='Ed J Zaluska', home_page='http://google.com')
+    ejz = Lecturer(key_name='ejz1', full_name='Ed J Zaluska', home_page='https://secure.ecs.soton.ac.uk/people/ejz')
     ejz.put()
-    mjw = Lecturer(key_name='mjw1', full_name='Mark J Weal', home_page='http://google.com')
-    mjw.put()
-    apb = Lecturer(key_name='apb1', full_name='Adam Prugel-Bennett', home_page='http://google.com')
-    apb.put()
-    mn = Lecturer(key_name='mn1', full_name='Mahesan Niranjan', home_page='http://google.com')
-    mn.put()
-    mp3 = Lecturer(key_name='mp31', full_name='Maria Polukarov', home_page='http://google.com')
-    mp3.put()
-    msn = Lecturer(key_name='msn1', full_name='Mark S Nixon', home_page='http://google.com')
-    msn.put()
-    srg = Lecturer(key_name='srg1', full_name='Steve R Gunn', home_page='http://google.com')
-    srg.put()
-    bim = Lecturer(key_name='bim1', full_name='B Iain McNally', home_page='http://google.com')
-    bim.put()
-    mrp2 = Lecturer(key_name='mrp21', full_name='Michael R. Poppleton', home_page='http://google.com')
-    mrp2.put()
-    srinanda = Lecturer(key_name='srinanda1', full_name='Srinandan Dasmahapatra', home_page='http://google.com')
-    srinanda.put()
-    lac = Lecturer(key_name='lac1', full_name='Leslie Carr', home_page='http://google.com')
-    lac.put()
-    nmg = Lecturer(key_name='nmg1', full_name='Nicholas Gibbins', home_page='http://google.com')
-    nmg.put()
+    jsh2 = Lecturer(key_name='jsh2', full_name='Dr Jonathon S Hare', home_page='https://secure.ecs.soton.ac.uk/people/jsh2')
+    jsh2.put()
 
     # associate them to modules they teach
-    rating1 = associate(lecturer=ejz, module=comp3001)
-    rating2 = associate(lecturer=msn,module=comp3001)
-    rating3 = associate(lecturer=ejz,module=info3005)
+    associate(lecturer=ejz, module=comp3001)
+    associate(lecturer=jsh2,module=comp3001)
+    associate(lecturer=ejz,module=info3005)
 
-    #temp:
-    rate_lecturer(rating1,2,1)
-    rate_lecturer(rating2,3,4)
-    rate_lecturer(rating3,3,2)
-    #end_temp
-
-    # when user subscribes to amodule, call this function (make sure it's after lecturer-module associations (ie. Ratings) have been created)
-    subscribe(user, comp3001)
-    subscribe(current_user, comp3001)
-    subscribe(current_user,comp3033)
-    subscribe(current_user,comp3032)
-    subscribe(current_user,comp3020)
-    subscribe(current_user,comp1314)
-    subscribe(current_user, info3005)
-    subscribe(current_user, comp3016)
-
-    #temp:
-    LecturerRating(lecturer=ejz,module=comp3001,student=current_user).put()
-    LecturerRating(lecturer=msn,module=comp3001,student=current_user).put()
-    LecturerRating(lecturer=ejz,module=info3005,student=current_user).put()
-    #end_temp
-
-    ###### FORUM #######
-#TODO iterate over all assessments in each module and create one category for each + 1 general category at the end
-#when the above todo is done, make sure that when the admin adds a new module they call a function to add categories to it as well
-    categGeneral3001 = Category(name='General Discussion', description='blah blah', module=comp3001)
+    # create categories
+    categGeneral3001 = Category(name='General Discussion', description='Discuss general issues with the module', module=comp3001)
     categGeneral3001.put()
-    categCoursework3001 = Category(name='Coursework Discussion', description='blah blah', module=comp3001)
+    categCoursework3001 = Category(name='Coursework Discussion', description='Questions related to coursework', module=comp3001)
     categCoursework3001.put()
+    categGeneral3005 = Category(name='General Discussion', description='Discuss general issues with the module', module=info3005)
+    categGeneral3005.put()
+    categCoursework3005 = Category(name='Coursework Discussion', description='Questions related to coursework', module=info3005)
+    categCoursework3005.put()
 
-    #temp:
-    #dios scripts for polulation
-    q = User.all();
-    q.filter('__key__ =',Key.from_path('User','az2g10'))
-    rg = q.get()
+    # sample threads
+    Thread(category=categGeneral3001,subject='Java support functional',body='Does Java support functional programming?',poster=current_user,tags=['java','functional']).put()
 
+    Thread(category=categGeneral3001,subject='Python typing',body='Is Python strongly typed?',poster=current_user,tags=['python','strongly typed']).put()
 
-    t = Thread(category=categGeneral3001,subject='Busy thread',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
-    t.put()
-
-    for d in range (0,10) :
-        if d%2 == 0 :
-            t = Thread(category=categGeneral3001,subject='Some subject number -> '+str(d),body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
-        else :
-            t = Thread(category=categCoursework3001,subject='Some subject',body='Some very intriguing text!',poster=rg,tags=['yada','yada'])
-        t.put()
-
-    for i in range(3):
-        p = Post(body='yada'+str(i),poster=rg, thread=t, answer = False)
-        p.put()
-        for g in range(1,4) :
-            n = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False)
-            n.put()
-            o = Post(body='yada2'+str(g),poster=rg,reply=p ,  answer = False)
-            o.put()
-
-            r = Post(body='yadayada3',poster=rg, reply=n, answer = False)
-            r.put()
-    r = Post(body='#This has no replies ',poster=rg, thread = t, answer = False)
-    r.put()
-    #end_temp
+    Thread(category=categCoursework3001,subject='Deadline',body='Hi guys. When is the deadline for Javascript?',poster=current_user,tags=['deadline'])
 
 def subscribe(user, module, a=0):
 	Subscription(show_in_homepage=True, receive_notifications=True, subscribed_user=user, module=module).put()
@@ -354,84 +128,34 @@ def subscribe(user, module, a=0):
 	module.student_count+=1
 	module.put()
 
-	for assessm in module.assessments:
-		Grade(student=user,assessment=assessm).put() 
+	for assessm in module.assessments: Grade(student=user,assessment=assessm).put() 
 	
-	q=Rating.all()
-	q=q.filter('module =', module)
-	ratings=q.run()
-	for rating in ratings:
-		LecturerRating(lecturer=rating.lecturer,module=module,student=user).put()
+	ratings=Rating.all().filter('module =', module).run()
+	for rating in ratings: LecturerRating(lecturer=rating.lecturer,module=module,student=user).put()
 
 def unsubscribe(user, module):
-	q=Subscription.all()
-	q=q.filter('subscribed_user =', user)
-	q=q.filter('module =', module)
-	subs=q.run()
-	for s in subs:
-		s.delete()
+	subs=Subscription.all().filter('subscribed_user =', user).filter('module =', module).run()
+	for s in subs: s.delete()
 
 	module.student_count-=1
 	module.put()
 
-	q=Grade.all()
-	q=q.filter('student =', user)
-	grades=q.run()
+	grades=Grade.all().filter('student =', user).run()
 
 	for assessm in module.assessments:
 		for grade in grades:
-			if grade.assessment.key() == assessm.key():
+			if grade.assessment.key() == assessm.key(): 
 				grade.delete()
 
-	q=LecturerRating.all()
-        q=q.filter('module =', module)
-	q=q.filter('user =', user)
-        lectRats=q.run()
-        for lectRat in lectRats:
-		lectRat.delete()
+	lectRats=LecturerRating.all().filter('module =',module).filter('user =',user).run()
+        for lectRat in lectRats: lectRat.delete()
+
+def associate(lecturer, module):
+	Rating(lecturer=lecturer,module=module).put()
 
 def associate(lecturer, module):
 	rating = Rating(lecturer=lecturer,module=module)
+	rating.teach_sum = 5
+	rating.overall_sum = 4
+	rating.teach_count = rating.overall_count = 1
 	rating.put()
-	return rating #temp
-
-def rm_module(module):
-	q=Subscribtion.all()
-	q=q.filter('module =', module)
-	subs = q.run()
-	for s in subs:
-		s.delete()
-	module.delete()
-
-#temp:
-def put_mark(user, assessment, mark):
- 	assessment.sum_marks += mark
-	assessment.count_marks += 1
-	assessment.put()
-	assessment.module.sum_marks += mark
-	assessment.module.count_marks += 1
-	assessment.module.put()
-
-def put_difficulty(user, assessment, difficulty_outof5):
- 	assessment.sum_difficulty += difficulty_outof5
-	assessment.count_difficulty += 1
-	assessment.put()
-	assessment.module.sum_difficulty += difficulty_outof5
-	assessment.module.count_difficulty += 1
-	assessment.module.put()
-
-def put_interest(user, assessment, interest_outof5):
- 	assessment.sum_interest += interest_outof5
-	assessment.count_interest += 1
-	assessment.put()
-	assessment.module.sum_interest += interest_outof5
-	assessment.module.count_interest += 1
-	assessment.module.put()
-
-def rate_lecturer(rating, teaching_outof5, overall_outof5):
-	rating.teach_sum += teaching_outof5
-	rating.teach_count += 1
-	rating.overall_sum += overall_outof5
-	rating.overall_count += 1
-	rating.put()
-#end_temp
