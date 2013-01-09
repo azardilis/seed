@@ -16,10 +16,8 @@ from google.appengine.api import images
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from google.appengine.api import images
-from itertools import izip
 from datetime import datetime
 from functions.BaseHandler import BaseHandler
-from google.appengine.ext.db import BadValueError
 import time
 import operator
 
