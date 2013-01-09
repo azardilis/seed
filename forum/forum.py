@@ -243,18 +243,24 @@ class AdminAssessment(BaseHandler):
 
     def post(self):
 		global current_user
+                cwkObject = None
+                success = True
 		current_user = db.get(Key.from_path('User',self.session.get('name')))
+                subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		if self.session.get('type')==1:
 			is_delete,is_apply,is_add = self.request.POST.get('remove_module_button', None),self.request.POST.get('apply_button', None), self.request.POST.get('add_button', None)
 			if is_apply:
-				#get the assessment object from the datastore
-				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
-				if cgi.escape(self.request.get('cwk_title')) is not None: cwkObject.title=cgi.escape(self.request.get('cwk_title'))
-				if cgi.escape(self.request.get('cwk_duedate')) is not None: cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
-				if cgi.escape(self.request.get('cwk_speclink')) is not None: cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
-				if cgi.escape(self.request.get('cwk_handin')) is not None: cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
-				if cgi.escape(self.request.get('cwk_modulecode')) is not None: cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
-				cwkObject.put()
+                                try:
+				    #get the assessment object from the datastore
+                                    cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+                                    if cgi.escape(self.request.get('cwk_title')) is not None: cwkObject.title=cgi.escape(self.request.get('cwk_title'))
+                                    if cgi.escape(self.request.get('cwk_duedate')) is not None: cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
+                                    if cgi.escape(self.request.get('cwk_speclink')) is not None: cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
+                                    if cgi.escape(self.request.get('cwk_handin')) is not None: cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
+                                    if cgi.escape(self.request.get('cwk_modulecode')) is not None: cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+                                except:
+                                    success = False
+                                if cwkObject: cwkObject.put()
 			if is_delete:
 				#get the assessment object from the datastore
 				cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
@@ -265,12 +271,18 @@ class AdminAssessment(BaseHandler):
 					cwk_duedate=cgi.escape(self.request.get('cwk_duedate'))
 					cwk_speclink=cgi.escape(self.request.get('cwk_speclink'))
 					cwk_handin=cgi.escape(self.request.get('cwk_handin'))
-					cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
+                                        try:
+                                            cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
+                                        except:
+                                            success = False
 				
-					cwkObject.put()
-			template_values = { 'current_user':current_user, 'message':"The changes have been successfully submited to the datastore" }
-			template = jinja_environment.get_template('templates/message-page.html')
-			self.response.out.write(template.render(template_values))
+					if cwkObject: cwkObject.put()
+                        if success:
+                            template_values = { 'current_user':current_user, 'message':"The changes have been successfully submited to the datastore" }
+                            template = jinja_environment.get_template('templates/message-page.html')
+                            self.response.out.write(template.render(template_values))
+                        else:
+                            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
 			
 		else: self.redirect("/")
 
