@@ -151,7 +151,6 @@ class AdminModules(BaseHandler):
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
 			is_add = self.request.POST.get('add_button', None)
-			self.response.out.write(is_delete)
 			if is_apply:
 				#get the module object from the datastore
                                 try:
