@@ -146,6 +146,7 @@ class AdminModules(BaseHandler):
                 moduleObject = None
 		global current_user
 		current_user = db.get(Key.from_path('User',self.session.get('name')))
+                subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		if self.session.get('type')==1:
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
