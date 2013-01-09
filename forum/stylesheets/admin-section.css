@@ -100,6 +100,10 @@ input, select{	margin-bottom:7px;}
 
 .user{	float:left; margin: 3px 10px 3px 10px;}
 
-input{ width:70%;}
-#filter-button{width:40px;}
-#filter-username{width:120px;}
+input{ width:70%;display:block;}
+
+#filter-button{width:40px;display:inline;}
+#filter-username{width:150px;display:inline;}
+form {width:400px;}
+#searchbox{width:35%;display:inline;padding:0px;}
+#searchbutton{width:15%;display:inline;}
