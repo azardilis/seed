@@ -428,7 +428,7 @@ class SignInPage(BaseHandler):
 			else: 
 				fname=self.request.get('full_name') 
 				course=self.request.get('course') 
-				if self.request.get('year') is not int: year=0 
+				if self.request.get('year') is not int or self.request.get('year')>5: year=0 
 				if fname is None or fname=='Full Name' or fname=='': fname=pot_user 
 				if course is None or course=='Course' or course=='': course='compsci'
 				User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,).put()
