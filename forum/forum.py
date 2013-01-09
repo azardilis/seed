@@ -419,11 +419,9 @@ class SignInPage(BaseHandler):
 		
         if self.request.url==url+'?reg=yes': 
 			pot_user=self.request.get('email') 
-			if pot_user[pot_user.index('@'):]!='@soton.ac.uk': return 'This is not a University email' 
 			pot_user=pot_user[:pot_user.index('@')] 
-			pot_user_rev=pot_user[::-1] 
+
 			if User.get_by_key_name(pot_user) is not None: return 'User already exists' 
-			elif pot_user_rev[2]!='g': return 'This is not a University email' 
 			elif self.request.get('password')!=self.request.get('retype'): return 'Your passwords do not match' 
 			else: 
 				fname=self.request.get('full_name') 
