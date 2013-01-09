@@ -89,7 +89,7 @@ input, select{	margin-bottom:7px;}
 
 
 #horizontal-menu-item a{ color:white; 	text-decoration:none; }
-
+#horizontal-menu-search {width:400px;height:50px;}
 #horizontal-menu-item:hover{ 	float:left;
 				color:white;
 				padding:2px;
@@ -101,3 +101,5 @@ input, select{	margin-bottom:7px;}
 .user{	float:left; margin: 3px 10px 3px 10px;}
 
 input{ width:70%;}
+#filter-button{width:40px;}
+#filter-username{width:120px;}
