@@ -912,15 +912,18 @@ class ProfilePage(BaseHandler):
         if self.session.get('type')==-1:
             self.redirect('/403')
             return
-
+	'''Post Variables'''
         avatar = self.request.get('img')
         fullname = self.request.get('fullname')
+	'''------------'''
+	'''Get current user'''
         current_user = db.get(Key.from_path('User',self.session.get('name')))
         user_key = current_user.key()
         user = db.get(user_key)
+	'''----------------'''
         if len(avatar) >0:
             try:
-                avatar=images.resize(avatar, 200, 200)
+                avatar=images.resize(avatar, 200, 200)#Resize and Upload Image if valid
                 user.avatar = db.Blob(avatar)
             except Exception, err: self.redirect('/403')
 
@@ -930,14 +933,16 @@ class ProfilePage(BaseHandler):
         self.redirect('/profile')
 
     def get(self):
+	'''Check if user is logged in'''
         if self.session.get('type')==-1:
             self.redirect('/403')
             return
+	'''-------------'''
         edit_mode = False
         template = jinja_environment.get_template('templates/profile.html')
 
         current_user = db.get(Key.from_path('User',self.session.get('name')))
-        subs =  current_user.subscriptions
+       
 
         sub_to_delete=cgi.escape(self.request.get('mod'))
         self.response.write(sub_to_delete)
@@ -955,10 +960,11 @@ class ProfilePage(BaseHandler):
             userQ=userQ.filter('__key__ = ' ,user_key)
             user = userQ.get()
             if user.key() == current_user.key(): edit_mode=True
+
         subs =  user.subscriptions
         mod_info=[]
         lecturers=[]
-
+	'''Receive User Posts and Topics Created'''
         posts = Post.all()
         posts=posts.filter("poster",user_key)
         num_posts=posts.count()
@@ -966,13 +972,17 @@ class ProfilePage(BaseHandler):
         threads = Thread.all()
         threads = threads.filter("poster",user_key)
         created_threads = threads.count()
-
+	''' ----------------------------------- '''
+	
+	'''Delete Module from subscription List'''
         if not sub_to_delete is '':
             subs.filter("__key__",Key(sub_to_delete))
             sub = subs.get()
             populate.unsubscribe(sub.subscribed_user, sub.module)
             subs =  current_user.subscriptions
+	''' ------------------------------------ '''
 
+	'''Retrieve User's Subscription List'''
         for s in subs:
             ratQ=Rating.all()
             ratQ.filter("module",s.module)
@@ -984,8 +994,8 @@ class ProfilePage(BaseHandler):
             if s.module.assessments.count()>0: assessments_flag=1
             else: assessments_flag=0
             mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
-
-            lecturers=[]
+	''' ---------------------------------- '''
+        lecturers=[]
 
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         template_params = { 'current_user':current_user,
@@ -998,6 +1008,7 @@ class ProfilePage(BaseHandler):
 
         self.response.out.write(template.render(template_params))
 
+'''Displays an Image saved in the database so it can be included in an HTML Page'''
 class GetImage(BaseHandler):
     def get(self):
         if self.session.get('type')==-1:
