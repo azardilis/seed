@@ -14,7 +14,7 @@
 .feedbackForm{		display:none;
 			position:fixed;
 			_position:absolute; /* hack for internet explorer 6*/
-			height:340px;
+			height:360px;
 			width:420px;
 			background:#FFFFFF;
 			border:2px solid #cecece;

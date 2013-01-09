@@ -18,7 +18,7 @@ section.handlercontent{	/*this is funny business as well*/
 article.thread{	border : 1px solid #829B9B ;
 		padding : 10px;
 		background : #ccdee8;
-		overflow: auto ;}
+	overflow: auto ;}
 
 a{ text-decoration : underline ; color : #02527d ;}
 
@@ -63,7 +63,7 @@ h3.title{ width : 60% ;	margin-bottom : 10px; float: left;}
 /*toggle subscriptions button CSS*/
 #toggle-button{	position:relative;
    		display:inline;
-    		float:left;
+    	float:left;
 		top : 0px;
 		width : 38%;
 		margin-left : 5px;
