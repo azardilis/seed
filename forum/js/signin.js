@@ -1,23 +1,3 @@
-var last_input="";
-var last_value="";
-function fade(){
-   var inp=document.activeElement;
-   last_input=inp;
-   last_value=inp.value;
-   inp.value="";
-   if(inp==document.getElementById('ps') || inp==document.getElementById('retype')){
-	inp.type="password";
-	}
-   }
-function rewrite(){
-   if(last_input.value==""){//if the user has not written anything yet
-	if(last_input==document.getElementById('ps') || last_input==document.getElementById('retype')){
-   		last_input.type="text";
-	}
-	last_input.value=last_value;
-   }
-}
-
 function register_info(){
 	var url=window.location.pathname;
 	var password=document.forms['register']['ps'];
