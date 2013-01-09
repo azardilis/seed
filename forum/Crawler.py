@@ -10,7 +10,7 @@ crawled = set([])
 #regular expressions for you to endulge
 keywordregex = re.compile('<meta\sname=["\']keywords["\']\scontent=["\'](.*?)["\']\s/>')
 linkregex = re.compile('<a\s*href=[\'|"](.*?)[\'"].*?>')
-lecturer_regex = re.compile('<a href=\'(https://secure\.ecs\.soton\.ac\.uk/people/[a-zA-Z0-9]{0,5})\'>([a-zA-Z. ]*)</a></div><div>(Module Leader|Lecturer)')
+lecturer_regex = re.compile('<a href=\'(https://secure\.ecs\.soton\.ac\.uk/people/[a-zA-Z0-9]{0,5})\'>([a-zA-Z. -]*)</a></div><div>(Module Leader|Lecturer)')
 cw_regex = re.compile('(Mon|Tue|Wed|Thu|Fri)&nbsp;([0-9]{1,2})&nbsp;(?:(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep)|(Oct|Nov|Dec)),&nbsp;([0-9]{1,2}:[0-9]{2})(?:,&nbsp;(20[1-2][0-9]))?</td><td><a href=\'([A-Za-z:/\. \w#_-]*)\'>([a-zA-Z\ 0-9:_\w\-]*)</a></td><td>:&nbsp;<a href=\'(https://handin.ecs.soton.ac.uk/handin/1213/[\w/]*)\'')
 title_regex = re.compile('(?:<title>ECS - ([\w: \-&,\._/\\!@#$^+=]*)[\w ()-]*</title>)')
 semester_regex = re.compile('(?:Semester:(?:</strong> )?([1-3]))')
@@ -70,6 +70,7 @@ def parse_modulepage(page,url,opener):
     year = get_module_year(_module.code)
     _module.add_semester(semester)
     _module.add_year(year)
+    set_module_programmes(_module,resp)
 
 #    msg = page
     startPos = msg.find('<!-- Main Page Begins -->')
@@ -87,7 +88,7 @@ def get_module_year(module_code):
         year = 4
     return year
 
-def set_module_preogrammes(_module,resp):
+def set_module_programmes(_module,resp):
     msg = resp
     result = re.search(programme_regex,msg)
     while result:
@@ -164,7 +165,8 @@ class TModule:
     semester = 0
     page = ""
     year = 0
-    programmes = []
+    programmes = 0
+    compsci = 0
     cw = []
     lecturers = []
 
@@ -176,10 +178,11 @@ class TModule:
         if (tmp[0]== ' '): tmp = tmp[1:]
         self.title = tmp
         self.semester = 0
-        self.programmes = []
+        self.programmes = 0
         self.cw = []
         self.lecturers = []
-        self.year = 0;
+        self.year = 0
+        self.compsci = 0
         
     def add_year(self,year):
         self.year = year
@@ -195,20 +198,18 @@ class TModule:
 
     def append_programme(self,programme):
         #look at http://www.ecs.soton.ac.uk/undergraduate/find_a_programme
-        compsci = re.compile('(?:G4G6|G400|G401|G421|G450|G4GR|G600|G4G5)')#Computer Science and Software Engineering
-        ito = re.compile('(?:G560|G500)')#Information Technology in Organisations LOL
-        ee = re.compile('(?:H610|H611|H641|H603|H6G7|H6G4|H691)') #Electronic Engineering
-        eme = re.compile('(?:H620|HH36|HHH6|H601)') #Electrical and Electromechanical Engineering
-        eee = re.compile('(?:H600|H602)') #Electrical and Electronic Engineering
-        course = ""
-        if programme[0] is 'G':
-            if re.search(compsci,programme): course = "compsci"
-            elif re.search(ito,programme): course = "ito"
-        else:
-            if re.search(ee,programme): course = "ee"
-            elif re.search(eme,programme):course = "eme"
-        if course not in self.programmes:
-            self.programmes.append(course)
+        compsci = re.compile('(G4G6|G400|G401|G421|G450|G4GR|G600|G4G5)')#Computer Science and Software Engineering
+        ito = re.compile('(G560|G500)')#Information Technology in Organisations LOL
+        ee = re.compile('(H610|H611|H641|H603|H6G7|H6G4|H691|H620|HH36|HHH6|H601|H600|H602)') #Electronic Engineering
+        course = 0
+     #   if programme[0] is 'G':
+            
+#            elif re.search(ito,programme): course = 0
+ #       else:
+        if re.search(ee,programme): course = 0
+        if re.search(compsci,programme): self.compsci = 1
+
+        self.programmes = course
         
     def append_cw(self,cw,deadline,handin,desc):        
         self.cw.append((cw,deadline,handin,desc))
@@ -294,11 +295,11 @@ def open_link(link):
             link = 'http://' + purl[1] + link
         elif link.startswith('#'):
             link = 'http://' + purl[1] + purl[2] + link
-        elif not link.startswith('http'):
-            link = 'http://' + purl[1] + '/' + link
+        #elif not link.startswith('http'):
+        #    link = 'http://' + purl[1] + '/' + link
+        while link[0] == ' ':
+            link = link[1:]
         if link not in crawled:
             parse_modulepage(opener.open(link),link,opener)
-            crawled.add(link)       
-            if i > 5:
-               return
-            i += 1
+            crawled.add(link)   
+ 
