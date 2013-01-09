@@ -9,7 +9,7 @@ import re
 from ratings import *
 import populate
 from google.appengine.api import mail
-from functions.ForumFunctions import * # functions to handle posts and shit # "posts and shit" lol!
+from functions.ForumFunctions import * # functions to handle post related things
 from model import *
 from webapp2_extras import sessions
 from google.appengine.api import images
@@ -31,8 +31,7 @@ def getSchoolYear(now):
         else:
             if schY.end == now.year: return schY
 
-    # not found
-    return None
+    return None # not found
 
 global session_dic
 session_dic={}
@@ -41,6 +40,7 @@ global current_user
 CATEGORIES,MID='categories','mid'
 EXTRA_TIME=40*24*60*60 #40 days
 
+#encapsulated all the information needed for an rss item
 class rss_item:
     def __init__(self, title, link, description, category, pub_date):
         self.title = title
@@ -55,6 +55,7 @@ def cloneEntity(e, **extra_args):
     props.update(extra_args)
     return klass(**props)
 
+#returns the number of occurences of search_term in thread attributes
 def search_success(thread, search_term):
     success = 0
     search_places = []
@@ -65,7 +66,6 @@ def search_success(thread, search_term):
     for search_place in search_places:
         if search_term in search_place: success += 1
     return success
-    #return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()
 
 def search_thread_tags(search_terms):
     results = {}
@@ -84,6 +84,7 @@ def getYcsFromCode(code):
     year=code.split('-')[2]
     semester=code.split('-')[3]
 
+#returns modules related to a specific year, course, semester
 def getYCS(year, course, semester):
     ycs_list = YearCourseSemester.all()
     ycs_list.filter('year =', year)
@@ -94,6 +95,7 @@ def getYCS(year, course, semester):
 
 #Main administration page
 class AdminPage(BaseHandler):
+
     def get(self):
     #passing variables to template
         global current_user
@@ -108,6 +110,7 @@ class AdminPage(BaseHandler):
 
 #Modules administration page
 class AdminModules(BaseHandler):
+
     def get(self):
         #passing variables to template
         global current_user
@@ -138,6 +141,7 @@ class AdminModules(BaseHandler):
             self.response.out.write(template.render(template_values))
         else:
             self.redirect("/")
+
     def post(self):
                 error_msg = ""
                 success = True
@@ -169,7 +173,7 @@ class AdminModules(BaseHandler):
 					ycs=ycs_list.get()
 					moduleObject.yearCourseSemester=ycs
                                 except:
-                                    success = False
+                                    success = False #something was wrong with the provided values, display error page
 				    if moduleObject: moduleObject.put()
 			if is_delete:
 				#get the module object from the datastore
@@ -198,11 +202,10 @@ class AdminModules(BaseHandler):
 					ycs_list.filter('course =', course)
 					ycs_list.filter('semester =', int(semester))
 					ycs=ycs_list.get()
-
 					try:
                                             moduleObject=Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs)
                                         except:
-                                            success = False
+                                            success = False #something was wrong with the provided values, display error page
                                             
 				if moduleObject: moduleObject.put()
                         if success:
@@ -213,7 +216,6 @@ class AdminModules(BaseHandler):
                             self.response.out.write(template.render(template_values))
                         else:
                             self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
-                            
 		else: self.redirect("/")
 
 #Assessments administration page
