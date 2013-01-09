@@ -56,8 +56,8 @@ function centerPopup(popupId){
 	//centering
 	$(popupId).css({
 		"position": "absolute",
-		"top": windowHeight/2-popupHeight/2,
-		"left": windowWidth/2-popupWidth/2
+		"top": windowHeight/2-popupHeight,
+		"left": windowWidth/2-popupWidth
 	});
 	//only need force for IE6
 
