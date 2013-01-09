@@ -8,7 +8,7 @@
 	    border-radius : 10px;
 	    margin-bottom : 3% ; }
 
-#mbar-wrapper{	width : 100%; overflow : auto ; padding-left: 1%;}
+#mbar-wrapper{	width : 100%; overflow : auto ; padding-left: 1%;margin-bottom : 10px;}
 
 ul#modulebar{ position : relative; float : left ;}
 
@@ -19,6 +19,8 @@ ul#modulebar{ position : relative; float : left ;}
 	text-align: center;
 	border-radius: 3px ;
 	display : inline ;
+	width:300px;
+	height : 20px;
 	background : #007275;
 	position : relative;
 	float : left ;
@@ -37,8 +39,7 @@ ul#modulebar{ position : relative; float : left ;}
 	/* Opera */
 	-o-transition-property:opacity;
 	-o-transition-duration:0.5s;
-	-o-transition-timing-function:ease-out;
-}
+	-o-transition-timing-function:ease-out;}
 
 #modulebar li:hover { opacity : 1; }
 

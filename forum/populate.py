@@ -113,47 +113,68 @@ def populate_db():
     
 
 
+    if 1 == 2:
 
+        open_link('https://secure.ecs.soton.ac.uk/notes/')
+        yearstart = ret_yearstart()
+        yearend =   ret_yearend()
+        years = SchoolYear(start=int(yearstart), end=int(yearend))
+        years.put()
 
-    open_link('https://secure.ecs.soton.ac.uk/notes/')
-    yearstart = ret_yearstart()
-    yearend =   ret_yearend()
-    years = SchoolYear(start=int(yearstart), end=int(yearend))
-    years.put()
+        modules = ret_allmodule() 
+        alllect = ret_alllecurers()
+        while len(modules):
+            (key, val) = modules.popitem()
 
-    modules = ret_allmodule() 
-    while len(modules):
-        (key, val) = modules.popitem()
-        ycs = compsci31
-        if val.semester == 1:
-            if val.year == 1:
-                ycs = compsci11
-            elif val.year == 2:
-                ycs = compsci21
-            elif val.year == 3:
-                ycs = compsci31
-            elif val.year == 4:
-                ycs = compsci41
-        elif val.semester == 2:
-            if val.year == 1:
-                ycs = compsci12
-            elif val.year == 2:
-                ycs = compsci22
-            elif val.year == 3:
-                ycs = compsci32
-            elif val.year == 4:
-                ycs = compsci42
+            ycs = compsci31
+            if val.semester == 1:
+                if val.year == 1:
+                    ycs = compsci11
+                elif val.year == 2:
+                    ycs = compsci21
+                elif val.year == 3:
+                    ycs = compsci31
+                elif val.year == 4:
+                    ycs = compsci41
+            elif val.semester == 2:
+                if val.year == 1:
+                    ycs = compsci12
+                elif val.year == 2:
+                    ycs = compsci22
+                elif val.year == 3:
+                    ycs = compsci32
+                elif val.year == 4:
+                    ycs = compsci42
 
-        temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
-        temp.put()
-        tcw = val.cw
-        while len(tcw):
+            temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
+            temp.put()
+            tcw = val.cw
+            categGeneral = Category(name='General Discussion', description='Vi som fiskar, fiskar inte i fotboll', module=temp)
+            categGeneral.put()
+            while len(tcw):
             #title date handin spec
-            (ttitle, tdate,thandin,tspec) = tcw.pop()
-            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'), specLink=db.Link(tspec),handin=db.Link(thandin),module=temp)
-            tempcw.put()
-                                
+                (ttitle, tdate,thandin,tspec) = tcw.pop()
+                if len(tspec) <4:
+                    tspec = val.page
+                tempcw = Assessment(title=str(ttitle),
+                                    dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'),
+                                    specLink=db.Link(""+str(tspec)),
+                                    handin=db.Link(""+str(thandin)),
+                                    module=temp)
+                tempcw.put()
 
+                categCoursework = Category(name='Coursework Discussion '+str(ttitle), description='En hatt satt pa en katt en natt for att jag var matt', module=temp)
+                categCoursework.put()
+
+
+            lectlist = val.lecturers            
+            while len(lectlist):
+                tlect = alllecturers[lectlist.pop()]
+                tlecto = Lecturer(key_name=tlect.keyname, full_name=tlect.name, home_page=tlect.page)
+                tlect.put()
+                # associate them to modules they teach
+                rating = associate(lecturer=tlecto, module=temp)
+                rating.put() 
 
     #end_temp
 

@@ -36,6 +36,9 @@ global yearend
 def ret_allmodule():
     return allmodules
 
+def ret_alllecurers():
+    return alllecturers
+
 def ret_yearstart():
     return yearstart
 
@@ -57,8 +60,8 @@ def parse_modulepage(page,url,opener):
     
 
     _module = TModule(modulename,url)
-    allmodules[modulename] = _module
-
+    allmodules[_module.code] = _module
+    modulename = _module.code
     
     semesterurl = "http://www.ecs.soton.ac.uk/module/" + _module.code
     resp = opener.open(semesterurl).read()
@@ -129,7 +132,7 @@ def parse_lecturer(lect):
         alllecturers[name] =lecturer 
 
     _module = allmodules[modulename]
-    _module.append_lecturer(name,role)
+    _module.append_lecturer(name)
 
 def parse_cw(cw):
     global modulename
@@ -187,8 +190,8 @@ class TModule:
     def add_semester(self,argsem):
         self.semester = argsem
 
-    def append_lecturer(self,lecturer,role):
-        self.lecturers.append((lecturer,role))
+    def append_lecturer(self,lecturer):
+        self.lecturers.append(lecturer)
 
     def append_programme(self,programme):
         #look at http://www.ecs.soton.ac.uk/undergraduate/find_a_programme
@@ -296,43 +299,6 @@ def open_link(link):
         if link not in crawled:
             parse_modulepage(opener.open(link),link,opener)
             crawled.add(link)       
-            if i > 3:
+            if i > 5:
                return
             i += 1
-                
-            
-                 
-            #finished
- #   sys.stdout.write("\n")
- #   while len(alllecturers):
- #       (key, val) = alllecturers.popitem()
-#        if len(val.modules) > 1:
-#            sys.stdout.write(" "+str(len(val.modules))) #some output of module
-#            sys.stdout.write(val.name)
-#            sys.stdout.write(val.modules[0][0])
-#            sys.stdout.write("\n")
-
-#    while len(allmodules):
-#        (key, val) = allmodules.popitem()
-#        print val.title +" " + val.code + " " + str(val.semester) + "\n"
-#need finish these
-#def Populate_lecturers():
-#    global alllecturers
-#    while len(alllecturers):
-#        (key, val) = alllecturers.popitem()
-#        temp = Lecturer(key_name=val.name, full_name=val.name,home_page=val.page)
-#        temp.put()
-#def Populate_modules():
-#    global allmodules
-#    while len(allmodules):
-#        (key, val) = allmodules.popitem()
-#        temp = Module(key_name=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=compsci31)
-#        temp.put()
-#        cw = val.cw
-#        while len(cw):
-#            #title date handin spec
-#            (ttitle, tdate,thandin,tspec) = cw.popitem()
-#            tempcw = Assessment(title=ttitle,dueDate=datetime.strptime('Nov 1 2005  1:33PM', '%b %d %Y %I:%M%p'), specLink=db.link(tspec),handin=db.#link(thandin),module=temp)
-#            tempcw.put()
-#            
-#                tocrawl.add(link)
