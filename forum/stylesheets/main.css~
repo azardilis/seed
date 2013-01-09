@@ -1,8 +1,6 @@
-@font-face {
-	font-family: 'Segan-Light';
-	font-style: normal;
-	src: local('fonts/Segan-Light-ttf');
-}
+@font-face {	font-family: 'Segan-Light';
+		font-style: normal;
+		src: local('fonts/Segan-Light-ttf'); }
 
 /*clear everything up*/
 span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, h1,h2,h3,article{
@@ -11,101 +9,71 @@ span,section,nav , ul,ol , li ,img, body, p , a , form, textarea, input, label, 
 }
 
 /*making links not underlined*/
-a:visited, a:active, a {
-	text-decoration: none;
-	color : #007275;
-}
+a:visited, a:active, a { text-decoration: none; color : #007275; }
 
-a:hover{
-	text-decoration: underline;
-}
+a:hover{ text-decoration: underline; }
 
-body{
-	background-image: url("resources/bg1.jpg");
-	font-family : 'Segan-Light',sans-serif ;
-}
+body{	background-image: url("resources/bg1.jpg"); font-family : 'Segan-Light',sans-serif ; }
 
-h1.pagetitle{
-	color : #02527d;
-	font-size :24pt;
-	font-weight: lighter;
-	margin : 10px;
-	margin-left : 0px;
-	display: block ;
-}
+h1.pagetitle{	color : #02527d;
+		font-size :24pt;
+		font-weight: lighter;
+		margin : 10px;
+		margin-left : 0px;
+		display: block ;}
 /*-----*/
 
 /*CSS for the sidebar*/
-#sidebar{
-	width : 16%;	
+#sidebar{width : 13%;	
 	background-color: 	#DDD;
 	display : block;
 	border-radius : 10px ;
 	margin-left: 2%;
 	padding : 2px ;
 	position : relative;
-	float : left;
-}
+	float : left;}
 
-#sidebar .first {
-	border-top-left-radius : 10px ;
-	border-top-right-radius : 10px ;	
-}
+#sidebar .first { border-top-left-radius : 10px ; border-top-right-radius : 10px ; }
 
-#sidebar .last {
-	border-bottom-left-radius : 10px ;
-	border-bottom-right-radius : 10px ;	
-}
+#sidebar .last {  border-bottom-left-radius : 10px ; border-bottom-right-radius : 10px ;}
 
-#sidebar li{
-	line-height: 35px;
-	display :block ;
-	margin-bottom : 1px ;	
-	background-color:#007275 ;
-	opacity : 0.8 ;
-}
+#sidebar li{	line-height: 35px;
+		display :block ;
+		margin-bottom : 1px ;	
+		background-color:#007275 ;
+		opacity : 0.8 ;}
 
-#sidebar li span{
-	padding-left: 5px ;	
-	line-height: 40px ;	
-}
+#sidebar li span{ padding-left: 5px ; line-height: 40px ;}
 
-#sidebar li:hover{
-	background-color : #005355;
-	opacity : 1;
-}
+#sidebar li:hover{ background-color : #005355;	opacity : 1; }
 
 #sidebar a:active ,#sidebar a:visited ,#sidebar  a:link ,#sidebar a:hover{
 	text-decoration: none ;	
 	color : white ;
 	text-align: left;
-	font-size: 15pt;
+	font-size: 13pt;
 }
 /*---*/
-#banner_image{
-	float:left;
-	padding : 20px;
-	margin : 0px;
-	height: 160px;
-	width:100%;
-	margin-left : -22px ;
-	
+#banner_image{	float:left;
+		padding : 20px;
+		margin : 0px;
+		height: 160px;
+		width:100%;
+		margin-left : -22px ; }
 
-}
 /*CSS for styiling the container of the content of each page*/
-#pagecontent{
-	position : relative;
-	float:right;	
-	padding : 1%;
-	width : 78% ;
-}
+#pagecontent{	position : relative;
+		float:right;	
+		padding : 1%;
+		width : 78% ; }
 /*----*/
 
 /*Just some general styling for the content section*/
 #content {
 	position : relative ; 
-	width : 80% ;
-	margin-left : 10%;
+	max-width : 60% ;
+	margin-left : 20%;
+	margin-right:20%;
 	margin-top : 12px;
 	margin-bottom : 12px ;
 
@@ -122,14 +90,6 @@ h1.pagetitle{
 }
 /**/
 
-#wlcmmsg{
-	margin : 1%;
-	position : relative ;
-	float : left ;
-}
+#wlcmmsg{ margin : 1%;	position : relative ; float : left ;}
 
-#lgout{
-	margin : 1%;
-	position : relative ;
-	float : right ;
-}
+#lgout{	margin : 1%; position : relative ; float : right ;}
