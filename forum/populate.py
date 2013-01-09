@@ -122,6 +122,7 @@ def populate_db():
         years.put()
 
         modules = ret_allmodule() 
+        alllect = ret_alllecurers()
         while len(modules):
             (key, val) = modules.popitem()
 
@@ -148,24 +149,32 @@ def populate_db():
             temp = Module(key_name=val.code, escCode=val.code, title=val.title,ecs_page=val.page,yearCourseSemester=ycs,schoolYear=years)
             temp.put()
             tcw = val.cw
+            categGeneral = Category(name='General Discussion', description='Vi som fiskar, fiskar inte i fotboll', module=temp)
+            categGeneral.put()
             while len(tcw):
             #title date handin spec
                 (ttitle, tdate,thandin,tspec) = tcw.pop()
                 if len(tspec) <4:
                     tspec = val.page
-            #if len(tspec) > 0:
-#            print tspec 
- #           print "fittta"
-##if len(thandin) > 0:
-  #          print thandin
                 tempcw = Assessment(title=str(ttitle),
                                     dueDate=datetime.strptime(tdate, '%b %d %Y %H:%M'),
                                     specLink=db.Link(""+str(tspec)),
                                     handin=db.Link(""+str(thandin)),
                                     module=temp)
                 tempcw.put()
-                                
 
+                categCoursework = Category(name='Coursework Discussion '+str(ttitle), description='En hatt satt pa en katt en natt for att jag var matt', module=temp)
+                categCoursework.put()
+
+
+            lectlist = val.lecturers            
+            while len(lectlist):
+                tlect = alllecturers[lectlist.pop()]
+                tlecto = Lecturer(key_name=tlect.keyname, full_name=tlect.name, home_page=tlect.page)
+                tlect.put()
+                # associate them to modules they teach
+                rating = associate(lecturer=tlecto, module=temp)
+                rating.put() 
 
     #end_temp
 
