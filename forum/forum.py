@@ -146,6 +146,7 @@ class AdminModules(BaseHandler):
                 moduleObject = None
 		global current_user
 		current_user = db.get(Key.from_path('User',self.session.get('name')))
+                subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
 		if self.session.get('type')==1:
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
@@ -417,18 +418,16 @@ class SignInPage(BaseHandler):
 		
         if self.request.url==url+'?reg=yes': 
 			pot_user=self.request.get('email') 
-			if pot_user[pot_user.index('@'):]!='@soton.ac.uk': return 'This is not a University email' 
 			pot_user=pot_user[:pot_user.index('@')] 
-			pot_user_rev=pot_user[::-1] 
+
 			if User.get_by_key_name(pot_user) is not None: return 'User already exists' 
-			elif pot_user_rev[2]!='g': return 'This is not a University email' 
 			elif self.request.get('password')!=self.request.get('retype'): return 'Your passwords do not match' 
 			else: 
 				fname=self.request.get('full_name') 
 				course=self.request.get('course') 
-				if self.request.get('year') is not int: year=0 
-				if fname is None or fname=='Full Name' or fname=='': fname=pot_user 
-				if course is None or course=='Course' or course=='': course='compsci'
+				if self.request.get('year') is not int or self.request.get('year')>5: year=0 
+				if fname is None or fname=='': fname=pot_user 
+				if course is None or course=='': course='compsci'
 				User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,).put()
         else:
 			if len(self.request.get('user'))==0 or len(self.request.get('password'))==0:

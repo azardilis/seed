@@ -24,7 +24,7 @@ h1.pagetitle{	color : #02527d;
 /*-----*/
 
 /*CSS for the sidebar*/
-#sidebar{width : 16%;	
+#sidebar{width : 15%;	
 	background-color: 	#DDD;
 	display : block;
 	border-radius : 10px ;
@@ -51,7 +51,7 @@ h1.pagetitle{	color : #02527d;
 	text-decoration: none ;	
 	color : white ;
 	text-align: left;
-	font-size: 15pt;
+	font-size: 13pt;
 }
 /*---*/
 #banner_image{	float:left;
@@ -71,8 +71,9 @@ h1.pagetitle{	color : #02527d;
 /*Just some general styling for the content section*/
 #content {
 	position : relative ; 
-	width : 80% ;
-	margin-left : 10%;
+	max-width : 60% ;
+	margin-left : 20%;
+	margin-right:20%;
 	margin-top : 12px;
 	margin-bottom : 12px ;
 
