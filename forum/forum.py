@@ -403,7 +403,7 @@ class AdminEditUser(BaseHandler):
 
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(BaseHandler):
-    def get(self):
+    def get(self):#show the initial signin page
 		if  self.session.get('type') is None or self.session.get('type')==-1:
 			template = jinja_environment.get_template('templates/signin.html')
 			self.response.out.write(template.render({'bad_login':self.request.get('bad_login')}))
@@ -412,10 +412,10 @@ class SignInPage(BaseHandler):
 			url=self.request.url
 		else:self.redirect("/main")
 
-    def post(self): #authenticate the user
+    def post(self):
         global current_user
 		
-        if self.request.url==url+'?reg=yes': 
+        if self.request.url==url+'?reg=yes': #try to register the user
 			pot_user=self.request.get('email') 
 			pot_user=pot_user[:pot_user.index('@')] 
 
@@ -429,27 +429,23 @@ class SignInPage(BaseHandler):
 				if course is None or course=='': course='compsci'
 				User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,).put()
         else:
-			if len(self.request.get('user'))==0 or len(self.request.get('password'))==0:
+			if len(self.request.get('user'))==0 or len(self.request.get('password'))==0:#check if empty form when logging in
 				self.redirect('?bad_login=1')
 				return
 
 			username, password = self.request.get('user'),self.request.get('password')
 			potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
-			if potential_user is not None and potential_user.password==self.request.get('password'):
+			if potential_user is not None and potential_user.password==self.request.get('password'):#check information for logging in
 				current_user=potential_user
 				self.session['name'],self.session['type'] = self.request.get('user'),potential_user.user_type
 				self.redirect("/main")
 
 			else: self.redirect("/?bad_login=1")
 
-class MainPage(BaseHandler):
+class MainPage(BaseHandler):#handles the page as soon as a user logs in
     def get(self):
-        #passing variables to template, namely the current user and the subs that need
-        #to be displayed in the homepage
 
         global current_user
-            #stop removing "if 'current_user' in globals()"from below. if you remove it, the main page returns an error if a non logged in user tries to acces it instead of redirecting
-            #them to the registration page!
         if 'current_user' in globals() and (self.session.get('type')==0 or self.session.get('type')==1):
 
             homepage_subs=[]
@@ -459,7 +455,7 @@ class MainPage(BaseHandler):
 
             modules = [sub.module for sub in homepage_subs]
             recent_threads = []
-            for mod in modules:
+            for mod in modules:#makes user's info ready
                 categs = mod.categories
                 for cat in categs:
                     threads = cat.threads
@@ -473,7 +469,7 @@ class MainPage(BaseHandler):
 
         else: self.redirect("/")
 
-class ForumPage(BaseHandler):
+class ForumPage(BaseHandler):#view a user's subscriptions
     def get(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -503,7 +499,7 @@ class ForumPage(BaseHandler):
                 lecturers.append(lec)
             if s.module.assessments.count()>0: assessments_flag=1
             else: assessments_flag=0
-            mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
+            mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))#creates a Module info object to pass the information easier
 
             lecturers=[]
 
@@ -512,7 +508,7 @@ class ForumPage(BaseHandler):
                             'subscriptions':subscribed_modules }
         self.response.out.write(template.render(template_params))
 
-class CategoriesPage(BaseHandler):
+class CategoriesPage(BaseHandler):#
 
     def endOfSemester(self,module):
         semester = module.yearCourseSemester.semester
