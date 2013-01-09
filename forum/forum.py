@@ -993,7 +993,7 @@ class ProfilePage(BaseHandler):
             else: assessments_flag=0
             mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
 	''' ---------------------------------- '''
-            lecturers=[]
+        lecturers=[]
 
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         template_params = { 'current_user':current_user,
