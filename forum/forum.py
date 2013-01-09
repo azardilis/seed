@@ -573,7 +573,7 @@ class CategoriesPage(BaseHandler):
         complete = list()
 
         for c in categs :
-            ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10 TODO?
+            ct = c.threads.order('-timestamp').fetch(5) 
             l = [c,ct]
             complete.append(l)
 
@@ -724,7 +724,7 @@ class removeThread(BaseHandler):
             self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class NewThread(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def get(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -745,7 +745,7 @@ class NewThread(BaseHandler):
             logging.error('newthread : empty cid >'+str(cid)+'<')
 
 class CreateNewThread(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -764,7 +764,7 @@ class CreateNewThread(BaseHandler):
         else : self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class ReplyToThread(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -787,7 +787,7 @@ class ReplyToThread(BaseHandler):
             logging.error('Thread not found, tid : '+str(tid)+'<')
 
 class ReplyToPost(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('403')
@@ -805,7 +805,7 @@ class ReplyToPost(BaseHandler):
             logging.error('Couldnt find post, pid : '+pid+'<')
 
 class VoteUpPost(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -825,7 +825,7 @@ class VoteUpPost(BaseHandler):
 
 
 class VoteDownPost(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -844,7 +844,7 @@ class VoteDownPost(BaseHandler):
             logging.error('unable to vote down pid '+self.request.get('pid')+'<')
 
 class ToggleSolution(BaseHandler) :
-#hould upload the website ODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -903,9 +903,9 @@ class ToggleSubscription(BaseHandler):
                 self.response.out.write('Unsubscribe')
         else: logging.error('Couldn\'t get module with mcode '+self.request.get('mcode'))
 
-'''Uses User Key to query the right User Entity'''
+
 class ProfilePage(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -1009,7 +1009,7 @@ class GetImage(BaseHandler):
             self.response.out.write(user.avatar)
 
 class AboutPage(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def get(self):
         template = jinja_environment.get_template('templates/about.html')
         current_user = db.get(Key.from_path('User',self.session.get('name')))
@@ -1018,7 +1018,7 @@ class AboutPage(BaseHandler):
         self.response.out.write(template.render(parms))
 
 class NotesPage(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def get(self):
         template = jinja_environment.get_template('templates/notes.html')
         current_user = db.get(Key.from_path('User',self.session.get('name')))
@@ -1044,7 +1044,7 @@ class ContactPage(BaseHandler):
         self.response.out.write(template.render(template_values))
 
 class EmailSent(webapp2.RequestHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         self.request.get('subject')
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
@@ -1053,7 +1053,7 @@ class EmailSent(webapp2.RequestHandler):
         message = self.request.get('message')
         mail.send_mail(sender="scriptingteamk@gmail.com", to='scriptingteamk@gmail.com', subject=subject, body=message)
         self.redirect("/contact")
-        #self.response.out.write(template.render({'current_user':current_user,'subscriptions':subscribed_modules }))
+       
 
 class ModuleInfo:
     def __init__(self,sub_key,sub_code,sub_name,mod_lecturers,mod_assessments):
@@ -1073,7 +1073,7 @@ class ModulesPage(BaseHandler):
 
         homepage_subs = subscribed_modules
 
-        #course = "compsci"
+     
         course = current_user.course
         y1s1 = getYCS(1,course,1)
         y1s2 = getYCS(1,course,2)
@@ -1127,7 +1127,7 @@ class Logout(BaseHandler):
         self.redirect('/')
 
 class FourOThree(BaseHandler):
-    def get(self): self.response.out.write(""" <h1>403 Access is Forbiden</h1> <p>You are not allowed to access this webpage</p> """)
+    def get(self): self.response.out.write(""" <h1>403 Access is Forbidden</h1> <p>You are not allowed to access this webpage</p> """)
 
 populate.populate_db()
 

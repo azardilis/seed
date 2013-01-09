@@ -24,7 +24,7 @@ h1.pagetitle{	color : #02527d;
 /*-----*/
 
 /*CSS for the sidebar*/
-#sidebar{width : 13%;	
+#sidebar{width : 15%;	
 	background-color: 	#DDD;
 	display : block;
 	border-radius : 10px ;
@@ -89,7 +89,8 @@ h1.pagetitle{	color : #02527d;
     box-shadow: 0px 0px 8px rgba(0,0,0,0.8), 0px 0px 8px 8px rgba(188,188,188,0.8);
 }
 /**/
-
+#searchbox{width:95%;}
+#searchbutton{max-width:50%;display:block;}
 #wlcmmsg{ margin : 1%;	position : relative ; float : left ;}
 
 #lgout{	margin : 1%; position : relative ; float : right ;}
