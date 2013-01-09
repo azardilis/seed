@@ -16,10 +16,8 @@ from google.appengine.api import images
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from google.appengine.api import images
-from itertools import izip
 from datetime import datetime
 from functions.BaseHandler import BaseHandler
-from google.appengine.ext.db import BadValueError
 import time
 import operator
 
@@ -151,7 +149,6 @@ class AdminModules(BaseHandler):
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
 			is_add = self.request.POST.get('add_button', None)
-			self.response.out.write(is_delete)
 			if is_apply:
 				#get the module object from the datastore
                                 try:
@@ -257,17 +254,16 @@ class AdminAssessment(BaseHandler):
 		if self.session.get('type')==1:
 			is_delete,is_apply,is_add = self.request.POST.get('remove_module_button', None),self.request.POST.get('apply_button', None), self.request.POST.get('add_button', None)
 			if is_apply:
-                                try:
-				    #get the assessment object from the datastore
-                                    cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
-                                    if cgi.escape(self.request.get('cwk_title')) is not None: cwkObject.title=cgi.escape(self.request.get('cwk_title'))
-                                    if cgi.escape(self.request.get('cwk_duedate')) is not None: cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
-                                    if cgi.escape(self.request.get('cwk_speclink')) is not None: cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
-                                    if cgi.escape(self.request.get('cwk_handin')) is not None: cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
-                                    if cgi.escape(self.request.get('cwk_modulecode')) is not None: cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
-                                except:
-                                    success = False
-                                if cwkObject: cwkObject.put()
+				try:
+					cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+					if cgi.escape(self.request.get('cwk_title')): cwkObject.title=cgi.escape(self.request.get('cwk_title'))
+					if cgi.escape(self.request.get('cwk_duedate')): cwkObject.dueDate=datetime.strptime(cgi.escape(self.request.get('cwk_duedate')),'%Y-%m-%d %H:%M:%S')
+					if cgi.escape(self.request.get('cwk_speclink')): cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
+					if cgi.escape(self.request.get('cwk_handin')): cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
+					if cgi.escape(self.request.get('cwk_modulecode')): cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+				except:
+					success = False
+				if cwkObject: cwkObject.put()
 			if is_delete:
 				#get the assessment object from the datastore
 				cwkObj=Assessment.get(cgi.escape(self.request.get('cwk_key')))
@@ -283,18 +279,18 @@ class AdminAssessment(BaseHandler):
 					cwk_duedate=cgi.escape(self.request.get('cwk_duedate'))
 					cwk_speclink=cgi.escape(self.request.get('cwk_speclink'))
 					cwk_handin=cgi.escape(self.request.get('cwk_handin'))
-                                        try:
-                                            cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
-                                        except:
-                                            success = False
+					try:
+					  cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
+					except:
+					  success = False
 				
 					if cwkObject: cwkObject.put()
                         if success:
                             template_values = { 'current_user':current_user, 'message':"The changes have been successfully submited to the datastore" }
                             template = jinja_environment.get_template('templates/message-page.html')
                             self.response.out.write(template.render(template_values))
-                        else:
-                            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
+
+                        else: self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
 			
 		else: self.redirect("/")
 
@@ -427,8 +423,8 @@ class SignInPage(BaseHandler):
 				fname=self.request.get('full_name') 
 				course=self.request.get('course') 
 				if self.request.get('year') is not int or self.request.get('year')>5: year=0 
-				if fname is None or fname=='Full Name' or fname=='': fname=pot_user 
-				if course is None or course=='Course' or course=='': course='compsci'
+				if fname is None or fname=='': fname=pot_user 
+				if course is None or course=='': course='compsci'
 				User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,).put()
         else:
 			if len(self.request.get('user'))==0 or len(self.request.get('password'))==0:

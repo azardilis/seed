@@ -27,13 +27,13 @@
   <div id="register" class="register">
   <form action="javascript:register_info()" enctype="multipart/form-data" method="post" id="register" name="register">
   <h2 style="color:#88ccff">Sign Up for FoRules</h2><br>
-  <p><input type="email" name="email" class="info" value="Email" onfocus="fade()" onblur="rewrite()" id="email"></p><br>
-  <p><input type="text" name="ps" class="info" value="Password" onfocus="fade()" onblur="rewrite()" id="ps"></p><br>
-  <p><input type="text" name="retype" class="info" value="Retype Password" onfocus="fade()" onblur="rewrite()" id="retype"></p><br>
+  <p><input placeholder="Email" type="email" name="email" class="info" id="email"></p><br>
+  <p><input type="text" name="ps" class="info" placeholder='Password' id="ps"></p><br>
+  <p><input type="text" name="retype" class="info" placeholder='Retype Password' id="retype"></p><br>
   <font color="#808080">Select Course:</font>
   <br><select>
   	<option value="compsci">Comspci</option>
-	<option value="elecEng">Electric Engineering</option>
+	<option value="EE">EE</option>
 	<option value="ito">Information Technology</option>
   </select></br><br>
   <font color='#808080'>Year:</font>
@@ -44,7 +44,7 @@
   	<option value=4>4</option>
   	<option value=5>5</option>
   </select></br><br>
-  <p><input type="text" name="fn" class="info" value="Full Name" onfocus="fade()" onblur="rewrite()" id="fn"><font color="red">*</font></p><br>
+  <p><input type="text" name="fn" class="info" placeholder='Full Name' id="fn"><font color="red">*</font></p><br>
   <input type="submit" name="reg" id="reg" value="Register Now"><br><br>
   <font color="red">*</font> <font size="1px">are optional fields. You can also edit them at the profile page once you have logged in.</font>
 
