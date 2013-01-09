@@ -9,17 +9,15 @@ import re
 from ratings import *
 import populate
 from google.appengine.api import mail
-from functions.ForumFunctions import * # functions to handle posts and shit # "posts and shit" lol!
+from functions.ForumFunctions import * # functions to handle post related things
 from model import *
 from webapp2_extras import sessions
 from google.appengine.api import images
 from google.appengine.ext.db import Key
 from google.appengine.ext import db
 from google.appengine.api import images
-from itertools import izip
 from datetime import datetime
 from functions.BaseHandler import BaseHandler
-from google.appengine.ext.db import BadValueError
 import time
 import operator
 
@@ -33,8 +31,7 @@ def getSchoolYear(now):
         else:
             if schY.end == now.year: return schY
 
-    # not found
-    return None
+    return None # not found
 
 global session_dic
 session_dic={}
@@ -43,6 +40,7 @@ global current_user
 CATEGORIES,MID='categories','mid'
 EXTRA_TIME=40*24*60*60 #40 days
 
+#encapsulated all the information needed for an rss item
 class rss_item:
     def __init__(self, title, link, description, category, pub_date):
         self.title = title
@@ -57,6 +55,7 @@ def cloneEntity(e, **extra_args):
     props.update(extra_args)
     return klass(**props)
 
+#returns the number of occurences of search_term in thread attributes
 def search_success(thread, search_term):
     success = 0
     search_places = []
@@ -67,7 +66,6 @@ def search_success(thread, search_term):
     for search_place in search_places:
         if search_term in search_place: success += 1
     return success
-    #return search_term in thread.tags or search_term in thread.poster.full_name or search_term in thread.subject or search_term == thread.poster.key().name()
 
 def search_thread_tags(search_terms):
     results = {}
@@ -86,6 +84,7 @@ def getYcsFromCode(code):
     year=code.split('-')[2]
     semester=code.split('-')[3]
 
+#returns modules related to a specific year, course, semester
 def getYCS(year, course, semester):
     ycs_list = YearCourseSemester.all()
     ycs_list.filter('year =', year)
@@ -96,6 +95,7 @@ def getYCS(year, course, semester):
 
 #Main administration page
 class AdminPage(BaseHandler):
+
     def get(self):
     #passing variables to template
         global current_user
@@ -110,6 +110,7 @@ class AdminPage(BaseHandler):
 
 #Modules administration page
 class AdminModules(BaseHandler):
+
     def get(self):
         #passing variables to template
         global current_user
@@ -140,6 +141,7 @@ class AdminModules(BaseHandler):
             self.response.out.write(template.render(template_values))
         else:
             self.redirect("/")
+
     def post(self):
                 error_msg = ""
                 success = True
@@ -151,7 +153,6 @@ class AdminModules(BaseHandler):
 			is_delete = self.request.POST.get('remove_module_button', None)
 			is_apply = self.request.POST.get('apply_button', None)
 			is_add = self.request.POST.get('add_button', None)
-			self.response.out.write(is_delete)
 			if is_apply:
 				#get the module object from the datastore
                                 try:
@@ -172,7 +173,7 @@ class AdminModules(BaseHandler):
 					ycs=ycs_list.get()
 					moduleObject.yearCourseSemester=ycs
                                 except:
-                                    success = False
+                                    success = False #something was wrong with the provided values, display error page
 				    if moduleObject: moduleObject.put()
 			if is_delete:
 				#get the module object from the datastore
@@ -201,11 +202,10 @@ class AdminModules(BaseHandler):
 					ycs_list.filter('course =', course)
 					ycs_list.filter('semester =', int(semester))
 					ycs=ycs_list.get()
-
 					try:
                                             moduleObject=Module(key_name=self.request.get('module_code'), title=self.request.get('module_title'), ecs_page=self.request.get('module_page'), yearCourseSemester=ycs)
                                         except:
-                                            success = False
+                                            success = False #something was wrong with the provided values, display error page
                                             
 				if moduleObject: moduleObject.put()
                         if success:
@@ -216,7 +216,6 @@ class AdminModules(BaseHandler):
                             self.response.out.write(template.render(template_values))
                         else:
                             self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
-                            
 		else: self.redirect("/")
 
 #Assessments administration page
@@ -257,17 +256,16 @@ class AdminAssessment(BaseHandler):
 		if self.session.get('type')==1:
 			is_delete,is_apply,is_add = self.request.POST.get('remove_module_button', None),self.request.POST.get('apply_button', None), self.request.POST.get('add_button', None)
 			if is_apply:
-                                try:
-				    #get the assessment object from the datastore
-                                    cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
-                                    if cgi.escape(self.request.get('cwk_title')) is not None: cwkObject.title=cgi.escape(self.request.get('cwk_title'))
-                                    if cgi.escape(self.request.get('cwk_duedate')) is not None: cwkObject.dueDate=cgi.escape(self.request.get('cwk_duedate'))
-                                    if cgi.escape(self.request.get('cwk_speclink')) is not None: cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
-                                    if cgi.escape(self.request.get('cwk_handin')) is not None: cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
-                                    if cgi.escape(self.request.get('cwk_modulecode')) is not None: cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
-                                except:
-                                    success = False
-                                if cwkObject: cwkObject.put()
+				try:
+					cwkObject=Assessment.get(cgi.escape(self.request.get('cwk_key')))
+					if cgi.escape(self.request.get('cwk_title')): cwkObject.title=cgi.escape(self.request.get('cwk_title'))
+					if cgi.escape(self.request.get('cwk_duedate')): cwkObject.dueDate=datetime.strptime(cgi.escape(self.request.get('cwk_duedate')),'%Y-%m-%d %H:%M:%S')
+					if cgi.escape(self.request.get('cwk_speclink')): cwkObject.specLink=cgi.escape(self.request.get('cwk_speclink'))
+					if cgi.escape(self.request.get('cwk_handin')): cwkObject.handin=cgi.escape(self.request.get('cwk_handin'))
+					if cgi.escape(self.request.get('cwk_modulecode')): cwkObject.module=Module.get(cgi.escape(self.request.get('cwk_modulecode')))
+				except:
+					success = False
+				if cwkObject: cwkObject.put()
 			if is_delete:
 				#get the assessment object from the datastore
 				cwkObj=Assessment.get(cgi.escape(self.request.get('cwk_key')))
@@ -283,18 +281,18 @@ class AdminAssessment(BaseHandler):
 					cwk_duedate=cgi.escape(self.request.get('cwk_duedate'))
 					cwk_speclink=cgi.escape(self.request.get('cwk_speclink'))
 					cwk_handin=cgi.escape(self.request.get('cwk_handin'))
-                                        try:
-                                            cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
-                                        except:
-                                            success = False
+					try:
+					  cwkObject=Assessment(title=cwk_title, dueDate=datetime.strptime(cwk_duedate, '%b %d %Y %I:%M%p'), specLink=cwk_speclink, handin=cwk_handin, module=Module.get(cgi.escape(self.request.get('cwk_modulecode'))))
+					except:
+					  success = False
 				
 					if cwkObject: cwkObject.put()
                         if success:
                             template_values = { 'current_user':current_user, 'message':"The changes have been successfully submited to the datastore" }
                             template = jinja_environment.get_template('templates/message-page.html')
                             self.response.out.write(template.render(template_values))
-                        else:
-                            self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
+
+                        else: self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details':'Something was wrong with the values provided!','current_user':current_user, 'subscriptions':subscribed_modules }))
 			
 		else: self.redirect("/")
 
@@ -405,7 +403,7 @@ class AdminEditUser(BaseHandler):
 
 #Handles rendering of the signinpage and authorisation and if okay redirects to main page
 class SignInPage(BaseHandler):
-    def get(self):
+    def get(self):#show the initial signin page
 		if  self.session.get('type') is None or self.session.get('type')==-1:
 			template = jinja_environment.get_template('templates/signin.html')
 			self.response.out.write(template.render({'bad_login':self.request.get('bad_login')}))
@@ -414,10 +412,10 @@ class SignInPage(BaseHandler):
 			url=self.request.url
 		else:self.redirect("/main")
 
-    def post(self): #authenticate the user
+    def post(self):
         global current_user
 		
-        if self.request.url==url+'?reg=yes': 
+        if self.request.url==url+'?reg=yes': #try to register the user
 			pot_user=self.request.get('email') 
 			pot_user=pot_user[:pot_user.index('@')] 
 
@@ -427,31 +425,27 @@ class SignInPage(BaseHandler):
 				fname=self.request.get('full_name') 
 				course=self.request.get('course') 
 				if self.request.get('year') is not int or self.request.get('year')>5: year=0 
-				if fname is None or fname=='Full Name' or fname=='': fname=pot_user 
-				if course is None or course=='Course' or course=='': course='compsci'
+				if fname is None or fname=='': fname=pot_user 
+				if course is None or course=='': course='compsci'
 				User(key_name=pot_user, full_name=fname, password=self.request.get('password'),course=course,user_type=0, year=year,).put()
         else:
-			if len(self.request.get('user'))==0 or len(self.request.get('password'))==0:
+			if len(self.request.get('user'))==0 or len(self.request.get('password'))==0:#check if empty form when logging in
 				self.redirect('?bad_login=1')
 				return
 
 			username, password = self.request.get('user'),self.request.get('password')
 			potential_user=User.get_by_key_name(cgi.escape(self.request.get('user')))
-			if potential_user is not None and potential_user.password==self.request.get('password'):
+			if potential_user is not None and potential_user.password==self.request.get('password'):#check information for logging in
 				current_user=potential_user
 				self.session['name'],self.session['type'] = self.request.get('user'),potential_user.user_type
 				self.redirect("/main")
 
 			else: self.redirect("/?bad_login=1")
 
-class MainPage(BaseHandler):
+class MainPage(BaseHandler):#handles the page as soon as a user logs in
     def get(self):
-        #passing variables to template, namely the current user and the subs that need
-        #to be displayed in the homepage
 
         global current_user
-            #stop removing "if 'current_user' in globals()"from below. if you remove it, the main page returns an error if a non logged in user tries to acces it instead of redirecting
-            #them to the registration page!
         if 'current_user' in globals() and (self.session.get('type')==0 or self.session.get('type')==1):
 
             homepage_subs=[]
@@ -461,7 +455,7 @@ class MainPage(BaseHandler):
 
             modules = [sub.module for sub in homepage_subs]
             recent_threads = []
-            for mod in modules:
+            for mod in modules:#makes user's info ready
                 categs = mod.categories
                 for cat in categs:
                     threads = cat.threads
@@ -475,7 +469,7 @@ class MainPage(BaseHandler):
 
         else: self.redirect("/")
 
-class ForumPage(BaseHandler):
+class ForumPage(BaseHandler):#view a user's subscriptions
     def get(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -505,7 +499,7 @@ class ForumPage(BaseHandler):
                 lecturers.append(lec)
             if s.module.assessments.count()>0: assessments_flag=1
             else: assessments_flag=0
-            mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
+            mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))#creates a Module info object to pass the information easier
 
             lecturers=[]
 
@@ -514,7 +508,7 @@ class ForumPage(BaseHandler):
                             'subscriptions':subscribed_modules }
         self.response.out.write(template.render(template_params))
 
-class CategoriesPage(BaseHandler):
+class CategoriesPage(BaseHandler):#
 
     def endOfSemester(self,module):
         semester = module.yearCourseSemester.semester
@@ -577,7 +571,7 @@ class CategoriesPage(BaseHandler):
         complete = list()
 
         for c in categs :
-            ct = c.threads.order('-timestamp').fetch(2) #just to limit what is fetched, later change to 10 TODO?
+            ct = c.threads.order('-timestamp').fetch(5) 
             l = [c,ct]
             complete.append(l)
 
@@ -728,7 +722,7 @@ class removeThread(BaseHandler):
             self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class NewThread(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def get(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -749,7 +743,7 @@ class NewThread(BaseHandler):
             logging.error('newthread : empty cid >'+str(cid)+'<')
 
 class CreateNewThread(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -768,7 +762,7 @@ class CreateNewThread(BaseHandler):
         else : self.response.out.write(jinja_environment.get_template('templates/error_template.html').render({'error_details' : 'We were unable to find the specified category.'}))
 
 class ReplyToThread(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -791,7 +785,7 @@ class ReplyToThread(BaseHandler):
             logging.error('Thread not found, tid : '+str(tid)+'<')
 
 class ReplyToPost(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('403')
@@ -809,7 +803,7 @@ class ReplyToPost(BaseHandler):
             logging.error('Couldnt find post, pid : '+pid+'<')
 
 class VoteUpPost(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -829,7 +823,7 @@ class VoteUpPost(BaseHandler):
 
 
 class VoteDownPost(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -848,7 +842,7 @@ class VoteDownPost(BaseHandler):
             logging.error('unable to vote down pid '+self.request.get('pid')+'<')
 
 class ToggleSolution(BaseHandler) :
-#hould upload the website ODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
@@ -907,22 +901,25 @@ class ToggleSubscription(BaseHandler):
                 self.response.out.write('Unsubscribe')
         else: logging.error('Couldn\'t get module with mcode '+self.request.get('mcode'))
 
-'''Uses User Key to query the right User Entity'''
+
 class ProfilePage(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         if self.session.get('type')==-1:
             self.redirect('/403')
             return
-
+	'''Post Variables'''
         avatar = self.request.get('img')
         fullname = self.request.get('fullname')
+	'''------------'''
+	'''Get current user'''
         current_user = db.get(Key.from_path('User',self.session.get('name')))
         user_key = current_user.key()
         user = db.get(user_key)
+	'''----------------'''
         if len(avatar) >0:
             try:
-                avatar=images.resize(avatar, 200, 200)
+                avatar=images.resize(avatar, 200, 200)#Resize and Upload Image if valid
                 user.avatar = db.Blob(avatar)
             except Exception, err: self.redirect('/403')
 
@@ -932,14 +929,16 @@ class ProfilePage(BaseHandler):
         self.redirect('/profile')
 
     def get(self):
+	'''Check if user is logged in'''
         if self.session.get('type')==-1:
             self.redirect('/403')
             return
+	'''-------------'''
         edit_mode = False
         template = jinja_environment.get_template('templates/profile.html')
 
         current_user = db.get(Key.from_path('User',self.session.get('name')))
-        subs =  current_user.subscriptions
+       
 
         sub_to_delete=cgi.escape(self.request.get('mod'))
         self.response.write(sub_to_delete)
@@ -957,10 +956,11 @@ class ProfilePage(BaseHandler):
             userQ=userQ.filter('__key__ = ' ,user_key)
             user = userQ.get()
             if user.key() == current_user.key(): edit_mode=True
+
         subs =  user.subscriptions
         mod_info=[]
         lecturers=[]
-
+	'''Receive User Posts and Topics Created'''
         posts = Post.all()
         posts=posts.filter("poster",user_key)
         num_posts=posts.count()
@@ -968,13 +968,17 @@ class ProfilePage(BaseHandler):
         threads = Thread.all()
         threads = threads.filter("poster",user_key)
         created_threads = threads.count()
-
+	''' ----------------------------------- '''
+	
+	'''Delete Module from subscription List'''
         if not sub_to_delete is '':
             subs.filter("__key__",Key(sub_to_delete))
             sub = subs.get()
             populate.unsubscribe(sub.subscribed_user, sub.module)
             subs =  current_user.subscriptions
+	''' ------------------------------------ '''
 
+	'''Retrieve User's Subscription List'''
         for s in subs:
             ratQ=Rating.all()
             ratQ.filter("module",s.module)
@@ -986,8 +990,8 @@ class ProfilePage(BaseHandler):
             if s.module.assessments.count()>0: assessments_flag=1
             else: assessments_flag=0
             mod_info.append(ModuleInfo(s.key(),s.module.key().name(),s.module.title,lecturers,assessments_flag))
-
-            lecturers=[]
+	''' ---------------------------------- '''
+        lecturers=[]
 
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
         template_params = { 'current_user':current_user,
@@ -1000,6 +1004,7 @@ class ProfilePage(BaseHandler):
 
         self.response.out.write(template.render(template_params))
 
+'''Displays an Image saved in the database so it can be included in an HTML Page'''
 class GetImage(BaseHandler):
     def get(self):
         if self.session.get('type')==-1:
@@ -1013,7 +1018,7 @@ class GetImage(BaseHandler):
             self.response.out.write(user.avatar)
 
 class AboutPage(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def get(self):
         template = jinja_environment.get_template('templates/about.html')
         current_user = db.get(Key.from_path('User',self.session.get('name')))
@@ -1022,7 +1027,7 @@ class AboutPage(BaseHandler):
         self.response.out.write(template.render(parms))
 
 class NotesPage(BaseHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def get(self):
         template = jinja_environment.get_template('templates/notes.html')
         current_user = db.get(Key.from_path('User',self.session.get('name')))
@@ -1048,7 +1053,7 @@ class ContactPage(BaseHandler):
         self.response.out.write(template.render(template_values))
 
 class EmailSent(webapp2.RequestHandler):
-#TODO: CHECK IF USER IS LOGGED IN BEFORE DISPLAYING THE PAGE!
+
     def post(self):
         self.request.get('subject')
         subscribed_modules = [sub for sub in current_user.subscriptions if sub.show_in_homepage]
@@ -1057,7 +1062,7 @@ class EmailSent(webapp2.RequestHandler):
         message = self.request.get('message')
         mail.send_mail(sender="scriptingteamk@gmail.com", to='scriptingteamk@gmail.com', subject=subject, body=message)
         self.redirect("/contact")
-        #self.response.out.write(template.render({'current_user':current_user,'subscriptions':subscribed_modules }))
+       
 
 class ModuleInfo:
     def __init__(self,sub_key,sub_code,sub_name,mod_lecturers,mod_assessments):
@@ -1077,7 +1082,7 @@ class ModulesPage(BaseHandler):
 
         homepage_subs = subscribed_modules
 
-        #course = "compsci"
+     
         course = current_user.course
         y1s1 = getYCS(1,course,1)
         y1s2 = getYCS(1,course,2)
@@ -1131,7 +1136,7 @@ class Logout(BaseHandler):
         self.redirect('/')
 
 class FourOThree(BaseHandler):
-    def get(self): self.response.out.write(""" <h1>403 Access is Forbiden</h1> <p>You are not allowed to access this webpage</p> """)
+    def get(self): self.response.out.write(""" <h1>403 Access is Forbidden</h1> <p>You are not allowed to access this webpage</p> """)
 
 populate.populate_db()
 
