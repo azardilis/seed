@@ -88,5 +88,5 @@ input, select{	margin-bottom:7px;}
 
 #filter-button{width:40px;display:inline;}
 #filter-username{width:150px;display:inline;}
-form {width:100%;}
+form {width:100%;} form input{width:100%;}
 
